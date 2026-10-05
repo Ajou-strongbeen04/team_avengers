@@ -1,0 +1,8 @@
+########## M 군 stage1 시드런 ##########
+
+===== mz08   Su=1.751  z_start=0.08 m   08-02 02:25 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/mz08
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/mz08
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/mz08
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/mz08 

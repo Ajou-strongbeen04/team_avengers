@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>漁벤져스 — 메인화면</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f3f4f6;
+    font-family: "Noto Sans CJK KR", "Noto Sans KR", sans-serif;
+    display: flex; justify-content: center; align-items: center; min-height: 100vh;
+  }
+  .phone {
+    width: 375px; height: 812px;
+    border: 12px solid #1e293b; border-radius: 40px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,.25);
+    background: #f8fafc; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+
+  /* ── 헤더 ── */
+  .hdr {
+    background: #2563eb; color: #fff; padding: 16px;
+    display: flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  }
+  .hdr .title { flex: 1; text-align: center; font-weight: 700; font-size: 16px; }
+  .hdr .menu { width: 28px; text-align: right; font-size: 20px; line-height: 1; }
+
+  .body { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 16px; overflow: hidden; }
+
+  /* ── 어항 (메인 히어로) ── */
+  .tank {
+    height: 248px; border-radius: 16px; position: relative; overflow: hidden;
+    background: linear-gradient(to bottom, #60a5fa 0%, #2563eb 100%);
+    box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  }
+  .tank .name {
+    position: absolute; bottom: 8px; left: 12px; z-index: 3;
+    color: #fff; font-size: 12px; font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,.5);
+  }
+
+  /* 이모지 물고기는 기본적으로 머리가 왼쪽. 오른쪽으로 갈 땐 scaleX(-1). */
+  .lane { position: absolute; left: 0; width: 100%; height: 0; }
+  .fish { position: absolute; line-height: 1; }
+  .fish .bob { display: inline-block; }
+
+  /* 물고기 폭(--w)만큼 빼서 어항 좌우 끝까지 왕복시킨다. */
+  @keyframes swimA {
+    0%   { left: 10px; transform: scaleX(-1); }
+    48%  { left: calc(100% - var(--w) - 10px); transform: scaleX(-1); }
+    50%  { left: calc(100% - var(--w) - 10px); transform: scaleX(1); }
+    98%  { left: 10px; transform: scaleX(1); }
+    100% { left: 10px; transform: scaleX(-1); }
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+
+  .lane1 { top: 34px; }
+  .lane2 { top: 104px; }
+  .lane3 { top: 158px; }
+  .f1 { font-size: 40px; --w: 48px; animation: swimA 12s ease-in-out infinite; }
+  .f2 { font-size: 30px; --w: 36px; animation: swimA  6s ease-in-out infinite; animation-delay: -3.2s; }
+  .f3 { font-size: 24px; --w: 29px; animation: swimA  4s ease-in-out infinite; animation-delay: -1.5s; }
+  .f1 .bob { animation: bob 3s ease-in-out infinite; }
+  .f2 .bob { animation: bob 2s ease-in-out infinite; animation-delay: -.7s; }
+  .f3 .bob { animation: bob 1.5s ease-in-out infinite; animation-delay: -1.4s; }
+
+  /* 기포 */
+  @keyframes rise {
+    0%   { transform: translateY(0)     scale(.7); opacity: 0; }
+    12%  { opacity: .55; }
+    100% { transform: translateY(-210px) scale(1.15); opacity: 0; }
+  }
+  .bub {
+    position: absolute; bottom: -10px; border-radius: 50%;
+    background: rgba(255,255,255,.75); animation: rise linear infinite;
+  }
+
+  /* ── 카드 ── */
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card {
+    background: #fff; border-radius: 16px; padding: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  }
+  .card.p4 { padding: 16px; }
+  .stat { text-align: center; }
+  .stat .lbl { font-size: 12px; color: #9ca3af; }
+  .stat .val { font-size: 20px; font-weight: 700; color: #111827; margin: 2px 0; }
+  .stat .st  { font-size: 11px; font-weight: 600; color: #15803d; }
+
+  .between { display: flex; align-items: center; justify-content: space-between; }
+  .k  { font-size: 12px; color: #9ca3af; }
+  .h3 { font-size: 14px; font-weight: 700; color: #374151; }
+  .badge-green {
+    background: #dcfce7; color: #15803d;
+    font-size: 14px; font-weight: 700; padding: 4px 12px; border-radius: 9999px;
+  }
+  .chev { color: #d1d5db; font-size: 18px; line-height: 1; }
+
+  .notify { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #6b7280; margin-top: 8px; }
+  .notify .line { display: flex; justify-content: space-between; gap: 8px; }
+  .notify .line .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .notify .line .r { white-space: nowrap; color: #9ca3af; font-variant-numeric: tabular-nums; }
+
+  .ai { display: flex; align-items: center; gap: 12px; }
+  .ai .ico { font-size: 24px; }
+  .ai .t1 { font-size: 14px; font-weight: 700; color: #374151; }
+  .ai .t2 { font-size: 12px; color: #9ca3af; }
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <div class="hdr">
+    <span style="width:28px"></span>
+    <span class="title">🏠 홈</span>
+    <span class="menu">☰</span>
+  </div>
+
+  <div class="body">
+
+    <!-- 어항 -->
+    <div class="tank">
+      <div class="bub" style="left:18%;  width:5px; height:5px;  animation-duration:6s; animation-delay:-1s"></div>
+      <div class="bub" style="left:23%;  width:3px; height:3px;  animation-duration:4s; animation-delay:-3s"></div>
+      <div class="bub" style="left:76%;  width:4px; height:4px;  animation-duration:3s; animation-delay:-2s"></div>
+      <div class="bub" style="left:81%;  width:6px; height:6px;  animation-duration:12s; animation-delay:-5s"></div>
+      <div class="bub" style="left:49%;  width:3px; height:3px;  animation-duration:6s; animation-delay:-4s"></div>
+
+      <div class="lane lane1"><span class="fish f1"><span class="bob">🐠</span></span></div>
+      <div class="lane lane2"><span class="fish f2"><span class="bob">🐠</span></span></div>
+      <div class="lane lane3"><span class="fish f3"><span class="bob">🐠</span></span></div>
+
+      <p class="name">몽이</p>
+    </div>
+
+    <!-- 수온 · 탁도 -->
+    <div class="row2">
+      <div class="card stat">
+        <p class="lbl">수온</p>
+        <p class="val">25.4°C</p>
+        <p class="st">양호</p>
+      </div>
+      <div class="card stat">
+        <p class="lbl">탁도</p>
+        <p class="val">12 NTU</p>
+        <p class="st">양호</p>
+      </div>
+    </div>
+
+    <!-- AI 종합 건강상태 -->
+    <div class="card p4 between">
+      <div>
+        <p class="k">AI 종합 건강상태</p>
+        <p class="k" style="margin-top:4px">수온·탁도 기반 용존산소 추정 결과</p>
+      </div>
+      <span class="badge-green">양호</span>
+    </div>
+
+    <!-- 알림 -->
+    <div class="card p4">
+      <div class="between">
+        <h3 class="h3">🔔 알림</h3>
+        <span class="chev">›</span>
+      </div>
+      <div class="notify">
+        <div class="line"><span class="t">🍚 밥 줄 시간</span><span class="r">[09:00]</span></div>
+        <div class="line"><span class="t">🍚 밥 줄 시간</span><span class="r">[18:00]</span></div>
+        <div class="line"><span class="t">용존산소가 안전 범위로 돌아왔어요 (최저 6.2 mg/L) 👍</span><span class="r">3분 전</span></div>
+        <div class="line"><span class="t">물이 다시 맑아졌어요 (12 NTU) 👍</span><span class="r">21분 전</span></div>
+      </div>
+    </div>
+
+    <!-- AI 상담 -->
+    <div class="card p4 between">
+      <div class="ai">
+        <span class="ico">🤖</span>
+        <div>
+          <p class="t1">AI 상담</p>
+          <p class="t2">물고기 상태가 궁금하면 물어보세요</p>
+        </div>
+      </div>
+      <span class="chev">›</span>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

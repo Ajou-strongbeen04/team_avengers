@@ -1,0 +1,36 @@
+EX2 · CFD 가상 재폭기 결과
+  case         : C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\EX2\CFD\flow\pos15  (time 200, 동결 UMean/nutMean)
+  T            : 25.0 degC,  P = 101.325 kPa
+  alpha_g      : 0.16848  → a = 2022 1/m,  k_L,b = 1.079e-04 m/s
+  C0           : 0.0 mg/L (탈산소 상태에서 출발)
+  수면채널     : ON
+
+[해석 0-D 예측]
+  K_La_plume = 6.0312e-04 /s (2.171 /h)
+  K_La_surf  = 1.2331e-04 /s (0.444 /h)
+  K_La_pred  = 7.2643e-04 /s (2.615 /h),  tau = 22.94 min
+
+[3D 과도해 피팅]  (fit_kla.py 와 동일 유효창 0.15–0.92)
+  K_La_eff,CFD = 7.0057e-04 /s = 2.522 /h  (SE 7.92e-12)
+  C*_CFD       = 8.2635 mg/L   (입력 C* = 8.2635)
+  tau          = 23.79 min,  95% 도달 71.4 min
+  초기상승률   = 0.347 mg/L/min
+  피팅 RMSE    = 9.6763e-08 mg/L (n=329, 창 235–3450 s)
+  3D/0-D 비    = 0.9644  (1.0 이면 0-D 축약이 3D 해와 일치)
+  최종 t=6760s: Cbar=8.1909 (99.12% sat), 공간편차 C_max-C_min = 0.0043 mg/L
+
+[프로브 후보점 — 체적평균 대표성 (방법론 §6.1-1)]
+  point                x,y,z [m]              RMSE vs Cbar   max|Δ|  (mg/L)
+  mid_center       (0.235,0.110,0.105)      0.0323      0.0765
+  surf_center      (0.235,0.110,0.180)      0.0312      0.0769
+  bot_center       (0.235,0.110,0.030)      0.0054      0.0244
+  surf_nearplume   (0.035,0.175,0.180)      0.0174      0.0401
+  mid_nearplume    (0.035,0.175,0.105)      0.0061      0.0354
+  bot_nearplume    (0.035,0.175,0.030)      0.0057      0.0244
+  surf_far         (0.435,0.175,0.180)      0.0110      0.0604
+  mid_far          (0.435,0.175,0.105)      0.0089      0.0482
+  bot_far          (0.435,0.175,0.030)      0.0112      0.0383
+  → 권장 프로브 위치: bot_center  (0.235, 0.11, 0.03)
+
+[κ 계산법] 실측 fit_kla.py 의 kla_meas 를 얻으면:
+  kappa = kla_meas / 7.0057e-04 /s  =  kla_meas[/h] / 2.522

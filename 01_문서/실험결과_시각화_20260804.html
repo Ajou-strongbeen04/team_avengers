@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漁벤져스 — 실험결과 시각화 (2026-08-04)</title>
+<style>
+  :root{
+    color-scheme: light;
+    --page:            #f9f9f7;
+    --surface-1:        #fcfcfb;
+    --surface-2:        #f4f3f0;
+    --text-primary:    #0b0b0b;
+    --text-secondary:  #52514e;
+    --text-muted:      #898781;
+    --grid:            #e1e0d9;
+    --axis:            #c3c2b7;
+    --border:          rgba(11,11,11,0.10);
+    --series-1: #2a78d6; /* blue   */
+    --series-2: #eb6834; /* orange */
+    --series-3: #1baf7a; /* aqua   */
+    --series-4: #eda100; /* yellow */
+    --series-5: #e87ba4; /* magenta*/
+    --series-6: #008300; /* green  */
+    --series-7: #4a3aa7; /* violet */
+    --series-8: #e34948; /* red    */
+    --good: #0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:where(:not([data-theme="light"])){
+      color-scheme: dark;
+      --page:            #0d0d0d;
+      --surface-1:        #1a1a19;
+      --surface-2:        #202020;
+      --text-primary:    #ffffff;
+      --text-secondary:  #c3c2b7;
+      --text-muted:      #898781;
+      --grid:            #2c2c2a;
+      --axis:            #383835;
+      --border:          rgba(255,255,255,0.10);
+      --series-1: #3987e5; --series-2:#d95926; --series-3:#199e70; --series-4:#c98500;
+      --series-5: #d55181; --series-6:#008300; --series-7:#9085e9; --series-8:#e66767;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --page:            #0d0d0d;
+    --surface-1:        #1a1a19;
+    --surface-2:        #202020;
+    --text-primary:    #ffffff;
+    --text-secondary:  #c3c2b7;
+    --text-muted:      #898781;
+    --grid:            #2c2c2a;
+    --axis:            #383835;
+    --border:          rgba(255,255,255,0.10);
+    --series-1: #3987e5; --series-2:#d95926; --series-3:#199e70; --series-4:#c98500;
+    --series-5: #d55181; --series-6:#008300; --series-7:#9085e9; --series-8:#e66767;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--page); color:var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+    line-height:1.55;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:28px 20px 80px;}
+  header.hero{padding: 22px 4px 26px;}
+  header.hero h1{font-size:1.7rem; margin:0 0 6px; letter-spacing:-0.01em;}
+  header.hero p{color:var(--text-secondary); margin:2px 0; font-size:0.95rem;}
+  .theme-toggle{
+    position:fixed; top:16px; right:16px; z-index:50;
+    background:var(--surface-1); border:1px solid var(--border); color:var(--text-secondary);
+    border-radius:8px; padding:6px 10px; font-size:0.78rem; cursor:pointer;
+  }
+  nav.toc{
+    display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 8px; padding:0;
+  }
+  nav.toc a{
+    font-size:0.8rem; color:var(--text-secondary); text-decoration:none;
+    background:var(--surface-1); border:1px solid var(--border); border-radius:999px;
+    padding:6px 13px;
+  }
+  nav.toc a:hover{color:var(--series-1); border-color:var(--series-1);}
+
+  section.exp{margin-top:52px;}
+  section.exp > h2{
+    font-size:1.28rem; margin:0 0 4px; padding-top:6px; scroll-margin-top:20px;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  section.exp > h2 .tag{
+    font-size:0.68rem; font-weight:600; color:var(--surface-1); background:var(--series-1);
+    border-radius:5px; padding:2px 7px; letter-spacing:.02em;
+  }
+  section.exp > .lede{color:var(--text-secondary); font-size:0.92rem; max-width:840px; margin:6px 0 20px;}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(420px,1fr)); gap:18px;}
+  .grid.single{grid-template-columns:1fr;}
+
+  .card{
+    background:var(--surface-1); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px 14px;
+  }
+  .card h3{font-size:0.98rem; margin:0 0 2px;}
+  .card .sub{color:var(--text-muted); font-size:0.76rem; margin:0 0 10px;}
+  .card .note{color:var(--text-secondary); font-size:0.78rem; margin-top:8px; border-top:1px dashed var(--border); padding-top:8px;}
+
+  .chart-svg{display:block; width:100%; height:auto; font-family:inherit;}
+  .axis-line{stroke:var(--axis); stroke-width:1;}
+  .grid-line{stroke:var(--grid); stroke-width:1;}
+  .tick-label{fill:var(--text-muted); font-size:10.5px;}
+  .axis-label{fill:var(--text-secondary); font-size:11px;}
+  .data-line{fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+  .data-dot{stroke:var(--surface-1); stroke-width:1.5; cursor:pointer;}
+  .data-dot:hover{r:6;}
+  .direct-label{font-size:10.5px; fill:var(--text-secondary); font-weight:600;}
+  .band{fill:var(--series-1); opacity:0.07;}
+  .ref-line{stroke:var(--text-muted); stroke-width:1.2; stroke-dasharray:4 3;}
+  .ref-label{font-size:10px; fill:var(--text-muted);}
+  .bar{cursor:pointer;}
+  .whisker{stroke:var(--text-secondary); stroke-width:1.4;}
+
+  .legend{display:flex; flex-wrap:wrap; gap:14px; margin-top:6px; padding-top:8px; border-top:1px solid var(--border);}
+  .legend-item{display:flex; align-items:center; gap:6px; font-size:0.78rem; color:var(--text-secondary);}
+  .swatch{width:11px; height:11px; border-radius:3px; flex:none;}
+  .swatch.line{border-radius:2px; height:3px; width:16px;}
+
+  details.rawtable{margin-top:10px;}
+  details.rawtable > summary{
+    cursor:pointer; font-size:0.76rem; color:var(--text-muted); user-select:none;
+  }
+  table.raw{width:100%; border-collapse:collapse; margin-top:8px; font-size:0.78rem;}
+  table.raw th, table.raw td{
+    padding:5px 8px; text-align:right; border-bottom:1px solid var(--border);
+    font-variant-numeric: tabular-nums;
+  }
+  table.raw th:first-child, table.raw td:first-child{text-align:left;}
+  table.raw th{color:var(--text-muted); font-weight:600;}
+
+  .badge{
+    display:inline-block; font-size:0.68rem; font-weight:600; border-radius:5px;
+    padding:2px 7px; margin-left:6px; vertical-align:middle;
+  }
+  .badge.warn{background:rgba(250,178,25,0.18); color:#8a5b00;}
+  .badge.crit{background:rgba(208,59,59,0.14); color:var(--critical);}
+  @media (prefers-color-scheme: dark){
+    .badge.warn{color:#fab219;} .badge.crit{color:#e66767;}
+  }
+  :root[data-theme="dark"] .badge.warn{color:#fab219;}
+  :root[data-theme="dark"] .badge.crit{color:#e66767;}
+
+  /* ---------- 3D tank ---------- */
+  .tank3d-wrap{display:grid; grid-template-columns: 1.3fr 1fr; gap:20px;}
+  @media (max-width:820px){ .tank3d-wrap{grid-template-columns:1fr;} }
+  .stage{
+    perspective: 1300px; height:380px; display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(ellipse at 50% 20%, var(--surface-2), var(--surface-1) 70%);
+    border-radius:12px; border:1px solid var(--border); touch-action:none; cursor:grab;
+  }
+  .stage:active{cursor:grabbing;}
+  .rig{ transform-style:preserve-3d; position:relative; width:1px; height:1px; }
+  .face{
+    position:absolute; border:1px solid rgba(42,120,214,0.55);
+    background:rgba(42,120,214,0.06);
+  }
+  .edge{position:absolute; background:var(--text-muted); opacity:0.55;}
+  .pt{
+    position:absolute; width:11px; height:11px; margin:-5.5px 0 0 -5.5px;
+    border-radius:50%; border:1.5px solid var(--surface-1);
+  }
+  .pt-label{
+    position:absolute; font-size:10.5px; font-weight:600; color:var(--text-primary);
+    background:var(--surface-1); border:1px solid var(--border); border-radius:5px;
+    padding:1px 6px; white-space:nowrap; transform:translate(10px,-8px);
+  }
+  .plume-rod{position:absolute; border-radius:4px;}
+  .controls-hint{font-size:0.74rem; color:var(--text-muted); margin-top:8px;}
+  .legend3d{display:flex; flex-direction:column; gap:8px; justify-content:center;}
+  .legend3d .row{display:flex; align-items:center; gap:8px; font-size:0.82rem; color:var(--text-secondary);}
+  .legend3d .dot{width:12px; height:12px; border-radius:50%; flex:none;}
+  .legend3d h4{margin:0 0 2px; font-size:0.85rem; color:var(--text-primary);}
+  .dims{font-size:0.78rem; color:var(--text-muted); margin-top:10px;}
+
+  footer{margin-top:60px; padding-top:16px; border-top:1px solid var(--border); color:var(--text-muted); font-size:0.76rem;}
+</style>
+</head>
+<body>
+<button class="theme-toggle" id="themeToggle" type="button">🌓 테마</button>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>漁벤져스 — 실험결과 시각화</h1>
+    <p>EX1(어항 크기 스윕) · EX2(재폭기/혼합시간 실측 + CFD 대조) · EX3(A층 ROM) 전 실험 데이터의 시각 요약 · 작성 2026-08-04</p>
+    <p>정본은 항상 <code>03_논문/Experiment/</code> 각 실험 문서다. 이 페이지는 그 수치를 그대로 옮긴 시각화이며 해석은 원문을 따른다.</p>
+  </header>
+
+  <nav class="toc">
+    <a href="#ex1">EX1 · 크기 스윕</a>
+    <a href="#tank3d">3D · 어항/폭기/프로브</a>
+    <a href="#ex2-zsweep">EX2 · z_start 스윕</a>
+    <a href="#ex2-meas">EX2 · 재폭기 실측</a>
+    <a href="#ex2-tmix">EX2 · 혼합시간</a>
+    <a href="#ex3">EX3 · ROM 결과</a>
+  </nav>
+
+  <!-- ================= EX1 ================= -->
+  <section class="exp" id="ex1">
+    <h2>EX1 <span class="tag">완료</span> — 어항 크기 확정</h2>
+    <p class="lede">고정 2.5 W 폭기로 부피가 커질수록 평균 DO가 단조 하락하고, Péclet 수 기반 레짐 판정으로 <b>L≈0.30–0.35 (7–11 L)</b>에서 자기유사 레짐으로 전이한다. 확정 규격 47×21×21 cm(≈20.7 L, L=0.47)은 이 유의미 범위 안에 있다.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>수조 길이(L)에 따른 평균/최저 DO</h3>
+        <p class="sub">1차 스윕(L=0.2–1.0) + 2차 세분(L=0.2–0.4) 통합 · 포화 DO 8.24 mg/L(25 °C) 대비</p>
+        <div id="c-ex1-do"></div>
+        <div class="legend" id="lg-ex1-do"></div>
+        <p class="note">확정 규격 L=0.47 m(점선)은 소형 잘-섞임 구간을 벗어나 자기유사 레짐 안에 위치 — EX2 정량실험의 기준 기하로 채택된 근거.</p>
+      </div>
+      <div class="card">
+        <h3>난류 Péclet 수 Pe_t — 레짐 판정</h3>
+        <p class="sub">Pe_t = U₀·Lc/D_eff · 무릎(knee) 구간 음영</p>
+        <div id="c-ex1-pe"></div>
+        <p class="note">L≤0.25(≤4 L)는 소형 잘-섞임, L≈0.30이 전이, <b>L≥0.35(≥11 L)부터 Pe_t 49–53로 평탄한 자기유사 레짐</b>.</p>
+      </div>
+    </div>
+    <details class="rawtable"><summary>원자료 표 보기</summary>
+      <table class="raw" id="tbl-ex1"></table>
+    </details>
+  </section>
+
+  <!-- ================= 3D TANK ================= -->
+  <section class="exp" id="tank3d">
+    <h2>3D <span class="tag">기하</span> — 어항 · 폭기 위치 · 프로브 배치</h2>
+    <p class="lede">EX2 본시험(47×21×21 cm) 기준 좌표. 폭기축은 벽걸이형 (0.035, 0.195) 고정, 높이(z_start)만 스윕한다. 재폭기 5런의 프로브 3점과 혼합시간 펄스실험의 코너 3점은 동일 좌표를 공유한다. 드래그로 회전.</p>
+    <div class="tank3d-wrap">
+      <div class="card" style="padding:10px;">
+        <div class="stage" id="stage"></div>
+        <p class="controls-hint">마우스/터치 드래그로 회전 · 축: x=길이 0.47 m, y=폭 0.21 m, z=수심 0.21 m (원점=바닥 안쪽 모서리)</p>
+      </div>
+      <div class="card legend3d">
+        <h4>범례</h4>
+        <div class="row"><span class="dot" style="background:var(--series-2)"></span> 폭기 플룸축 (0.035, 0.195) — z_start 0.02~0.17 m 6수준</div>
+        <div class="row"><span class="dot" style="background:var(--series-1)"></span> S1 · 장축 코너 (0.455, 0.195, 0.105)</div>
+        <div class="row"><span class="dot" style="background:var(--series-3)"></span> S2 · 단축 코너 (0.015, 0.015, 0.105)</div>
+        <div class="row"><span class="dot" style="background:var(--series-4)"></span> S3 · 최원축 (0.455, 0.015, 0.105)</div>
+        <div class="dims">
+          치수: L 0.47 m × B 0.21 m × d 0.21 m (≈20.7 L)<br>
+          플룸: 원기둥 r=0.01 m, d_b=0.5 mm 기포<br>
+          Q_air = 1.2 L/min (실측 확정)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EX2 z-sweep ================= -->
+  <section class="exp" id="ex2-zsweep">
+    <h2>EX2 <span class="tag">CFD</span> — 폭기 높이(z_start) 스윕</h2>
+    <p class="lede">플룸이 짧아질수록(z_start↑) 기포체적분율 α_g는 커지지만 실제 물질전달 K_La는 줄어든다 — 순환 유량이 병목이라는 논문의 핵심 주장을 뒷받침.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>K_La — 0-D 벌크 모델 vs 3-D CFD(coarse)</h3>
+        <p class="sub">z_start별 · 단위 1/h · 동일 단위라 단일 축 비교 가능</p>
+        <div id="c-ex2-kla"></div>
+        <div class="legend" id="lg-ex2-kla"></div>
+        <p class="note">3-D/0-D 비 0.91–0.92(coarse 격자) — 0-D가 3-D보다 8–9 % 낙관적. "레버" 열(맨 오른쪽, z=0.02=100 %)은 z가 커질수록 K_La가 급격히 줄어듦을 보여준다.</p>
+      </div>
+      <div class="card">
+        <h3>기포체적분율 α_g</h3>
+        <p class="sub">z_start (플룸 길이 H_p = 0.21 − z_start)가 짧아질수록 α_g 증가</p>
+        <div id="c-ex2-alpha"></div>
+      </div>
+    </div>
+    <details class="rawtable"><summary>원자료 표 보기 (z_start 수준별 자기일관 상수)</summary>
+      <table class="raw" id="tbl-ex2-z"></table>
+    </details>
+  </section>
+
+  <!-- ================= EX2 실측 ================= -->
+  <section class="exp" id="ex2-meas">
+    <h2>EX2 <span class="tag">실측</span> — 재폭기 시험 본시험 5런</h2>
+    <p class="lede">2026-08-01/02 세션, 47×21×21 cm 어항, Q_air=1.2 L/min, 25 °C 환산값.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>z_start별 K_La 실측</h3>
+        <p class="sub">S1·S2·S3(z=0.02, n=3, CV 1.44 %) · S4(z=0.08) · S5(z=0.17)</p>
+        <div id="c-ex2-measkla"></div>
+        <p class="note">z=0.02→0.17로 K_La가 2.48→1.07 (1/h)로 감소 — CFD 레버(위 섹션)와 같은 방향.</p>
+      </div>
+      <div class="card">
+        <h3>위치 강건성 — 프로브 3점 (z=0.02 고정)</h3>
+        <p class="sub">폭기축 수평거리 0.18–0.46 m(2.5배)로 옮겨도 K_La·κ 거의 불변</p>
+        <div id="c-ex2-robust"></div>
+        <div class="legend" id="lg-ex2-robust"></div>
+        <p class="note">K_La CV=1.44 % — 위치 강건성 통과. κ(=실측/CFD)는 0.936–0.961로 CFD 대비 4–6 % 낮게 일관.</p>
+      </div>
+    </div>
+    <details class="rawtable"><summary>원자료 표 보기</summary>
+      <table class="raw" id="tbl-ex2-meas"></table>
+    </details>
+  </section>
+
+  <!-- ================= EX2 tmix ================= -->
+  <section class="exp" id="ex2-tmix">
+    <h2>EX2 <span class="tag">실측</span> — 혼합시간 t_mix (산소결손 펄스추적법) <span class="badge warn">판정: 불성립</span></h2>
+    <p class="lede">t_mix ≪ 1/K_La(=24.8분) 기준이 성립하지 않음을 확인 — 국소 DO 결손이 위치에 따라 균질값의 0.56–2.47배로 갈라진 채 t+600 s까지 수렴하지 않는다.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>국소결손 ÷ 벌크 이론결손 — 시간에 따른 궤적</h3>
+        <p class="sub">4개 프로브/주입점 조합 · 1.0 = 완전 균질(well-mixed)</p>
+        <div id="c-ex2-tmix-traj"></div>
+        <div class="legend" id="lg-ex2-tmix-traj"></div>
+        <p class="note">well-mixed면 네 선 모두 1.0(점선)에 수렴해야 하나, 사용 가능 구간(t+600 s)까지 수렴하지 않는다. t+600 s 이후(음영)는 baseline 표류로 근거 불가.</p>
+      </div>
+      <div class="card">
+        <h3>최대 국소결손 배수 — baseline 처리법에 따른 불확도</h3>
+        <p class="sub">막대=상수 baseline(본문 표기값) · 수염=3가지 baseline 처리법 범위</p>
+        <div id="c-ex2-tmix-peak"></div>
+        <p class="note">"장축 코너 = 항상 초과"는 baseline 처리와 무관하게 견고하나, 개별 배수(0.56/1.95 등)는 baseline 방식에 따라 최대 3.6배까지 흔들려 확정값으로 쓰지 않는다.</p>
+      </div>
+    </div>
+    <details class="rawtable"><summary>원자료 표 보기</summary>
+      <table class="raw" id="tbl-ex2-tmix"></table>
+    </details>
+  </section>
+
+  <!-- ================= EX3 ================= -->
+  <section class="exp" id="ex3">
+    <h2>EX3 <span class="tag">진행중</span> — A층 축소모델(ROM) Stage 2-A</h2>
+    <p class="lede">POD(모드 r=108) + 회귀(Ridge/RandomForest)로 기하 → 저유속 정체역 위치를 예측. RF가 평균장·최근접조회를 확실히 능가하며, projection ceiling과의 간극이 CNN(Stage 2-B) 도입 근거.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>방법별 성능 — IoU(저유속 하위10% 영역 일치도)</h3>
+        <p class="sub">test 10케이스 중앙값 · 높을수록 좋음</p>
+        <div id="c-ex3-iou"></div>
+        <p class="note">RF(0.718)가 평균장(0.597)·최근접조회(0.627)를 능가. projection ceiling(0.861)과의 간극(0.14)이 남은 회귀 오차.</p>
+      </div>
+      <div class="card">
+        <h3>방법별 성능 — 이상장 상대오차 anomL2</h3>
+        <p class="sub">공통평균 제거 후 상대 L2 · 낮을수록 좋음 · 평균장 예측=1.0 기준선</p>
+        <div id="c-ex3-anom"></div>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h3>학습곡선 (RF) — 학습표본 수에 따른 정확도</h3>
+        <p class="sub">N=243에서도 anomL2가 하강 중 → 데이터 추가로 개선 여지</p>
+        <div id="c-ex3-lc"></div>
+        <div class="legend" id="lg-ex3-lc"></div>
+      </div>
+      <div class="card">
+        <h3>학습곡선 — 저유속 영역 무게중심 오차</h3>
+        <p class="sub">cdist_mm · 낮을수록 좋음</p>
+        <div id="c-ex3-lc-cdist"></div>
+      </div>
+    </div>
+    <details class="rawtable"><summary>원자료 표 보기</summary>
+      <table class="raw" id="tbl-ex3"></table>
+    </details>
+  </section>
+
+  <footer>
+    漁벤져스 · 2026 제2회 Google–아주대학교 AI융합캡스톤디자인 · 데이터 출처: <code>03_논문/Experiment/EX1,EX2,EX2_예외검증,EX3</code>, <code>03_논문/Experiment/상수_목록.md</code>. 수치·해석 정본은 해당 원문서를 따른다.
+  </footer>
+</div>
+
+<script>
+/* ======================= theme toggle ======================= */
+(function(){
+  const btn = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  btn.addEventListener('click', ()=>{
+    const cur = root.getAttribute('data-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let next;
+    if(!cur) next = prefersDark ? 'light' : 'dark';
+    else next = cur === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+  });
+})();
+
+/* ======================= tiny SVG chart engine ======================= */
+const SVGNS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs){
+  const e = document.createElementNS(SVGNS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function fmt(n, d){ return Number(n).toFixed(d===undefined?2:d); }
+
+function niceTicks(min, max, count){
+  const span = max - min || 1;
+  const step = Math.pow(10, Math.floor(Math.log10(span/count)));
+  const err = span/count/step;
+  const mult = err >= 7.5 ? 10 : err >= 3.5 ? 5 : err >= 1.5 ? 2 : 1;
+  const niceStep = mult*step;
+  const niceMin = Math.floor(min/niceStep)*niceStep;
+  const niceMax = Math.ceil(max/niceStep)*niceStep;
+  const ticks = [];
+  for(let v = niceMin; v <= niceMax + 1e-9; v += niceStep) ticks.push(Math.round(v*1e6)/1e6);
+  return ticks;
+}
+
+function lineChart(mount, opts){
+  const W = opts.width||580, H = opts.height||300;
+  const M = opts.margin||{t:16,r:18,b:34,l:44};
+  const svg = el('svg',{viewBox:`0 0 ${W} ${H}`, class:'chart-svg', role:'img', 'aria-label': opts.title||''});
+  const plotW = W-M.l-M.r, plotH = H-M.t-M.b;
+
+  let xs=[], ys=[];
+  opts.series.forEach(s=> s.data.forEach(p=>{ xs.push(p[0]); ys.push(p[1]); }));
+  if(opts.yDomain){ ys.push(opts.yDomain[0], opts.yDomain[1]); }
+  const xMin = opts.xDomain? opts.xDomain[0] : Math.min(...xs);
+  const xMax = opts.xDomain? opts.xDomain[1] : Math.max(...xs);
+  const yTicksArr = niceTicks(Math.min(...ys), Math.max(...ys), 4);
+  const yMin = yTicksArr[0], yMax = yTicksArr[yTicksArr.length-1];
+
+  const X = x => M.l + (x-xMin)/(xMax-xMin||1)*plotW;
+  const Y = y => M.t + plotH - (y-yMin)/(yMax-yMin||1)*plotH;
+
+  // gridlines + y ticks
+  yTicksArr.forEach(t=>{
+    svg.appendChild(el('line',{class:'grid-line', x1:M.l, x2:W-M.r, y1:Y(t), y2:Y(t)}));
+    const lbl = el('text',{class:'tick-label', x:M.l-8, y:Y(t)+3, 'text-anchor':'end'});
+    lbl.textContent = opts.yTickFormat? opts.yTickFormat(t): fmt(t,2);
+    svg.appendChild(lbl);
+  });
+  // x ticks
+  const xTicksArr = opts.xTicks || xs.filter((v,i)=>xs.indexOf(v)===i).sort((a,b)=>a-b);
+  xTicksArr.forEach(t=>{
+    const lbl = el('text',{class:'tick-label', x:X(t), y:H-M.b+16, 'text-anchor':'middle'});
+    lbl.textContent = opts.xTickFormat? opts.xTickFormat(t): fmt(t,2);
+    svg.appendChild(lbl);
+  });
+  svg.appendChild(el('line',{class:'axis-line', x1:M.l, x2:W-M.r, y1:M.t+plotH, y2:M.t+plotH}));
+  svg.appendChild(el('line',{class:'axis-line', x1:M.l, x2:M.l, y1:M.t, y2:M.t+plotH}));
+
+  if(opts.xLabel){
+    const l = el('text',{class:'axis-label', x:(M.l+W-M.r)/2, y:H-4, 'text-anchor':'middle'});
+    l.textContent = opts.xLabel; svg.appendChild(l);
+  }
+  if(opts.yLabel){
+    const l = el('text',{class:'axis-label', x:0, y:0, 'text-anchor':'middle',
+      transform:`translate(${12},${M.t+plotH/2}) rotate(-90)`});
+    l.textContent = opts.yLabel; svg.appendChild(l);
+  }
+
+  // shaded band (e.g. regime knee)
+  if(opts.band){
+    svg.appendChild(el('rect',{class:'band', x:X(opts.band.x0), y:M.t, width:X(opts.band.x1)-X(opts.band.x0), height:plotH}));
+    if(opts.band.label){
+      const t = el('text',{class:'ref-label', x:(X(opts.band.x0)+X(opts.band.x1))/2, y:M.t+12, 'text-anchor':'middle'});
+      t.textContent = opts.band.label; svg.appendChild(t);
+    }
+  }
+  // reference vertical line
+  if(opts.refLine){
+    svg.appendChild(el('line',{class:'ref-line', x1:X(opts.refLine.x), x2:X(opts.refLine.x), y1:M.t, y2:M.t+plotH}));
+    const t = el('text',{class:'ref-label', x:X(opts.refLine.x)+4, y:M.t+10});
+    t.textContent = opts.refLine.label||''; svg.appendChild(t);
+  }
+  // dashed reference horizontal (e.g. well-mixed = 1.0)
+  if(opts.refHLine!==undefined){
+    svg.appendChild(el('line',{class:'ref-line', x1:M.l, x2:W-M.r, y1:Y(opts.refHLine), y2:Y(opts.refHLine)}));
+  }
+
+  opts.series.forEach(s=>{
+    const pts = s.data.filter(p=>p[1]!==null);
+    const d = pts.map((p,i)=> (i===0?'M':'L') + X(p[0]).toFixed(1) + ',' + Y(p[1]).toFixed(1)).join(' ');
+    svg.appendChild(el('path',{class:'data-line', d, stroke:s.color, 'stroke-dasharray': s.dash||''}));
+    pts.forEach(p=>{
+      const c = el('circle',{class:'data-dot', cx:X(p[0]), cy:Y(p[1]), r:4, fill:s.color});
+      const title = el('title',{}); title.textContent = `${s.name}: ${opts.xLabel||'x'}=${fmt(p[0],2)}, ${fmt(p[1], opts.valDigits!==undefined?opts.valDigits:3)}`;
+      c.appendChild(title);
+      svg.appendChild(c);
+    });
+    if(s.directLabel){
+      const last = pts[pts.length-1];
+      const t = el('text',{class:'direct-label', x:X(last[0])+6, y:Y(last[1])+3, fill:s.color});
+      t.textContent = s.name;
+      svg.appendChild(t);
+    }
+  });
+
+  mount.appendChild(svg);
+  return {X,Y,svg};
+}
+
+function legend(mount, items){
+  items.forEach(it=>{
+    const d = document.createElement('div'); d.className='legend-item';
+    const sw = document.createElement('span');
+    sw.className = 'swatch' + (it.line? ' line':'');
+    sw.style.background = it.color;
+    d.appendChild(sw);
+    const t = document.createElement('span'); t.textContent = it.name;
+    d.appendChild(t);
+    mount.appendChild(d);
+  });
+}
+
+function barChart(mount, opts){
+  const W = opts.width||580, H = opts.height||300;
+  const M = opts.margin||{t:16,r:18,b:38,l:44};
+  const svg = el('svg',{viewBox:`0 0 ${W} ${H}`, class:'chart-svg'});
+  const plotW = W-M.l-M.r, plotH = H-M.t-M.b;
+  const cats = opts.categories;
+  const nSeries = opts.series.length;
+  const groupW = plotW/cats.length;
+  const barGap = 2, groupPad = 10;
+  const barW = (groupW - groupPad - barGap*(nSeries-1)) / nSeries;
+
+  let allVals = [];
+  opts.series.forEach(s=> s.values.forEach((v,vi)=>{
+    allVals.push(v);
+    if(s.whisk && s.whisk[vi]) allVals.push(s.whisk[vi][0], s.whisk[vi][1]);
+  }));
+  let yMin = Math.min(0, ...allVals), yMax = Math.max(...allVals);
+  const yTicksArr = niceTicks(yMin, yMax, 4);
+  yMin = Math.min(yTicksArr[0],0); yMax = yTicksArr[yTicksArr.length-1];
+  const Y = v => M.t + plotH - (v-yMin)/(yMax-yMin||1)*plotH;
+  const y0 = Y(0);
+
+  yTicksArr.forEach(t=>{
+    svg.appendChild(el('line',{class:'grid-line', x1:M.l, x2:W-M.r, y1:Y(t), y2:Y(t)}));
+    const lbl = el('text',{class:'tick-label', x:M.l-8, y:Y(t)+3, 'text-anchor':'end'});
+    lbl.textContent = opts.yTickFormat? opts.yTickFormat(t): fmt(t,2);
+    svg.appendChild(lbl);
+  });
+  svg.appendChild(el('line',{class:'axis-line', x1:M.l, x2:W-M.r, y1:y0, y2:y0}));
+
+  cats.forEach((cat,ci)=>{
+    const gx = M.l + ci*groupW + groupPad/2;
+    opts.series.forEach((s,si)=>{
+      const v = s.values[ci];
+      if(v===null || v===undefined) return;
+      const bx = gx + si*(barW+barGap);
+      const bh = Math.abs(Y(v)-y0);
+      const by = v>=0? Y(v): y0;
+      const r = el('rect',{class:'bar', x:bx, y:by, width:barW, height:Math.max(bh,1), fill:s.color, rx:3, ry:3});
+      const title = el('title',{}); title.textContent = `${s.name} · ${cat}: ${fmt(v, opts.valDigits!==undefined?opts.valDigits:3)}`;
+      r.appendChild(title);
+      svg.appendChild(r);
+      if(s.whisk && s.whisk[ci]){
+        const [lo,hi] = s.whisk[ci];
+        const cx = bx+barW/2;
+        svg.appendChild(el('line',{class:'whisker', x1:cx,x2:cx, y1:Y(hi), y2:Y(lo)}));
+        svg.appendChild(el('line',{class:'whisker', x1:cx-4,x2:cx+4, y1:Y(hi), y2:Y(hi)}));
+        svg.appendChild(el('line',{class:'whisker', x1:cx-4,x2:cx+4, y1:Y(lo), y2:Y(lo)}));
+      }
+    });
+    const lbl = el('text',{class:'tick-label', x:gx+ (groupW-groupPad)/2, y:H-M.b+16, 'text-anchor':'middle'});
+    lbl.textContent = cat;
+    svg.appendChild(lbl);
+  });
+
+  mount.appendChild(svg);
+}
+
+function fillTable(mount, headers, rows){
+  const thead = document.createElement('tr');
+  headers.forEach(h=>{ const th=document.createElement('th'); th.textContent=h; thead.appendChild(th); });
+  mount.appendChild(thead);
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    r.forEach(v=>{ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); });
+    mount.appendChild(tr);
+  });
+}
+
+/* ======================= EX1 ======================= */
+const ex1L      = [0.20,0.25,0.30,0.35,0.40,0.60,0.80,1.00];
+const ex1DOmean = [7.914,7.887,7.848,7.815,7.763,7.686,7.394,7.335];
+const ex1DOmin  = [7.039,7.108,6.819,6.573,6.470,6.773,5.987,6.511];
+const ex1Pe     = [67.0,60.4,55.0,53.2,50.9,49.9,48.8,48.8];
+
+lineChart(document.getElementById('c-ex1-do'), {
+  title:'EX1 DO vs L',
+  series:[
+    {name:'DO_mean (mg/L)', color:cvar('--series-1'), data: ex1L.map((l,i)=>[l, ex1DOmean[i]])},
+    {name:'DO_min (mg/L)', color:cvar('--series-2'), data: ex1L.map((l,i)=>[l, ex1DOmin[i]])},
+  ],
+  xLabel:'수조 길이 L (m)', yLabel:'DO (mg/L)',
+  xTicks: ex1L,
+  refLine:{x:0.47, label:'확정규격 L=0.47'},
+});
+legend(document.getElementById('lg-ex1-do'), [
+  {name:'DO_mean (mg/L)', color:'var(--series-1)', line:true},
+  {name:'DO_min (mg/L)', color:'var(--series-2)', line:true},
+]);
+
+lineChart(document.getElementById('c-ex1-pe'), {
+  series:[{name:'Pe_t', color:getComputedStyle(document.body).getPropertyValue('--series-3').trim() || '#1baf7a', data: ex1L.map((l,i)=>[l, ex1Pe[i]]), directLabel:true}],
+  xLabel:'수조 길이 L (m)', yLabel:'Pe_t (난류 Péclet)',
+  xTicks: ex1L,
+  band:{x0:0.28, x1:0.36, label:'전이(knee)'},
+  refLine:{x:0.47, label:'L=0.47'},
+});
+
+fillTable(document.getElementById('tbl-ex1'),
+  ['L (m)','V (L)','DO_mean (mg/L)','DO_min (mg/L)','Pe_t'],
+  ex1L.map((l,i)=>[l.toFixed(2), (l===0.20?2:l===0.25?4:l===0.30?7:l===0.35?11:l===0.40?16:l===0.60?54:l===0.80?128:250), ex1DOmean[i].toFixed(3), ex1DOmin[i].toFixed(3), ex1Pe[i].toFixed(1)])
+);
+
+/* ======================= 3D tank ======================= */
+(function(){
+  const stage = document.getElementById('stage');
+  const rig = document.createElement('div'); rig.className='rig';
+  stage.appendChild(rig);
+
+  // scale: tank 0.47 x 0.21 x 0.21 m -> px
+  const S = 480; // px per meter (scaled for view)
+  const Lm=0.47, Bm=0.21, Dm=0.21;
+  const Lp=Lm*S, Bp=Bm*S, Dp=Dm*S;
+
+  // 8 corners of box (x=length,y=width,z=height) centered at origin for rotation
+  function toPx(x,y,z){
+    return { x: (x-Lm/2)*S, y: (z-Dm/2)*-S, z: (y-Bm/2)*S };
+  }
+  function place(node, x,y,z){
+    node.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+  }
+
+  // wireframe edges of the tank box
+  const corners = [];
+  [0,Lm].forEach(x=> [0,Bm].forEach(y=> [0,Dm].forEach(z=> corners.push([x,y,z]) )));
+  const edgesIdx = [
+    [0,4],[1,5],[2,6],[3,7], // z edges (order depends on push order below fix)
+  ];
+  // simpler: build via explicit corner map
+  const P = {};
+  [0,Lm].forEach(x=> [0,Bm].forEach(y=> [0,Dm].forEach(z=>{ P[`${x}_${y}_${z}`] = toPx(x,y,z); })));
+  const edgeList = [
+    [[0,0,0],[Lm,0,0]], [[0,Bm,0],[Lm,Bm,0]], [[0,0,Dm],[Lm,0,Dm]], [[0,Bm,Dm],[Lm,Bm,Dm]],
+    [[0,0,0],[0,Bm,0]], [[Lm,0,0],[Lm,Bm,0]], [[0,0,Dm],[0,Bm,Dm]], [[Lm,0,Dm],[Lm,Bm,Dm]],
+    [[0,0,0],[0,0,Dm]], [[Lm,0,0],[Lm,0,Dm]], [[0,Bm,0],[0,Bm,Dm]], [[Lm,Bm,0],[Lm,Bm,Dm]],
+  ];
+  function addEdge(a,b){
+    const p1 = toPx(...a), p2 = toPx(...b);
+    const dx=p2.x-p1.x, dy=p2.y-p1.y, dz=p2.z-p1.z;
+    const len = Math.sqrt(dx*dx+dy*dy+dz*dz);
+    const e = document.createElement('div'); e.className='edge';
+    e.style.width = len+'px'; e.style.height='1.5px';
+    e.style.transformOrigin='0 50%';
+    const midStyle = `translate3d(${p1.x}px, ${p1.y}px, ${p1.z}px) rotateY(${Math.atan2(dz,dx)*-180/Math.PI}deg) rotateZ(${Math.atan2(dy,Math.sqrt(dx*dx+dz*dz))*180/Math.PI}deg)`;
+    e.style.transform = midStyle;
+    rig.appendChild(e);
+  }
+  edgeList.forEach(([a,b])=>addEdge(a,b));
+
+  // translucent bottom + water-surface faces for readability
+  function addFace(cx,cy,cz, w,h, rx,ry, color){
+    const f = document.createElement('div'); f.className='face';
+    f.style.width=w+'px'; f.style.height=h+'px';
+    f.style.marginLeft=(-w/2)+'px'; f.style.marginTop=(-h/2)+'px';
+    f.style.background = color||'';
+    const p = toPx(cx,cy,cz);
+    f.style.transform = `translate3d(${p.x}px,${p.y}px,${p.z}px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+    rig.appendChild(f);
+  }
+  addFace(Lm/2,Bm/2,0, Lp,Bp, 90,0); // bottom
+  addFace(Lm/2,Bm/2,Dm, Lp,Bp, 90,0); // water surface (top)
+
+  // aeration plume rod: axis (0.035,0.195), from z=0.02 up to 0.21
+  (function(){
+    const x=0.035, y=0.195, z0=0.02, z1=Dm;
+    const p0 = toPx(x,y,z0), p1 = toPx(x,y,z1);
+    const len = Math.abs(p1.y-p0.y);
+    const rod = document.createElement('div'); rod.className='plume-rod';
+    rod.style.width='6px'; rod.style.height=len+'px';
+    rod.style.marginLeft='-3px';
+    rod.style.background = 'linear-gradient(var(--series-2), transparent)';
+    rod.style.transform = `translate3d(${p0.x}px, ${p1.y}px, ${p0.z}px)`;
+    rig.appendChild(rod);
+
+    // 6 z_start marker dots along the rod
+    [0.02,0.05,0.08,0.11,0.14,0.17].forEach(zs=>{
+      const p = toPx(x,y,zs);
+      const dot = document.createElement('div'); dot.className='pt';
+      dot.style.width='7px'; dot.style.height='7px'; dot.style.margin='-3.5px 0 0 -3.5px';
+      dot.style.background = getComputedStyle(document.body).getPropertyValue('--series-2').trim() || '#eb6834';
+      dot.style.transform = `translate3d(${p.x}px, ${p.y}px, ${p.z}px)`;
+      rig.appendChild(dot);
+    });
+    const lp = toPx(x,y,z1);
+    const lbl = document.createElement('div'); lbl.className='pt-label';
+    lbl.textContent = '폭기 플룸';
+    lbl.style.transform = `translate3d(${lp.x}px, ${lp.y}px, ${lp.z}px) translate(10px,-24px)`;
+    rig.appendChild(lbl);
+  })();
+
+  // probes
+  const probes = [
+    {name:'S1 장축코너', x:0.455,y:0.195,z:0.105, color:'--series-1'},
+    {name:'S2 단축코너', x:0.015,y:0.015,z:0.105, color:'--series-3'},
+    {name:'S3 최원축',   x:0.455,y:0.015,z:0.105, color:'--series-4'},
+  ];
+  probes.forEach(pr=>{
+    const p = toPx(pr.x,pr.y,pr.z);
+    const dot = document.createElement('div'); dot.className='pt';
+    dot.style.background = getComputedStyle(document.body).getPropertyValue(pr.color).trim();
+    dot.style.transform = `translate3d(${p.x}px, ${p.y}px, ${p.z}px)`;
+    rig.appendChild(dot);
+    const lbl = document.createElement('div'); lbl.className='pt-label';
+    lbl.textContent = pr.name;
+    lbl.style.transform = `translate3d(${p.x}px, ${p.y}px, ${p.z}px) translate(10px,-8px)`;
+    rig.appendChild(lbl);
+  });
+
+  // rotation via drag
+  let rotX = -22, rotY = -32;
+  function applyRot(){ rig.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`; }
+  applyRot();
+  let dragging=false, lastX=0,lastY=0;
+  stage.addEventListener('pointerdown', e=>{ dragging=true; lastX=e.clientX; lastY=e.clientY; stage.setPointerCapture(e.pointerId); });
+  stage.addEventListener('pointerup', ()=> dragging=false);
+  stage.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    rotY += (e.clientX-lastX)*0.4;
+    rotX -= (e.clientY-lastY)*0.4;
+    rotX = Math.max(-85, Math.min(85, rotX));
+    lastX=e.clientX; lastY=e.clientY;
+    applyRot();
+  });
+})();
+
+/* ======================= EX2 z-sweep ======================= */
+const zStart = [0.02,0.05,0.08,0.11,0.14,0.17];
+const alphaG  = [0.1815,0.1768,0.1854,0.1945,0.2135,0.2436];
+const kla0D   = [2.928,2.497,2.212,1.896,1.507,1.151];
+const kla3D   = [2.703,2.305,2.030,1.743,1.382,1.051];
+
+function cvar(name){ return getComputedStyle(document.body).getPropertyValue(name).trim(); }
+
+lineChart(document.getElementById('c-ex2-kla'), {
+  series:[
+    {name:'K_La 0-D (1/h)', color:cvar('--series-1'), data: zStart.map((z,i)=>[z,kla0D[i]])},
+    {name:'K_La 3-D CFD (1/h)', color:cvar('--series-2'), data: zStart.map((z,i)=>[z,kla3D[i]])},
+  ],
+  xLabel:'z_start (m)', yLabel:'K_La (1/h)', xTicks: zStart,
+});
+legend(document.getElementById('lg-ex2-kla'), [
+  {name:'K_La 0-D', color:'var(--series-1)', line:true},
+  {name:'K_La 3-D CFD', color:'var(--series-2)', line:true},
+]);
+
+lineChart(document.getElementById('c-ex2-alpha'), {
+  series:[{name:'α_g', color:cvar('--series-6'), data: zStart.map((z,i)=>[z,alphaG[i]]), directLabel:false}],
+  xLabel:'z_start (m)', yLabel:'α_g (기포체적분율)', xTicks: zStart,
+});
+
+fillTable(document.getElementById('tbl-ex2-z'),
+  ['z_start (m)','H_p (m)','α_g','K_La 0-D (1/h)','K_La 3-D coarse (1/h)','레버 (%)'],
+  zStart.map((z,i)=>[z.toFixed(2), (0.21-z).toFixed(2), alphaG[i].toFixed(4), kla0D[i].toFixed(3), kla3D[i].toFixed(3), [100,85.3,75.1,64.5,51.1,38.9][i]])
+);
+
+/* ======================= EX2 실측 ======================= */
+barChart(document.getElementById('c-ex2-measkla'), {
+  categories:['z=0.02 (n=3)','z=0.08 (S4)','z=0.17 (S5)'],
+  series:[{name:'K_La 실측 (1/h, 25°C)', color:cvar('--series-1'),
+    values:[2.479,2.079,1.070], whisk:[[2.479-0.036,2.479+0.036],null,null]}],
+  yLabel:'K_La (1/h)',
+});
+
+barChart(document.getElementById('c-ex2-robust'), {
+  categories:['S1 장축코너','S2 단축코너','S3 최원축'],
+  series:[
+    {name:'K_La (1/h)', color:cvar('--series-1'), values:[2.502,2.437,2.497]},
+  ],
+  yLabel:'K_La (1/h)',
+});
+legend(document.getElementById('lg-ex2-robust'), [
+  {name:'K_La (1/h) · κ = 0.961 / 0.936 / 0.959 (CFD 대비)', color:'var(--series-1)'},
+]);
+
+fillTable(document.getElementById('tbl-ex2-meas'),
+  ['런','프로브','z_start (m)','K_La(25°C) 1/h','κ (실측/CFD)'],
+  [
+    ['S1','장축코너 (0.455,0.195,0.105)',0.02,2.502,0.961],
+    ['S2','단축코너 (0.015,0.015,0.105)',0.02,2.437,0.936],
+    ['S3','최원축 (0.455,0.015,0.105)',0.02,2.497,0.959],
+    ['S4','장축코너',0.08,2.079,1.063],
+    ['S5','장축코너',0.17,1.070,1.057],
+  ]
+);
+
+/* ======================= EX2 tmix ======================= */
+const tmixT = [200,400,600,900,1200];
+const tmixSeries = {
+  '장축코너/최원축': [2.04,2.45,2.47,2.28,1.90],
+  '장축코너/단축코너': [1.39,1.22,1.35,1.11,0.82],
+  '단축코너/최원축': [0.86,0.89,0.70,0.46,null],
+  '최원축/최원축': [0.62,0.66,0.47,0.18,-0.12],
+};
+const tmixColors = ['--series-1','--series-2','--series-3','--series-4'];
+lineChart(document.getElementById('c-ex2-tmix-traj'), {
+  series: Object.keys(tmixSeries).map((name,i)=>({
+    name, color: cvar(tmixColors[i]),
+    data: tmixT.map((t,j)=>[t, tmixSeries[name][j]]),
+  })),
+  xLabel:'주입 후 경과시간 t (s)', yLabel:'국소결손 ÷ 벌크 이론결손',
+  xTicks: tmixT,
+  refHLine: 1.0,
+  band:{x0:600, x1:1200, label:'baseline 표류로 근거 불가'},
+  valDigits:2,
+});
+legend(document.getElementById('lg-ex2-tmix-traj'), Object.keys(tmixSeries).map((name,i)=>({name, color:`var(${tmixColors[i]})`, line:true})));
+
+barChart(document.getElementById('c-ex2-tmix-peak'), {
+  categories:['장축/최원축','장축/단축','단축/최원축','최원축/최원축'],
+  series:[{name:'최대결손 배수 (균질값=1.0)', color:cvar('--series-5'),
+    values:[1.95,1.22,0.77,0.56],
+    whisk:[[1.95,2.16],[1.07,1.31],[0.77,1.02],[0.56,2.02]]}],
+  yLabel:'배수 (×)',
+});
+
+fillTable(document.getElementById('tbl-ex2-tmix'),
+  ['조건 (프로브/주입점)','t+200s','t+400s','t+600s','t+900s','t+1200s'],
+  Object.keys(tmixSeries).map(name=>[name, ...tmixSeries[name].map(v=> v===null? '—': v.toFixed(2))])
+);
+
+/* ======================= EX3 ======================= */
+const ex3Methods = ['baseline_meanfield','baseline_nn_retrieval','pod_projection_ceiling','pod_ridge','pod_rf'];
+const ex3IoU     = [0.597,0.627,0.861,0.563,0.718];
+const ex3AnomL2  = [1.000,0.917,0.293,0.703,0.612];
+const ex3Cdist   = [11.4,10.4,2.7,11.4,7.2];
+const ex3Colors  = ['--series-8','--series-4','--series-3','--series-2','--series-1'];
+
+barChart(document.getElementById('c-ex3-iou'), {
+  categories: ex3Methods.map(m=>m.replace('baseline_','').replace('pod_','')),
+  series:[{name:'IoU_med', color:cvar('--series-1'), values: ex3IoU}],
+  yLabel:'IoU (중앙값)',
+});
+barChart(document.getElementById('c-ex3-anom'), {
+  categories: ex3Methods.map(m=>m.replace('baseline_','').replace('pod_','')),
+  series:[{name:'anomL2 med', color:cvar('--series-2'), values: ex3AnomL2}],
+  yLabel:'anomL2 (중앙값)',
+});
+
+const ex3N = [30,60,120,180,243];
+const ex3LcAnom = [0.848,0.739,0.664,0.684,0.636];
+const ex3LcIoU  = [0.581,0.601,0.681,0.717,0.716];
+const ex3LcCdist= [12.1,7.9,8.0,8.3,6.7];
+
+lineChart(document.getElementById('c-ex3-lc'), {
+  series:[
+    {name:'anomL2', color:cvar('--series-2'), data: ex3N.map((n,i)=>[n, ex3LcAnom[i]])},
+    {name:'IoU_med', color:cvar('--series-1'), data: ex3N.map((n,i)=>[n, ex3LcIoU[i]])},
+  ],
+  xLabel:'학습 표본 수 N', yLabel:'anomL2 / IoU (0–1)', xTicks: ex3N,
+});
+legend(document.getElementById('lg-ex3-lc'), [
+  {name:'anomL2 (↓ 좋음)', color:'var(--series-2)', line:true},
+  {name:'IoU_med (↑ 좋음)', color:'var(--series-1)', line:true},
+]);
+
+lineChart(document.getElementById('c-ex3-lc-cdist'), {
+  series:[{name:'cdist_mm', color:cvar('--series-7'), data: ex3N.map((n,i)=>[n, ex3LcCdist[i]])}],
+  xLabel:'학습 표본 수 N', yLabel:'무게중심 오차 (mm)', xTicks: ex3N,
+});
+
+fillTable(document.getElementById('tbl-ex3'),
+  ['method','relL2','anomL2 med','IoU med','IoU min','cdist mm'],
+  [
+    ['baseline_meanfield',0.119,1.000,0.597,0.202,11.4],
+    ['baseline_nn_retrieval',0.109,0.917,0.627,0.263,10.4],
+    ['pod_projection_ceiling',0.033,0.293,0.861,0.494,2.7],
+    ['pod_ridge',0.111,0.703,0.563,0.293,11.4],
+    ['pod_rf',0.075,0.612,0.718,0.197,7.2],
+  ]
+);
+</script>
+</body>
+</html>

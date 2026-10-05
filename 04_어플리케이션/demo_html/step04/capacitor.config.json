@@ -1,0 +1,11 @@
+{
+  "appId": "com.eobengers.aquasense",
+  "appName": "漁벤져스",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

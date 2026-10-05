@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EX1 — 어항 크기 결정 실험 (팀 브리핑)</title>
+<style>
+  body{font-family:'Malgun Gothic','맑은 고딕',sans-serif;line-height:1.7;color:#222;
+       max-width:860px;margin:0 auto;padding:32px 24px;}
+  h1{font-size:1.6em;border-bottom:3px solid #1d6fb8;padding-bottom:10px;margin-bottom:4px;}
+  h2{font-size:1.2em;color:#1d6fb8;margin-top:34px;border-left:5px solid #1d6fb8;padding-left:10px;}
+  h3{font-size:1.02em;margin-top:20px;color:#444;}
+  .sub{color:#777;font-size:.9em;margin-top:2px;}
+  .tldr{background:#eef5fb;border:1px solid #cfe0f0;border-radius:8px;padding:14px 18px;margin:20px 0;}
+  .tldr b{color:#1d6fb8;}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92em;}
+  th,td{border:1px solid #ddd;padding:7px 9px;text-align:center;}
+  th{background:#f2f6fa;}
+  td.l,th.l{text-align:left;}
+  .hi{background:#fff6e5;font-weight:bold;}
+  .note{background:#faf7f0;border:1px solid #e8e0d0;border-radius:8px;padding:12px 16px;font-size:.92em;color:#555;}
+  .tech{background:#f6f8fa;border:1px solid #e2e6ea;border-radius:8px;padding:12px 16px;font-size:.9em;color:#555;margin:10px 0;}
+  .k{color:#1d6fb8;font-weight:bold;}
+  ul{margin:8px 0;}
+  li{margin:4px 0;}
+  .foot{margin-top:36px;padding-top:12px;border-top:1px solid #eee;color:#999;font-size:.85em;}
+  code{background:#eef1f3;padding:1px 5px;border-radius:4px;font-size:.9em;}
+</style>
+</head>
+<body>
+
+<h1>EX1 — 어항 크기 결정 실험</h1>
+<div class="sub">팀 漁벤져스 · 가정용 어항 DO 진단 디바이스 · 2026-07-12 · 담당 김강빈(유체)</div>
+
+<div class="tldr" style="border-left:5px solid #c77;background:#fff6f6;">
+⚠️ <b>완료된 브리핑 기록(historical).</b> 본 문서의 수온 25 °C·사육밀도(생물 소비) 설정은 EX1 당시 값이다.
+<b>2026-07-16 방향 전환</b>으로 생물 소비/생성은 어항별 BC로 분리·제거되고 수온은 실측값으로 두므로, EX1 이후 트랙(EX2·논문·ROM)에는 적용되지 않는다. 크기 결론은 이송·확산 스케일링이 주도해 유지된다.
+</div>
+
+<div class="tldr">
+<b>한 줄 요약.</b> 실험용 어항을 사기 전에 <b>CFD로 크기를 먼저 결정</b>했다.
+결과 → 저산소역이 의미 있게 나타나는 <b>어항 크기 범위는 가로 35~80 cm (11~128 L)</b>,
+대표 규격은 <b>60 cm급(54 L)</b>. 검토 중인 50 cm 어항(내부 47×21×21.5, ≈20 L)도 <b>안전 범위 안</b>.
+</div>
+
+<h2>1. 왜 했나 — 목적</h2>
+<p>제품의 핵심은 "단일 센서가 못 보는 어항 속 <span class="k">산소 공간구배(저산소역)</span>를 진단"하는 것.
+그러려면 <b>실험할 어항 크기</b>부터 정해야 한다. 너무 작으면 물이 다 섞여 진단할 구배가 없고,
+너무 크면 가정용이 아니고 계산도 무거워진다. <b>돈 쓰기 전에 시뮬레이션으로 "적당한 크기"를 먼저 찾자</b>가 EX1.</p>
+
+<h2>2. 핵심 아이디어 (직관)</h2>
+<p>에어펌프(2.5 W)는 <b>세기가 고정</b>이다. 이 고정된 펌프로:</p>
+<ul>
+  <li><b>작은 어항</b> → 펌프가 물 전체를 휘저어 산소가 <b>균일</b> (저산소역 없음).</li>
+  <li><b>큰 어항</b> → 펌프 물살이 먼 구석까지 못 가 <b>저산소역</b> 발생.</li>
+</ul>
+<p>따라서 "펌프가 감당 못 하기 시작하는 <b>어항 크기 경계</b>"가 존재한다. EX1은 그 경계를 찾는 실험이다.</p>
+
+<h2>3. 어떻게 했나 (방법 요약)</h2>
+<ul>
+  <li>어항 비율 <b>가로:세로:높이 = 2:1:1 고정</b>, 전체 크기(가로 L)만 0.2 m → 1.0 m로 바꿔가며 비교.</li>
+  <li>물의 <b>유동 + 산소(DO) 이송</b>을 CFD(OpenFOAM)로 정상상태까지 풀어, 각 크기의 산소 분포를 얻음.</li>
+  <li>바닥 중앙 폭기, 수온 25 °C, 사육밀도 5 g/L(가벼운 편)로 고정.</li>
+  <li>크기별로 두 가지를 측정: ① <b>산소 분포</b>(평균·최저), ② <b>유동 레짐 지표</b>(무차원수 Pe_t).</li>
+</ul>
+<div class="tech">
+<b>기술 상세 (스킵 가능).</b> 물리적으로 유동장은 폭기 위치에만, DO는 그 유동 위에서 수온에만 종속(단방향 결합)이라
+"유동을 풀고 그 위에 DO"로 분리해 값싸게 계산. 레짐 지표는 난류 Péclet
+<code>Pe_t = U₀·Lc / D_eff</code> (이송/확산 균형). Lc = 플룸에서 가장 먼 구석까지 거리.
+</div>
+
+<h2>4. 결과</h2>
+
+<h3>4-1. 크기가 커질수록 평균 산소가 떨어진다 (뚜렷)</h3>
+<table>
+<tr><th>가로 L</th><th>부피</th><th>평균 DO</th><th>최저 DO(구석)</th><th>포화(8.24) 대비 결손</th></tr>
+<tr><td>0.2 m</td><td>2 L</td><td>7.91</td><td>7.04</td><td>0.33</td></tr>
+<tr><td>0.4 m</td><td>16 L</td><td>7.76</td><td>6.47</td><td>0.48</td></tr>
+<tr><td>0.6 m</td><td>54 L</td><td>7.69</td><td>6.77</td><td>0.55</td></tr>
+<tr><td>0.8 m</td><td>128 L</td><td>7.39</td><td>5.99</td><td>0.85</td></tr>
+<tr><td>1.0 m</td><td>250 L</td><td>7.34</td><td>6.51</td><td>0.90</td></tr>
+</table>
+<p>→ 고정 펌프가 큰 부피를 균일하게 산소화하지 못한다는 <b>프로젝트 명제를 데이터로 확인</b>. (단위 mg/L)</p>
+
+<h3>4-2. 유동 레짐 경계 = 가로 30~35 cm (핵심)</h3>
+<p>레짐 지표 Pe_t를 0.2~0.4 구간에서 세밀히 보면, 작은 어항에서 높다가 <b>급락 후 평탄</b>해진다.
+평탄해지기 시작하는 "무릎"이 <span class="k">가로 30~35 cm (7~11 L)</span>.</p>
+<table>
+<tr><th>가로 L</th><th>부피</th><th>Pe_t</th><th>변화폭</th><th>해석</th></tr>
+<tr><td>0.20 m</td><td>2 L</td><td>67.0</td><td>—</td><td class="l">소형·잘 섞임(별종)</td></tr>
+<tr><td>0.25 m</td><td>4 L</td><td>60.4</td><td>−6.6</td><td class="l">전이</td></tr>
+<tr class="hi"><td>0.30 m</td><td>7 L</td><td>55.0</td><td>−5.4</td><td class="l">← 경계(무릎)</td></tr>
+<tr class="hi"><td>0.35 m</td><td>11 L</td><td>53.2</td><td>−1.8</td><td class="l">← 자기유사 레짐 시작</td></tr>
+<tr><td>0.40 m</td><td>16 L</td><td>50.9</td><td>−2.3</td><td class="l">평탄(~49로 수렴)</td></tr>
+</table>
+<p>즉 <b>가로 35 cm 이상</b>이면 어항들이 서로 "물리적으로 같은 레짐"(대표성 있음)이 된다.</p>
+
+<h2>5. 결론 — 어항 크기 확정</h2>
+<ul>
+  <li><b>대표성 있는 레짐 하한:</b> 가로 <b>35 cm (11 L)</b>.</li>
+  <li><b>가정용 현실성·계산 신뢰 상한:</b> 가로 <b>80 cm (128 L)</b>.</li>
+  <li><b>→ 유의미 실험/구매 범위: 가로 35~80 cm (11~128 L).</b></li>
+  <li><b>추천 규격: 60×30×30 cm (54 L)</b> — 레짐 한복판, 신호 뚜렷, 시장 표준.</li>
+</ul>
+<div class="note">
+<b>구매 후보 검토.</b> 50 cm 어항(내부 47×21×21.5 cm, ≈20 L): 가로 47 cm·비율 ≈2.2:1:1 →
+<b>안전 범위 안 + 비율도 우리 기준(2:1:1)에 부합</b>. 다만 20 L로 작은 쪽이라 저산소 신호는 "중간".
+더 뚜렷한 신호를 원하면 60 cm급이 한 수 위.
+</div>
+
+<h2>6. 한계 (정직하게)</h2>
+<ul>
+  <li>가벼운 사육(5 g/L)이라 저산소 신호가 전반적으로 약함(최저 DO도 6 mg/L 이상 = 어류엔 안전 수준).</li>
+  <li>대형(80 cm~) 케이스는 격자상 플룸 해상도가 떨어져 결론 신뢰 낮음. (경계 판정 구간 20~40 cm는 고해상이라 신뢰.)</li>
+  <li>일부 입력값(폭기 밀도 등)은 가정치 → 절대값은 추후 실측 캘리브레이션 대상. 단 <b>상대 크기 비교</b>엔 영향 적음.</li>
+</ul>
+
+<h2>7. 다음 단계</h2>
+<ul>
+  <li>확정 크기(60 cm 또는 50 cm 후보)에서 <b>본 실험 = 폭기 위치 스윕(3D)</b> → 저산소역 위치 라이브러리 구축.</li>
+  <li>(선택) 대형 케이스 격자 세분·고밀도 사육으로 신호 보강.</li>
+</ul>
+
+<div class="foot">
+漁벤져스 · 2026 Google–아주대 AI융합캡스톤디자인 · EX1 종료 기록<br>
+상세 데이터: <code>EX1/EX1_결과.md</code> · 방법: <code>EX1/EX1_방법론.md</code> · 케이스: <code>EX1/case/</code>
+</div>
+
+</body>
+</html>

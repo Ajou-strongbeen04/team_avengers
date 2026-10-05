@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX2 CFD_v2 · 폭기 부력 소스. F_air/rho = alpha_g*g [m/s^2]
+| alpha_g 는 Q_air=1.2 L/min 실측 + W 되먹임의 자기일관 고정점                         |
+|  부력쪽 alpha_g는 물리 고정(캘리브레이션 자유도 아님) — 전달쪽 a=6a_g/d_b만.   |
+|  ※ ESI 버전에 따라 injectionRateSuSp ↔ sources 키 상이 → 에러시 교체         |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object fvOptions; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+airLift
+{
+    type            vectorSemiImplicitSource;
+    selectionMode   cellZone;
+    cellZone        plume;
+    volumeMode      specific;               // 단위체적당 [m/s^2]
+    injectionRateSuSp
+    {
+        U           ((0 0 1.796) 0);   // Su = alpha_g*g, Sp=0  [stage2 자기일관 alpha_g=0.1830]
+    }
+}
+
+// ************************************************************************* //

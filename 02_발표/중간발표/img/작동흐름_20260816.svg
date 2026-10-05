@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+<rect width="1280" height="720" fill="#FFFFFF"/>
+<text x="40" y="54" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="27" font-weight="700" fill="#111111">어떻게 작동하는가</text>
+<text x="40" y="84" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#666666">사진 한 장과 수온 · 탁도 두 지표만으로 수조의 상태를 추정합니다</text>
+<rect x="1040" y="40" width="13" height="13" rx="3" fill="#FCF4E6" stroke="#B07A1E" stroke-width="1.6"/>
+<text x="1060" y="51" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" fill="#555555">AI</text>
+<rect x="1100" y="40" width="13" height="13" rx="3" fill="#EAF1F8" stroke="#1F4E79" stroke-width="1.6"/>
+<text x="1120" y="51" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" fill="#555555">물리 법칙</text>
+<rect x="40" y="116" width="360" height="48" rx="24" fill="#F4F4F4"/>
+<text x="220" y="141" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" font-weight="700" fill="#333333">어항 사진 1장</text>
+<text x="220" y="157" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" fill="#888888">처음 한 번만</text>
+<line x1="220" y1="164" x2="220" y2="184" stroke="#CCCCCC" stroke-width="1.5"/>
+<path d="M 215 180 L 220 188 L 225 180 Z" fill="#CCCCCC"/>
+<rect x="40" y="190" width="360" height="258" rx="10" fill="#FCF4E6" stroke="#E8D3A8" stroke-width="1.5"/>
+<text x="70" y="242" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="34" font-weight="700" fill="#B07A1E">①</text>
+<text x="112" y="240" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="700" letter-spacing="0.5" fill="#B07A1E">AI가 하는 일</text>
+<text x="70" y="308" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="44" font-weight="800" letter-spacing="2" fill="#111111">본 다</text>
+<text x="71" y="356" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" fill="#3A3A3A">어항 사진에서</text>
+<text x="71" y="383" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" fill="#3A3A3A">무엇이 · 어디에 · 얼마나 큰지</text>
+<text x="71" y="410" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" fill="#3A3A3A">읽어냅니다</text>
+<rect x="460" y="116" width="360" height="48" rx="24" fill="#F4F4F4"/>
+<text x="640" y="141" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" font-weight="700" fill="#333333">센서 2개 (수온 · 탁도)</text>
+<text x="640" y="157" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" fill="#888888">계속 측정</text>
+<line x1="640" y1="164" x2="640" y2="184" stroke="#CCCCCC" stroke-width="1.5"/>
+<path d="M 635 180 L 640 188 L 645 180 Z" fill="#CCCCCC"/>
+<rect x="460" y="190" width="360" height="258" rx="10" fill="#EAF1F8" stroke="#B9CFE4" stroke-width="1.5"/>
+<text x="490" y="242" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="34" font-weight="700" fill="#1F4E79">②</text>
+<text x="532" y="240" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="700" letter-spacing="0.5" fill="#1F4E79">물리 법칙이 하는 일</text>
+<text x="490" y="308" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="44" font-weight="800" letter-spacing="2" fill="#111111">계산한다</text>
+<text x="491" y="356" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" fill="#3A3A3A">눈에 보이지 않는 산소량을</text>
+<text x="491" y="383" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" fill="#3A3A3A">공식으로 계산하고</text>
+<text x="491" y="410" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" fill="#3A3A3A">위험 · 안전을 판정합니다</text>
+<rect x="880" y="190" width="360" height="258" rx="10" fill="#FCF4E6" stroke="#E8D3A8" stroke-width="1.5"/>
+<text x="910" y="242" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="34" font-weight="700" fill="#B07A1E">③</text>
+<text x="952" y="240" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="700" letter-spacing="0.5" fill="#B07A1E">AI가 하는 일</text>
+<text x="910" y="308" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="44" font-weight="800" letter-spacing="2" fill="#111111">알려준다</text>
+<text x="911" y="356" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" fill="#3A3A3A">지금 무엇을 하면 되는지</text>
+<text x="911" y="383" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" fill="#3A3A3A">사람이 읽는 문장으로</text>
+<text x="911" y="410" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="16" fill="#3A3A3A">설명합니다</text>
+<line x1="408" y1="386" x2="441" y2="386" stroke="#AAAAAA" stroke-width="2"/>
+<path d="M 440 379 L 452 386 L 440 393 Z" fill="#AAAAAA"/>
+<text x="430" y="370" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12.5" fill="#888888">읽어낸 어항 구조</text>
+<line x1="828" y1="386" x2="861" y2="386" stroke="#AAAAAA" stroke-width="2"/>
+<path d="M 860 379 L 872 386 L 860 393 Z" fill="#AAAAAA"/>
+<text x="850" y="370" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12.5" fill="#888888">위험 · 안전 판정</text>
+<line x1="1060" y1="448" x2="1060" y2="468" stroke="#CCCCCC" stroke-width="1.5"/>
+<path d="M 1055 464 L 1060 472 L 1065 464 Z" fill="#CCCCCC"/>
+<rect x="880" y="476" width="360" height="48" rx="24" fill="#F4F4F4"/>
+<text x="1060" y="501" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" font-weight="700" fill="#333333">휴대폰 알림</text>
+<text x="1060" y="517" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" fill="#888888">상태가 바뀌는 시점에만</text>
+<rect x="40" y="560" width="1200" height="96" rx="8" fill="#F7F7F7"/>
+<rect x="40" y="560" width="6" height="96" fill="#111111"/>
+<text x="76" y="602" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="24" font-weight="800" fill="#111111">AI는 <tspan fill="#B07A1E">보는 일</tspan>과 <tspan fill="#B07A1E">말하는 일</tspan>만 합니다.</text>
+<text x="76" y="638" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="24" font-weight="800" fill="#111111">위험한지 아닌지는 <tspan fill="#1F4E79">물리 법칙</tspan>이 판단합니다.</text>
+<text x="1204" y="612" text-anchor="end" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="14" fill="#777777">판정의 근거가</text>
+<text x="1204" y="634" text-anchor="end" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="14" fill="#777777">모델 안에 숫자로 남습니다</text>
+<text x="40" y="698" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" fill="#AAAAAA">상세 계산식과 검증 결과는 「주요 성과」 참조</text>
+</svg>

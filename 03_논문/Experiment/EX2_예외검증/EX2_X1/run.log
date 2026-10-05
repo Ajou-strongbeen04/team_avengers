@@ -1,0 +1,37 @@
+[ok] 대조군 확인: /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception/../EX2/CFD/study/coarse_0.02/200
+==============================================
+ EX_exception  case_su168   (Su = 1.684)
+ 시작: 2026년 07월 28일 화 오후 10:15:41
+==============================================
+[ok] fvOptions  Su = 1.684  (alpha_g = 0.1717)
+[WARN] system/blockMeshDict 가 대조군과 다릅니다 — 사과-대-사과 비교가 깨집니다.
+./Allrun: line 43: diff: command not found
+[WARN] system/controlDict 가 대조군과 다릅니다 — 사과-대-사과 비교가 깨집니다.
+./Allrun: line 43: diff: command not found
+[WARN] system/fvSchemes 가 대조군과 다릅니다 — 사과-대-사과 비교가 깨집니다.
+./Allrun: line 43: diff: command not found
+[WARN] system/fvSolution 가 대조군과 다릅니다 — 사과-대-사과 비교가 깨집니다.
+./Allrun: line 43: diff: command not found
+[WARN] system/topoSetDict 가 대조군과 다릅니다 — 사과-대-사과 비교가 깨집니다.
+./Allrun: line 43: diff: command not found
+[WARN] constant/transportProperties 가 대조군과 다릅니다 — 사과-대-사과 비교가 깨집니다.
+./Allrun: line 43: diff: command not found
+[ok] 대조군 대비 fvOptions 외 차이 없음 (위 WARN 없으면)
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception/case_su168
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception/case_su168
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception/case_su168
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception/case_su168 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception/case_su168
+
+== 벽시간 ==
+ExecutionTime = 1954.253 s  ClockTime = 1955 s
+ExecutionTime = 1954.39 s  ClockTime = 1955 s
+ExecutionTime = 1954.998 s  ClockTime = 1955 s
+
+== 판정 ==
+./Allrun: line 66: /c/Users/김강빈/AppData/Local/Microsoft/WindowsApps/python3: Permission denied
+
+ 종료: 2026년 07월 28일 화 오후 10:48:35
+
+완료 2026년 07월 28일 화 오후 10:48:35. 판정 결과를 README.md §4 표에 기입하십시오.

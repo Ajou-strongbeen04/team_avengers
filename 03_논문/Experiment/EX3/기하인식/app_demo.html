@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漁벤져스 스마트 어항 앱 데모</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 모바일 폰 모양 외곽선 지정 */
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            border: 12px solid #1e293b;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+
+    <div class="phone-container flex flex-col justify-between">
+        
+        <div class="bg-blue-600 text-white py-4 px-6 text-center font-bold shadow-md">
+            🐟 漁벤져스 스마트 어항 케어
+        </div>
+
+        <div class="flex-1 p-6 overflow-y-auto space-y-6">
+            
+            <div class="text-center">
+                <p class="text-sm text-gray-500">어항 실측 사이즈를 입력하고<br>정면 사진을 업로드하면<br>AI가 구조물의 실제 좌표(cm)를 계산합니다.</p>
+            </div>
+
+            <div id="errorBanner" class="hidden bg-red-50 border border-red-300 text-red-700 text-xs rounded-xl p-3 flex items-start justify-between gap-2">
+                <span id="errorText" class="flex-1"></span>
+                <button onclick="document.getElementById('errorBanner').classList.add('hidden')" class="font-bold text-red-500 leading-none">✕</button>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 space-y-3 shadow-sm">
+                <h3 class="text-sm font-bold text-gray-700">📏 어항 실측 사이즈 (cm)</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="text-xs text-gray-500">가로(너비)</label>
+                        <input type="number" id="tankWidth" min="1" placeholder="예: 60" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm" oninput="checkReady()">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">세로(높이)</label>
+                        <input type="number" id="tankHeight" min="1" placeholder="예: 36" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm" oninput="checkReady()">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">깊이</label>
+                        <input type="number" id="tankDepth" min="1" placeholder="예: 30" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm" oninput="checkReady()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-2 border-dashed border-gray-300 rounded-2xl p-4 text-center bg-white hover:border-blue-500 transition cursor-pointer" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="previewImage(event)">
+                <div id="uploadPlaceholder">
+                    <span class="text-4xl">📸</span>
+                    <p class="text-sm font-semibold text-gray-600 mt-2">어항 사진 선택하기</p>
+                    <p class="text-xs text-gray-400 mt-1">클릭하여 이미지 업로드</p>
+                </div>
+                <img id="imagePreview" class="hidden w-full h-40 object-cover rounded-xl" />
+            </div>
+
+            <button id="analyzeBtn" onclick="analyzeAquarium()" class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-blue-600 active:scale-95 transition disabled:bg-gray-300" disabled>
+                Gemini 3D 좌표 분석 시작
+            </button>
+
+            <div id="loading" class="hidden text-center space-y-2">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
+                <p class="text-sm text-blue-500 font-semibold">Gemini 2.5 Flash 분석 중...</p>
+            </div>
+
+            <div id="resultArea" class="hidden space-y-3">
+                <div>
+                    <h3 class="text-sm font-bold text-gray-700 mb-2">📊 추출된 구조물 실제 좌표 (cm)</h3>
+                    <div id="resultCards" class="space-y-2"></div>
+                </div>
+
+                <div id="diagramArea" class="space-y-2"></div>
+
+                <div>
+                    <button onclick="document.getElementById('jsonOutput').classList.toggle('hidden')" class="text-xs text-blue-500 underline">JSON 원본 보기/숨기기</button>
+                    <pre id="jsonOutput" class="hidden bg-gray-900 text-green-400 text-xs p-4 rounded-xl overflow-x-auto max-h-60 font-mono mt-2"></pre>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-white border-t border-gray-200 py-3 flex justify-around text-xs text-gray-400 font-medium">
+            <div class="text-blue-500 text-center cursor-pointer">
+                <span class="text-lg block">🔍</span>
+                AI 분석
+            </div>
+            <div class="text-center cursor-not-allowed">
+                <span class="text-lg block">🌡️</span>
+                센서 모니터링
+            </div>
+            <div class="text-center cursor-not-allowed">
+                <span class="text-lg block">🔔</span>
+                위험 알림
+            </div>
+        </div>
+
+    </div>
+    <script src="config.js"></script>
+    <script>
+        // 올바른 구글 API 키 고정
+        const API_KEY = window.GEMINI_API_KEY || ""; 
+
+        let base64Image = "";
+
+        // alert() 대신 화면 안에 조용히 에러 배너로 표시
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('errorBanner').classList.remove('hidden');
+        }
+
+        // 구조물 좌표를 카드 리스트로 렌더링
+        function renderCards(items) {
+            document.getElementById('resultCards').innerHTML = items.map(item => `
+                <div class="bg-white rounded-xl p-3 shadow-sm flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700">${item.object}</span>
+                    <span class="text-xs text-gray-500 font-mono">X:${item.coordinates_cm.x} Y:${item.coordinates_cm.y} Z:${item.coordinates_cm.z} cm</span>
+                </div>
+            `).join('');
+        }
+
+        // 어항 실측 사이즈 비율에 맞춘 2D 배치도(SVG) 생성
+        function renderDiagram(points, opts) {
+            const { width = 300, maxH, maxV, keyH, keyV, invertV, labelH, labelV, title } = opts;
+            const height = Math.max(70, Math.min(220, width * (maxV / maxH)));
+            const pad = 22;
+            const plotW = width - pad * 2;
+            const plotH = height - pad * 2;
+
+            const toX = v => pad + (v / maxH) * plotW;
+            const toY = v => invertV
+                ? pad + plotH - (v / maxV) * plotH
+                : pad + (v / maxV) * plotH;
+
+            const dots = points.map(p => {
+                const cx = toX(p.coordinates_cm[keyH]);
+                const cy = toY(p.coordinates_cm[keyV]);
+                const label = p.object.length > 6 ? p.object.slice(0, 6) + '…' : p.object;
+                return `
+                    <circle cx="${cx}" cy="${cy}" r="5" fill="#3b82f6" stroke="white" stroke-width="1.5">
+                        <title>${p.object} (${p.coordinates_cm[keyH]}, ${p.coordinates_cm[keyV]}cm)</title>
+                    </circle>
+                    <text x="${cx}" y="${cy - 8}" font-size="8" text-anchor="middle" fill="#1e3a8a">${label}</text>
+                `;
+            }).join('');
+
+            return `
+                <div class="bg-white rounded-xl p-2 shadow-sm">
+                    <p class="text-xs font-semibold text-gray-600 mb-1">${title}</p>
+                    <svg viewBox="0 0 ${width} ${height}" class="w-full">
+                        <rect x="${pad}" y="${pad}" width="${plotW}" height="${plotH}" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+                        ${dots}
+                        <text x="${pad}" y="${height - 4}" font-size="8" fill="#64748b">${labelH} →</text>
+                        <text x="6" y="${pad + 4}" font-size="8" fill="#64748b" transform="rotate(-90 6 ${pad + 4})">${labelV} →</text>
+                    </svg>
+                </div>
+            `;
+        }
+
+        // 이미지 + 어항 사이즈가 모두 준비됐을 때만 분석 버튼 활성화
+        function checkReady() {
+            const w = parseFloat(document.getElementById('tankWidth').value);
+            const h = parseFloat(document.getElementById('tankHeight').value);
+            const d = parseFloat(document.getElementById('tankDepth').value);
+            const sizeValid = w > 0 && h > 0 && d > 0;
+            document.getElementById('analyzeBtn').disabled = !(base64Image && sizeValid);
+        }
+
+        // 이미지 미리보기 및 Base64 변환
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('imagePreview').classList.remove('hidden');
+                document.getElementById('uploadPlaceholder').classList.add('hidden');
+
+                base64Image = e.target.result.split(',')[1];
+                checkReady();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Gemini Flash (latest) v1beta 호출 함수
+        async function analyzeAquarium() {
+            if (!base64Image) return;
+
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loading = document.getElementById('loading');
+            const resultArea = document.getElementById('resultArea');
+            const jsonOutput = document.getElementById('jsonOutput');
+
+            // UI 상태 전환
+            analyzeBtn.disabled = true;
+            loading.querySelector('p').textContent = "Gemini 2.5 Flash 분석 중...";
+            loading.classList.remove('hidden');
+            resultArea.classList.add('hidden');
+            document.getElementById('errorBanner').classList.add('hidden');
+
+            const promptText = `
+You are an expert in 3D spatial analysis for aquariums.
+Analyze the provided front-view photo of an aquarium and identify key structures (e.g., filter, rocks, plants, decorations).
+For each identified object, estimate its 3D relative coordinate (X, Y, Z) from 0 to 100 based on these exact rules:
+- X-axis (Width): Left edge is 0 -> Right edge is 100.
+- Y-axis (Height): Top water surface is 0 -> Bottom sand bed is 100.
+- Z-axis (Depth): Front glass panel is 0 -> Back wall panel is 100.
+
+Output MUST be a strictly formatted JSON array of objects, with no other text, markdown blocks, or explanation.
+Example Output Format:
+[
+  {
+    "object": "filter",
+    "coordinates": {"x": 15, "y": 45, "z": 80}
+  }
+]
+`;
+
+            // 이 계정의 무료 티어 쿼터가 있는 모델만 사용 (gemini-2.0-flash는 quota 0으로 확인됨)
+            const modelFallbacks = ["gemini-flash-latest"];
+
+            const requestBody = {
+                contents: [{
+                    parts: [
+                        { text: promptText },
+                        {
+                            inlineData: {
+                                mimeType: "image/jpeg",
+                                data: base64Image
+                            }
+                        }
+                    ]
+                }]
+            };
+
+            try {
+                let response, data;
+                const retriesPerModel = 6;      // 503(과부하)용 — 재시도해도 내 쿼터를 깎지 않음
+                const maxQuotaRetries = 1;      // 429(분당 한도 초과)용 — 재시도 자체가 쿼터를 더 쓰므로 최소화
+                let quotaRetryCount = 0;
+
+                outer:
+                for (const model of modelFallbacks) {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
+
+                    for (let attempt = 0; attempt < retriesPerModel; attempt++) {
+                        response = await fetch(url, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(requestBody)
+                        });
+                        data = await response.json();
+
+                        if (response.status === 429) {
+                            if (quotaRetryCount >= maxQuotaRetries) {
+                                // 한도 초과는 더 재시도하지 않고 바로 사용자에게 알림 (쿼터 추가 소모 방지)
+                                break outer;
+                            }
+                            quotaRetryCount++;
+                            const retryInfo = data?.error?.details?.find(
+                                d => d["@type"]?.includes("RetryInfo")
+                            );
+                            const suggestedSeconds = retryInfo ? parseFloat(retryInfo.retryDelay) : 30;
+                            const delayMs = Math.ceil(suggestedSeconds * 1000) + 500;
+
+                            console.warn(`${model} 429 한도 초과, 구글 권장 대기시간 ${delayMs}ms 후 1회만 재시도...`);
+                            document.querySelector('#loading p').textContent =
+                                `분당 요청 한도 초과, ${Math.ceil(delayMs / 1000)}초 대기 중...`;
+                            await new Promise(r => setTimeout(r, delayMs));
+                            continue;
+                        }
+
+                        // 503(모델 과부하)이면 짧게 대기 후 재시도 (쿼터와 무관)
+                        if (response.status === 503) {
+                            const delayMs = Math.min(1500 * Math.pow(2, attempt), 15000); // 지수 백오프, 최대 15초
+
+                            console.warn(`${model} 503 과부하, ${delayMs}ms 후 재시도 ${attempt + 1}/${retriesPerModel}...`);
+                            document.querySelector('#loading p').textContent =
+                                `과부하 감지, 재시도 중... (${attempt + 1}/${retriesPerModel})`;
+                            await new Promise(r => setTimeout(r, delayMs));
+                            continue;
+                        }
+                        break outer;
+                    }
+                    // 이 모델이 계속 실패하면 다음 모델로 넘어감
+                    console.warn(`${model} 계속 실패, 다음 모델로 전환합니다.`);
+                }
+
+                if (!response.ok) {
+                    console.error("구글 서버 에러 상세:", data);
+                    showError(`🚨 에러 발생! [코드: ${data.error?.code}] ${data.error?.message}`);
+                    return;
+                }
+
+                // Gemini가 뱉은 텍스트 가져오기
+                let rawText = data.candidates[0].content.parts[0].text;
+
+                // 🔥 [핵심 안전장치] AI가 뱉은 문자열에 마크다운(```json)이 섞여 있으면 깨끗하게 지워줍니다.
+                rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+
+                const relativeCoords = JSON.parse(rawText);
+
+                // 입력받은 어항 실측 사이즈(cm)로 상대좌표(0~100)를 실제 좌표로 환산
+                const tankWidth = parseFloat(document.getElementById('tankWidth').value);
+                const tankHeight = parseFloat(document.getElementById('tankHeight').value);
+                const tankDepth = parseFloat(document.getElementById('tankDepth').value);
+
+                const resultWithActual = relativeCoords.map(item => ({
+                    object: item.object,
+                    coordinates_cm: {
+                        x: Math.round((item.coordinates.x / 100) * tankWidth * 10) / 10,
+                        y: Math.round((item.coordinates.y / 100) * tankHeight * 10) / 10,
+                        z: Math.round((item.coordinates.z / 100) * tankDepth * 10) / 10
+                    }
+                }));
+
+                renderCards(resultWithActual);
+
+                document.getElementById('diagramArea').innerHTML =
+                    renderDiagram(resultWithActual, {
+                        maxH: tankWidth, maxV: tankDepth,
+                        keyH: 'x', keyV: 'z', invertV: true,
+                        labelH: '가로(cm)', labelV: '깊이(cm)',
+                        title: '📐 위에서 본 배치 (Top View)'
+                    }) +
+                    renderDiagram(resultWithActual, {
+                        maxH: tankWidth, maxV: tankHeight,
+                        keyH: 'x', keyV: 'y', invertV: false,
+                        labelH: '가로(cm)', labelV: '높이(cm, 위=수면)',
+                        title: '📐 옆에서 본 배치 (Side View)'
+                    });
+
+                jsonOutput.textContent = JSON.stringify(resultWithActual, null, 2);
+                resultArea.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("네트워크 에러 상세:", error);
+                showError(`❌ 시스템 오류: ${error.message} (Failed to fetch라면 CORS 문제일 수 있으니 Netlify Drop에 올려서 확인해보세요)`);
+            } finally {
+                loading.classList.add('hidden');
+                analyzeBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

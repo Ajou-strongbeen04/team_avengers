@@ -1,0 +1,31 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| 漁벤져스 EX3 A층 · 자동생성 (gen_cases.py) — 수정 금지                       |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object topoSetDict; }
+
+actions
+(
+    { name plumeCells; type cellSet; action new; source cylinderToCell;
+      point1 (0.02 0.035 0.02); point2 (0.02 0.035 0.21); radius 0.01; }
+    { name plume; type cellZoneSet; action new; source setToCellZone; set plumeCells; }
+    // obs0 rock L @(0.226,0.123) box
+    { name obs0Cells; type cellSet; action new; source boxToCell;
+      box (0.1706 0.0835 -0.0001) (0.2806 0.1635 0.1000); }
+    { name obs0; type cellZoneSet; action new; source setToCellZone; set obs0Cells; }
+    // obs1 rock S @(0.035,0.180) box
+    { name obs1Cells; type cellSet; action new; source boxToCell;
+      box (0.0148 0.1598 -0.0001) (0.0548 0.1998 0.0400); }
+    { name obs1; type cellZoneSet; action new; source setToCellZone; set obs1Cells; }
+    // obs2 rock S @(0.333,0.164) box
+    { name obs2Cells; type cellSet; action new; source boxToCell;
+      box (0.3128 0.1436 -0.0001) (0.3528 0.1836 0.0400); }
+    { name obs2; type cellZoneSet; action new; source setToCellZone; set obs2Cells; }
+    // obs3 plant S @(0.179,0.045) cylinder r=0.02 h=0.08
+    { name obs3Cells; type cellSet; action new; source cylinderToCell;
+      point1 (0.1791 0.0447 0.0); point2 (0.1791 0.0447 0.0800); radius 0.02; }
+    { name obs3; type cellZoneSet; action new; source setToCellZone; set obs3Cells; }
+    // obs4 rock M @(0.098,0.075) box
+    { name obs4Cells; type cellSet; action new; source boxToCell;
+      box (0.0632 0.0445 -0.0001) (0.1332 0.1045 0.0700); }
+    { name obs4; type cellZoneSet; action new; source setToCellZone; set obs4Cells; }
+);

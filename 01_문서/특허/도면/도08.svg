@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="600" viewBox="0 0 940 600" font-family="Noto Sans CJK KR, Malgun Gothic, sans-serif">
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker>
+  <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="none" stroke="#000" stroke-width="1.4"/></marker>
+  <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#000" stroke-width="0.7"/></pattern>
+  <pattern id="hatch2" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#000" stroke-width="0.7"/></pattern>
+  <pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#000"/></pattern>
+</defs>
+<rect width="940" height="600" fill="#fff"/>
+<text x="18" y="30" font-size="17" font-weight="bold">【도 8】</text>
+<text x="470.0" y="60" font-size="14" text-anchor="middle" font-weight="bold">저산소 위험구역과 비이온 암모니아 독성 위험구역의 어긋남</text>
+<rect x="70" y="110" width="360" height="180" fill="none" stroke="#000" stroke-width="1.6"/>
+<line x1="70" y1="128" x2="430" y2="128" stroke="#000" stroke-width="0.9" stroke-dasharray="6 3"/>
+<rect x="126" y="128" width="46" height="162" fill="none" stroke="#000" stroke-width="0.9" stroke-dasharray="5 3"/>
+<text x="149" y="306" font-size="11" text-anchor="middle" font-weight="normal">Ω_air</text>
+<text x="70" y="100" font-size="13" text-anchor="start" font-weight="bold">(a) 용존산소 DO 분포</text>
+<rect x="510" y="110" width="360" height="180" fill="none" stroke="#000" stroke-width="1.6"/>
+<line x1="510" y1="128" x2="870" y2="128" stroke="#000" stroke-width="0.9" stroke-dasharray="6 3"/>
+<rect x="566" y="128" width="46" height="162" fill="none" stroke="#000" stroke-width="0.9" stroke-dasharray="5 3"/>
+<text x="589" y="306" font-size="11" text-anchor="middle" font-weight="normal">Ω_air</text>
+<text x="510" y="100" font-size="13" text-anchor="start" font-weight="bold">(b) 비이온 암모니아 NH3 독성 분포</text>
+<ellipse cx="356" cy="250" rx="58" ry="34" fill="url(#hatch)" stroke="#000" stroke-width="2.4"/>
+<line x1="356" y1="250" x2="356" y2="322" stroke="#000" stroke-width="0.9"/>
+<circle cx="356" cy="250" r="2" fill="#000"/>
+<text x="362" y="326" font-size="12" text-anchor="start" font-weight="bold">161</text>
+<text x="364" y="340" font-size="11" text-anchor="start" font-weight="normal">저산소 위험구역</text>
+<text x="132" y="170" font-size="11" text-anchor="start" font-weight="normal">DO 高</text>
+<text x="320" y="170" font-size="11" text-anchor="start" font-weight="normal">DO 低</text>
+<ellipse cx="589" cy="200" rx="44" ry="62" fill="url(#hatch2)" stroke="#000" stroke-width="2.4"/>
+<line x1="589" y1="200" x2="710" y2="320" stroke="#000" stroke-width="0.9"/>
+<circle cx="589" cy="200" r="2" fill="#000"/>
+<text x="716" y="324" font-size="12" text-anchor="start" font-weight="bold">162</text>
+<text x="718" y="338" font-size="11" text-anchor="start" font-weight="normal">암모니아 독성 위험구역</text>
+<text x="660" y="170" font-size="11" text-anchor="start" font-weight="normal">pH 低 → 독성 低</text>
+<text x="540" y="282" font-size="11" text-anchor="start" font-weight="normal">pH 高</text>
+<rect x="70" y="380" width="800" height="66" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="470.0" y="409.9" font-size="11" text-anchor="middle" font-weight="normal">폭기 플룸에서는 CO2 가 탈기되어 국소 pH 가 상승한다 → f(NH3) 가 pH 1 상승당 약 10 배로 증가 →</text>
+<text x="470.0" y="423.9" font-size="11" text-anchor="middle" font-weight="normal">TAN 농도가 같아도 독성은 자릿수 단위로 달라진다. 반대로 정체역은 DO 는 낮으나 pH 도 낮아 독성은 상대적으로 낮다.</text>
+<rect x="70" y="466" width="800" height="44" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="470.0" y="491.9" font-size="11" text-anchor="middle" font-weight="bold">→ 융합 판정부(50)는 두 위험구역의 합집합에 대해 안전측 판정을 내리고, 그 어긋남을 별도로 표시한다.</text>
+<text x="70" y="552" font-size="11" text-anchor="start" font-weight="normal">단일 항목 지도 또는 단일 지점 계측으로는 이 어긋남을 원리적으로 판정할 수 없다.</text>
+</svg>

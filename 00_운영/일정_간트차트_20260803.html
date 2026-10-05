@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>漁벤져스 일정 간트차트 — 2026-07-11 ~ 2026-10-08</title>
+<style>
+body { font-family: -apple-system, "Apple SD Gothic Neo", sans-serif; font-size: 14px; line-height: 1.6; max-width: 1180px; margin: 24px auto; padding: 0 16px; color: #222; }
+h1 { font-size: 20px; border-bottom: 2px solid #333; padding-bottom: 6px; }
+h2 { font-size: 16px; margin-top: 30px; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 12px; }
+th, td { border: 1px solid #ccc; padding: 3px 4px; text-align: center; }
+th.task, td.task { text-align: left; white-space: nowrap; padding-left: 6px; }
+th.own, td.own { white-space: nowrap; font-size: 11px; color: #555; }
+thead th { background: #f2f2f2; font-weight: normal; font-size: 11px; }
+thead th.now { background: #ffe9a8; font-weight: bold; }
+td.now { background: #fffbe6; }
+.sat, .sun { background: #f8f8f8; }
+.done { background: #a9a9a9; }
+.bar { background: #4a7ab5; }
+.bar2 { background: #7aa5cf; }
+.crit { background: #c0504d; }
+.mile { background: #2e2e2e; color: #fff; font-weight: bold; }
+.grp td { background: #f0f4fa; text-align: left; font-weight: bold; }
+.grp-p td { background: #faf0f0; text-align: left; font-weight: bold; }
+tbody tr:hover td.task { background: #fffbe6; }
+.legend span { display: inline-block; padding: 2px 10px; margin-right: 8px; font-size: 12px; color: #fff; }
+.note { background: #fff6f6; border-left: 4px solid #c0504d; padding: 10px 14px; margin: 14px 0; }
+.note2 { background: #f5f8fc; border-left: 4px solid #4a7ab5; padding: 10px 14px; margin: 14px 0; }
+ul { margin: 6px 0; }
+</style>
+</head>
+<body>
+
+<h1>漁벤져스 일정 간트차트 — 2026-07-11 ~ 2026-10-08</h1>
+<p>작성 2026-08-03 · 시작점 = <strong>07-11 주제 전환 확정일</strong><br>
+근거: <code>03_논문/제출용/00_전략/타임라인_역산.md</code>, <code>01_문서/기타_보고_사항/특허_가출원/전자출원_실행가이드.md</code>, <code>03_논문/Experiment/EX2/CFD/진행상황_및_일정.md</code>, <code>00_운영/진행상황_타임라인_20260803.md</code></p>
+
+<div class="note">
+<strong>D = 2026-08-22 (중간발표).</strong> 최종발표(10-08)가 아니다.<br>
+<code>05_경영.md</code> §14가 D를 <strong>"최초 강제 공개일"</strong>로 정의하고, 팀 확인 결과 8/22 중간발표가 외부 공개다.<br>
+따라서 <strong>특허 출원(P)은 8/22 이전에 반드시 끝나야 한다.</strong> 원 역산표 권고(P = D−3주 = 08-01)는 이미 경과했다.<br>
+논문 프리프린트(X)는 D 이후로 미룬다 — 특허만 지키면 되고, 그때는 EX2·CFD 결과가 채워진 원고를 낼 수 있다.
+</div>
+
+<h2>1. 확정 일정</h2>
+<table>
+<tbody>
+<tr><td class="task">주제 전환 확정 (가두리 → 가정용 어항 DO)</td><td>2026-07-11 (토)</td><td class="own">기점</td></tr>
+<tr><td class="task">교수 2차 미팅</td><td>2026-08-04 (화)</td><td class="own">D − 18일</td></tr>
+<tr><td class="task"><strong>특허 출원 (P) — 목표</strong></td><td><strong>2026-08-12 (수)</strong></td><td class="own">D − 10일</td></tr>
+<tr><td class="task"><strong>특허 출원 (P) — 하드 마감</strong></td><td><strong>2026-08-19 (수)</strong></td><td class="own">D − 3일</td></tr>
+<tr><td class="task">발표자료 제출</td><td>2026-08-16 (일)</td><td class="own">D − 6일</td></tr>
+<tr><td class="task"><strong>중간발표 (D) = 최초 외부 공개</strong></td><td><strong>2026-08-22 (토)</strong></td><td class="own">기준점</td></tr>
+<tr><td class="task">Preprints.org 게시 (X)</td><td>2026-09-15 (화) 목표</td><td class="own">D + 24일</td></tr>
+<tr><td class="task">최종발표</td><td>2026-10-08 (목)</td><td class="own">D + 47일</td></tr>
+</tbody>
+</table>
+
+<h2>2. 전체 간트차트 — 07/11 ~ 10/08 (주 단위)</h2>
+
+<p class="legend">
+<span class="done">완료</span>
+<span class="crit">특허 (크리티컬 패스)</span>
+<span class="bar">기술 트랙 (예정)</span>
+<span class="bar2">발표 준비</span>
+<span class="mile">마일스톤</span>
+</p>
+
+<table>
+<thead>
+<tr>
+<th class="task">작업</th><th class="own">담당</th>
+<th>7/11<br>~17</th><th>7/18<br>~24</th><th>7/25<br>~31</th>
+<th class="now">8/1<br>~7</th><th>8/8<br>~14</th><th>8/15<br>~21</th><th>8/22<br>~28</th>
+<th>8/29<br>~9/4</th><th>9/5<br>~11</th><th>9/12<br>~18</th><th>9/19<br>~25</th><th>9/26<br>~10/2</th><th>10/3<br>~9</th>
+</tr>
+</thead>
+<tbody>
+
+<tr class="grp"><td colspan="15">🔵 논문 · 물리 트랙 (김강빈 · 최성준)</td></tr>
+
+<tr><td class="task">EX1 어항 크기 스윕</td><td class="own">김강빈</td>
+<td class="done"></td><td></td><td></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">EX3 CFD 데이터셋 생성 (GCP, 253/700)</td><td class="own">김강빈</td>
+<td class="done"></td><td class="done"></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">EX2 재폭기 전환 · 방법론 재설계</td><td class="own">김강빈</td>
+<td></td><td class="done"></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">ROM Stage 2A/2B · 조대 위험맵 검증</td><td class="own">김강빈</td>
+<td></td><td></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">논문 v3 골격 · EX2_X 1~4 게이트</td><td class="own">김강빈·최성준</td>
+<td></td><td></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">재폭기 파일럿 · 본시험 S1~S5</td><td class="own">김강빈·최성준</td>
+<td></td><td></td><td class="done"></td><td class="now done"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">CFD 재출발 (e02·e08·e17)</td><td class="own">김강빈</td>
+<td></td><td></td><td></td><td class="now done"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">e08 재실행 · 가상재폭기 5런 · 정량비교표</td><td class="own">김강빈·최성준</td>
+<td></td><td></td><td></td><td class="now bar"></td><td class="bar"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">논문 §4 재작성</td><td class="own">김강빈</td>
+<td></td><td></td><td></td><td class="now"></td><td class="bar"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">κ·잔차 최종값 확정 (§4.1)</td><td class="own">김강빈·최성준</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td></td><td class="bar"></td><td class="bar"></td><td class="bar"></td><td></td><td></td><td></td><td></td></tr>
+
+<tr class="grp"><td colspan="15">🔧 제품 · 하드웨어 트랙 (김강빈 · 최성준)</td></tr>
+
+<tr><td class="task">제품설계 사양서 · 센서 범위 확정</td><td class="own">김강빈</td>
+<td></td><td class="done"></td><td></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">탁도 C안 조사 → 폐기 → v3.1 freeze</td><td class="own">김강빈</td>
+<td></td><td></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">외피설계 v3 · STL · Fusion 회로도</td><td class="own">김강빈</td>
+<td></td><td></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">펌웨어 bringup · demo_v1 · demo_v2</td><td class="own">김강빈</td>
+<td></td><td></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">문서 불일치 해소 (SENSE 핀 · R_L)</td><td class="own">김강빈</td>
+<td></td><td></td><td></td><td class="now"></td><td class="bar"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr class="grp"><td colspan="15">💻 SW · 앱 트랙 (한규태 · 신동하)</td></tr>
+
+<tr><td class="task">기하인식 01~05 · VLM 파이프라인</td><td class="own">한규태·신동하</td>
+<td class="done"></td><td></td><td></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">ROM 이관 · rev.2 · rev.C</td><td class="own">한규태·신동하</td>
+<td></td><td></td><td class="done"></td><td class="now done"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">step01~03 앱 · 물리엔진 병합 · APK</td><td class="own">한규태·신동하</td>
+<td></td><td></td><td class="done"></td><td class="now done"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">정합성 5건 수정 · 폭기전력 환산 반영</td><td class="own">한규태·신동하</td>
+<td></td><td></td><td></td><td class="now bar"></td><td class="bar"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">EX3 5-fold CV 최종 결과</td><td class="own">한규태·신동하</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td></td><td class="bar"></td><td class="bar"></td><td class="bar"></td><td></td><td></td><td></td><td></td></tr>
+
+<tr class="grp-p"><td colspan="15">🔴 경영 · 특허 트랙 (송두산) — 크리티컬 패스</td></tr>
+
+<tr><td class="task">실험장소·특허경로 조사</td><td class="own">송두산</td>
+<td class="done"></td><td></td><td></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">발명설명서 정본 · 전자출원 가이드</td><td class="own">김강빈·송두산</td>
+<td></td><td></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">경영 점검브리핑 · 05_경영 전면 갱신</td><td class="own">송두산</td>
+<td></td><td></td><td class="done"></td><td class="now done"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">손익계산서 v13 · 발표요약</td><td class="own">송두산</td>
+<td></td><td></td><td></td><td class="now done"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task"><strong>특허 사전준비 6항목</strong> (고객번호·승계서·PDF)</td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now crit"></td><td class="crit"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task"><strong>특허로 출원 제출 (P)</strong></td><td class="own">송두산</td>
+<td></td><td></td><td></td><td class="now"></td><td class="mile">P</td><td class="mile">막</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr class="grp"><td colspan="15">🟦 발표 · 행정</td></tr>
+
+<tr><td class="task">활동보고서 1~4주차</td><td class="own">전원</td>
+<td class="done"></td><td class="done"></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">정기회의 (제6회·긴급·제7회)</td><td class="own">전원</td>
+<td></td><td class="done"></td><td class="done"></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">교수 2차 미팅</td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now mile">★</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">v3.1 개정제안 승인 결정</td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now mile">◆</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">발표자료 작성</td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now"></td><td class="bar2"></td><td class="bar2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task"><strong>발표자료 제출</strong></td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td class="mile">▲</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">리허설</td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td class="bar2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task"><strong>중간발표 (D)</strong></td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td></td><td class="mile">D</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">프리프린트 원고 v1 · 교차검토</td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td></td><td></td><td class="bar2"></td><td class="bar2"></td><td class="bar2"></td><td></td><td></td><td></td></tr>
+
+<tr><td class="task"><strong>Preprints.org 게시 (X)</strong></td><td class="own">한규태</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td class="mile">X</td><td></td><td></td><td></td></tr>
+
+<tr><td class="task">DOI 반영 · 최종발표 자료</td><td class="own">신동하</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="bar2"></td><td class="bar2"></td><td></td></tr>
+
+<tr><td class="task"><strong>최종발표</strong></td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="mile">최종</td></tr>
+
+<tr><td class="task">영문 원고 초고 → Sensors 투고</td><td class="own">전원</td>
+<td></td><td></td><td></td><td class="now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="bar"></td></tr>
+
+</tbody>
+</table>
+
+<p style="font-size:12px;color:#555">
+노란 열 = 이번 주(8/1~7) · ★ 교수 2차 미팅 · ◆ v3.1 승인 결정 · <strong>P</strong> 특허 출원 목표(8/12) · <strong>막</strong> 특허 하드 마감(8/19) · ▲ 발표자료 제출(8/16) · <strong>D</strong> 중간발표 = 최초 공개(8/22) · <strong>X</strong> 프리프린트 게시(~9/15)
+</p>
+
+<h2>3. 상세 간트차트 — 8/3 ~ 8/22 (중간발표까지 19일, 일 단위)</h2>
+
+<table>
+<thead>
+<tr>
+<th class="task">작업</th><th class="own">담당</th>
+<th class="now">3<br>월</th><th>4<br>화</th><th>5<br>수</th><th>6<br>목</th><th>7<br>금</th><th class="sat">8<br>토</th><th class="sun">9<br>일</th>
+<th>10<br>월</th><th>11<br>화</th><th>12<br>수</th><th>13<br>목</th><th>14<br>금</th><th class="sat">15<br>토</th><th class="sun">16<br>일</th>
+<th>17<br>월</th><th>18<br>화</th><th>19<br>수</th><th>20<br>목</th><th>21<br>금</th><th class="sat">22<br>토</th>
+</tr>
+</thead>
+<tbody>
+
+<tr class="grp-p"><td colspan="22">🔴 특허 트랙 — 크리티컬 패스</td></tr>
+
+<tr><td class="task">특허고객번호 발급 (5인)</td><td class="own">전원</td>
+<td class="now"></td><td class="crit"></td><td class="crit"></td><td class="crit"></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">전자문서 이용신고 · 인증서 등록</td><td class="own">김강빈</td>
+<td class="now"></td><td class="crit"></td><td class="crit"></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">재학증명서 / 연령 감면 증빙</td><td class="own">김강빈</td>
+<td class="now"></td><td></td><td class="crit"></td><td class="crit"></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">권리승계 확인서 5인 서명</td><td class="own">송두산</td>
+<td class="now"></td><td class="crit"></td><td class="crit"></td><td class="crit"></td><td class="crit"></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">§8.4 좌표계 충돌 결정</td><td class="own">김강빈·한규태</td>
+<td class="now"></td><td></td><td class="crit"></td><td class="crit"></td><td class="crit"></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">발명설명서 팀 검토·확정</td><td class="own">전원</td>
+<td class="now"></td><td></td><td class="crit"></td><td class="crit"></td><td class="crit"></td><td class="sat crit"></td><td class="sun crit"></td>
+<td class="crit"></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">PDF 변환 · 서식 확인</td><td class="own">김강빈</td>
+<td class="now"></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td class="crit"></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task"><strong>특허로 출원 제출 (P)</strong></td><td class="own">송두산</td>
+<td class="now"></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td class="mile">P</td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td class="mile">막</td><td></td><td></td><td class="sat"></td></tr>
+
+<tr class="grp"><td colspan="22">🔵 기술 트랙</td></tr>
+
+<tr><td class="task">e08 재실행 (~99분)</td><td class="own">김강빈</td>
+<td class="now bar"></td><td class="bar"></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">가상 재폭기 5런 (P1)</td><td class="own">김강빈·최성준</td>
+<td class="now"></td><td></td><td class="bar"></td><td class="bar"></td><td class="bar"></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">정량비교표 · 미결 #9·#10 (P2)</td><td class="own">김강빈</td>
+<td class="now"></td><td></td><td></td><td></td><td></td><td class="sat bar"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">v3.1 개정제안 승인 결정</td><td class="own">전원</td>
+<td class="now"></td><td></td><td></td><td></td><td></td><td class="sat mile">◆</td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">논문 §4 재작성 (P5)</td><td class="own">김강빈</td>
+<td class="now"></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun bar"></td>
+<td class="bar"></td><td class="bar"></td><td class="bar"></td><td class="bar"></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">앱 정합성 5건 수정</td><td class="own">한규태·신동하</td>
+<td class="now"></td><td></td><td class="bar"></td><td class="bar"></td><td class="bar"></td><td class="sat bar"></td><td class="sun bar"></td>
+<td class="bar"></td><td class="bar"></td><td class="bar"></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">API 키 회전 (즉시)</td><td class="own">한규태</td>
+<td class="now mile">!</td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr class="grp"><td colspan="22">🟦 발표 준비</td></tr>
+
+<tr><td class="task">교수 2차 미팅</td><td class="own">전원</td>
+<td class="now"></td><td class="mile">★</td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">발표자료 작성</td><td class="own">전원</td>
+<td class="now"></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td class="bar2"></td><td class="bar2"></td><td class="bar2"></td><td class="bar2"></td><td class="bar2"></td><td class="sat bar2"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task"><strong>발표자료 제출</strong></td><td class="own">전원</td>
+<td class="now"></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun mile">▲</td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td></tr>
+
+<tr><td class="task">리허설</td><td class="own">전원</td>
+<td class="now"></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td class="bar2"></td><td class="bar2"></td><td class="bar2"></td><td class="bar2"></td><td class="bar2"></td><td class="sat"></td></tr>
+
+<tr><td class="task"><strong>중간발표 (D)</strong></td><td class="own">전원</td>
+<td class="now"></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat"></td><td class="sun"></td>
+<td></td><td></td><td></td><td></td><td></td><td class="sat mile">D</td></tr>
+
+</tbody>
+</table>
+
+<div class="note2">
+<strong>후속 기한 (P = 08-12 가정 — P 확정 즉시 실제 날짜로 교체)</strong>
+<ul>
+<li>2027-07-12 (P+11개월) — 정식출원 원고 착수</li>
+<li><strong>2027-08-12 (P+1년) — 국내우선권주장 정식출원 마감. 미이행 시 우선권 상실</strong></li>
+<li>2027-10-12 (P+1년 2개월) — 청구범위 보정 마감. 미이행 시 <strong>취하 간주</strong></li>
+</ul>
+</div>
+
+<h2>4. 이번 주에 반드시 움직여야 하는 것</h2>
+
+<table>
+<thead><tr><th class="task">언제</th><th class="task">무엇</th><th class="task">누가</th></tr></thead>
+<tbody>
+<tr><td class="task">오늘 (8/3)</td><td class="task">Gemini API 키 회전 — 평문 노출 + APK 배포본 존재</td><td class="task">한규태</td></tr>
+<tr><td class="task">오늘 (8/3)</td><td class="task">e08 재실행 착수 (~99분)</td><td class="task">김강빈</td></tr>
+<tr><td class="task">내일 (8/4)</td><td class="task">특허고객번호 5인 전원 발급 — 온라인·무료·최초 1회</td><td class="task">전원</td></tr>
+<tr><td class="task">내일 (8/4)</td><td class="task">권리승계 확인서 회람 시작 (A4 1장, 5인 서명)</td><td class="task">송두산</td></tr>
+<tr><td class="task">8/5~8/7</td><td class="task">발명설명서 §8.4 좌표계 충돌 결정 — 출원 전 필수</td><td class="task">김강빈·한규태</td></tr>
+</tbody>
+</table>
+
+<p style="font-size:12px;color:#666;margin-top:24px">
+날짜·수치는 <code>타임라인_역산.md</code>·<code>전자출원_실행가이드.md</code>·<code>CFD/진행상황_및_일정.md</code>·<code>진행상황_타임라인_20260803.md</code>에 적힌 것만 사용했다.
+</p>
+
+</body>
+</html>

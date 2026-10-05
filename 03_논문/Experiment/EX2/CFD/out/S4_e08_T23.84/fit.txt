@@ -1,0 +1,35 @@
+EX2 · CFD 가상 재폭기 결과
+  case         : /Users/strongbeen04/Library/CloudStorage/OneDrive-개인/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD/e08  (time 200, 동결 UMean/nutMean)
+  T            : 23.84 degC,  P = 101.0 kPa
+  alpha_g      : 0.18305  → a = 2197 1/m,  k_L,b = 1.104e-04 m/s
+  C0           : 0.0 mg/L (탈산소 상태에서 출발)
+  수면채널     : ON
+
+[해석 0-D 예측]
+  K_La_plume = 4.6781e-04 /s (1.684 /h)
+  K_La_surf  = 1.1997e-04 /s (0.432 /h)
+  K_La_pred  = 5.8778e-04 /s (2.116 /h),  tau = 28.36 min
+
+[3D 과도해 피팅]  (fit_kla.py 와 동일 유효창 0.15–0.92)
+  K_La_eff,CFD = 5.4486e-04 /s = 1.962 /h  (SE 3.15e-14)
+  C*_CFD       = 8.4164 mg/L   (입력 C* = 8.4164)
+  tau          = 30.59 min,  95% 도달 91.8 min
+  초기상승률   = 0.275 mg/L/min
+  피팅 RMSE    = 5.4017e-10 mg/L (n=412, 창 300–4410 s)
+  3D/0-D 비    = 0.9270  (1.0 이면 0-D 축약이 3D 해와 일치)
+  최종 t=8510s: Cbar=8.3348 (99.03% sat), 공간편차 C_max-C_min = 0.0080 mg/L
+
+[프로브 국소곡선 — 실측과 1:1 대조할 값]
+  실측 K_La 는 프로브 **1점 판독**에서 나온다. 체적평균이 아니라 이 열을 쓸 것.
+  point              x,y,z [m]          K_La[/h]  vs체적평균   RMSE_fit   RMSEvsCbar  max|Δ|
+  S4_jangchuk      (0.455,0.195,0.105)     1.9615     -0.00 %  2.903e-08   0.0077     0.0205
+  center_mid       (0.235,0.105,0.105)     1.9615     +0.00 %  5.458e-09   0.0068     0.0456
+  nearplume_mid    (0.055,0.175,0.105)     1.9615     -0.00 %  1.142e-08   0.0054     0.0358
+  surface_center   (0.235,0.105,0.180)     1.9615     +0.00 %  7.923e-09   0.0199     0.0519
+  bottom_far       (0.435,0.015,0.030)     1.9615     -0.00 %  8.918e-09   0.0122     0.0412
+  → 체적평균 대표성이 가장 좋은 점: nearplume_mid  (0.055, 0.175, 0.105)
+  → 프로브 간 K_La 산포: 1.9615 ± 0.0000 /h  = **CV 0.00 %**  (실측 위치 산포 1.44 % 의 CFD 대조군)
+
+[κ 계산법] 실측 fit_kla.py 의 kla_meas 를 얻으면:
+  체적평균 기준 : kappa = kla_meas[/h] / 1.9615
+  S4_jangchuk     : kappa = kla_meas[/h] / 1.9615   ← 같은 좌표 대조 (권장)

@@ -1,0 +1,8 @@
+#!/bin/sh
+cd "${0%/*}" || exit 1
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions
+
+cleanCase0                        # 시간디렉토리 + 0/ 정리
+rm -rf processor*                 # 병렬 분할 정리
+rm -f log.*
+#------------------------------------------------------------------------------

@@ -1,0 +1,19 @@
+{
+  "name": "aqua-sense-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "漁벤져스 스마트 어항 케어 — Capacitor 안드로이드 앱",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "patch": "node scripts/patch-manifest.js",
+    "sync": "npm run build && npx cap sync android && npm run patch",
+    "open": "npx cap open android",
+    "android": "npm run sync && npm run open"
+  },
+  "dependencies": {
+    "@capacitor-community/bluetooth-le": "^8.2.0",
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0"
+  }
+}

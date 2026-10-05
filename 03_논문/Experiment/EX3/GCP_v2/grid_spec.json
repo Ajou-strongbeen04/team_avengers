@@ -1,0 +1,27 @@
+{
+  "_comment": "A층 데이터셋 공통 리샘플 격자 규격. CFD 메시(108x48x48)와 별개 — 전 케이스 정렬·POD/ROM 입력·B층 이송확산 재료용 정규격자. 목적=위험 DO구역 위치 판정 → 필요시 저해상으로 축소 가능.",
+  "version": "pilot-2026-07-17",
+  "tank_dims_m": [0.47, 0.21, 0.21],
+  "z_convention": "z-up (bottom z=0, free-surface z=Lz), EX2 상속",
+  "resolution": {
+    "default": {"nx": 96, "ny": 48, "nz": 48, "note": "중해상 ~221k, 등방 셀 ~4.4-4.9mm"},
+    "low_alt": {"nx": 64, "ny": 32, "nz": 32, "note": "저해상 ~65k, 위치판정 충분시 축소"}
+  },
+  "active": "default",
+  "normalization": {
+    "x_norm": "x / Lx",
+    "y_norm": "y / Ly",
+    "z_norm": "z / Lz",
+    "range": "[0,1]^3, cell-centered"
+  },
+  "stored_fields": {
+    "phi": "면유량(질량보존 면플럭스) — B층 이송항 재사용(FV 일관)",
+    "U": "시간평균 속도 UMean (파생·시각화)",
+    "nut": "시간평균 난류점성 nutMean (생값) — D_eff=D_mol+nut/Sct 를 B층에서 형성, Sct 밴드 무비용 스윕",
+    "k": "시간평균 TKE kMean (선택)",
+    "omega": "시간평균 omegaMean (선택)"
+  },
+  "source_mean_fields": ["UMean", "phiMean", "nutMean", "kMean", "omegaMean"],
+  "resample_method": "cell-center trilinear from OpenFOAM to regular grid (postProcess sample or pyvista)",
+  "obstacle_mask": "각 격자셀의 구조물 점유(0/1) + kind 채널 저장 → ROM 입력 인코딩"
+}

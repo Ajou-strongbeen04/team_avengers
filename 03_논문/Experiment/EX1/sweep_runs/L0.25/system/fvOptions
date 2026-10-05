@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX1 · 폭기 부력 소스(운동량). 플룸 셀존에 상향 체적력                         |
+|  F_air/rho = alpha_g * g  [m/s^2] (kinematic).  alpha_g=0.02(placeholder)     |
+|  Su = 0.02*9.81 = 0.1962 (+z 상향).  ※ alpha_g 절대값은 캘리브레이션 대상     |
+|  ※ ESI 버전에 따라 injectionRateSuSp ↔ sources 키 상이 → 에러시 교체         |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object fvOptions; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+airLift
+{
+    type            vectorSemiImplicitSource;
+    selectionMode   cellZone;
+    cellZone        plume;
+    volumeMode      specific;               // 단위체적당 [m/s^2]
+    injectionRateSuSp
+    {
+        U           ((0 0 0.1962) 0);   // (Su[vector] Sp[scalar]): 상향 부력, Sp=0
+    }
+}
+
+// ************************************************************************* //

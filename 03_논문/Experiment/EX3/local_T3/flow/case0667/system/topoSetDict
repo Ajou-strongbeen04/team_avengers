@@ -1,0 +1,35 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| 漁벤져스 EX3 A층 · 자동생성 (gen_cases.py) — 수정 금지                       |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object topoSetDict; }
+
+actions
+(
+    { name plumeCells; type cellSet; action new; source cylinderToCell;
+      point1 (0.02 0.035 0.02); point2 (0.02 0.035 0.21); radius 0.01; }
+    { name plume; type cellZoneSet; action new; source setToCellZone; set plumeCells; }
+    // obs0 rock M @(0.056,0.101) box
+    { name obs0Cells; type cellSet; action new; source boxToCell;
+      box (0.0209 0.0708 -0.0001) (0.0909 0.1308 0.0700); }
+    { name obs0; type cellZoneSet; action new; source setToCellZone; set obs0Cells; }
+    // obs1 rock S @(0.411,0.058) box
+    { name obs1Cells; type cellSet; action new; source boxToCell;
+      box (0.3912 0.0378 -0.0001) (0.4313 0.0777 0.0400); }
+    { name obs1; type cellZoneSet; action new; source setToCellZone; set obs1Cells; }
+    // obs2 plant M @(0.211,0.104) cylinder r=0.035 h=0.12
+    { name obs2Cells; type cellSet; action new; source cylinderToCell;
+      point1 (0.2115 0.1040 0.0); point2 (0.2115 0.1040 0.1200); radius 0.035; }
+    { name obs2; type cellZoneSet; action new; source setToCellZone; set obs2Cells; }
+    // obs3 rock L @(0.320,0.090) box
+    { name obs3Cells; type cellSet; action new; source boxToCell;
+      box (0.2651 0.0501 -0.0001) (0.3751 0.1301 0.1000); }
+    { name obs3; type cellZoneSet; action new; source setToCellZone; set obs3Cells; }
+    // obs4 plant M @(0.420,0.124) cylinder r=0.035 h=0.12
+    { name obs4Cells; type cellSet; action new; source cylinderToCell;
+      point1 (0.4202 0.1241 0.0); point2 (0.4202 0.1241 0.1200); radius 0.035; }
+    { name obs4; type cellZoneSet; action new; source setToCellZone; set obs4Cells; }
+    // obs5 rock S @(0.053,0.164) box
+    { name obs5Cells; type cellSet; action new; source boxToCell;
+      box (0.0326 0.1440 -0.0001) (0.0726 0.1840 0.0400); }
+    { name obs5; type cellZoneSet; action new; source setToCellZone; set obs5Cells; }
+);

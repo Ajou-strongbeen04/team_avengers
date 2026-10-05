@@ -1,0 +1,87 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX1 · 정상상태(simpleFoam) : 유동+DO 동시 수렴 (느린 DO 시간척도 회피)        |
+|  'time' = SIMPLE 반복수. DO C 는 scalarTransport FO 가 매 반복 정상 solve.   |
+|  D_eff = alphaD*nu + alphaDt*nut = Dmol + nut/Sct                            |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object controlDict; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     simpleFoam;
+
+startFrom       latestTime;
+startTime       0;
+stopAt          endTime;
+endTime         2000;           // 최대 반복(수렴시 residualControl 로 조기종료)
+
+deltaT          1;              // 정상상태 = 반복 카운터
+
+writeControl    timeStep;
+writeInterval   500;
+purgeWrite      2;
+writeCompression on;
+writeFormat     ascii;
+writePrecision  7;
+timeFormat      general;
+runTimeModifiable yes;
+
+libs            ("libsolverFunctionObjects.so");
+
+functions
+{
+    // ---- DO 이송-확산 (정상: ddt=steadyState → 정상 스칼라 solve) --------
+    scalarTransportC
+    {
+        type            scalarTransport;
+        libs            (solverFunctionObjects);
+        field           C;
+        executeControl  timeStep;
+        executeInterval 1;
+        writeControl    writeTime;
+        bounded01       false;
+        alphaD          2.0e-3;         // 분자확산 (Dmol/nu)
+        alphaDt         1.4286;         // 난류확산 (1/Sct)
+        nCorr           1;
+        resetOnStartUp  false;
+
+        fvOptions
+        {
+            // (1) 플룸 계면 O2 전달  S_air = kL*a*(C*-C)
+            surfaceAir
+            {
+                type            scalarSemiImplicitSource;
+                selectionMode   cellZone;
+                cellZone        plume;
+                volumeMode      specific;
+                injectionRateSuSp { C (8.537e-3 -1.036e-3); }
+            }
+            // (2) 생물 소비 (5 g/L, 선형화 Monod)
+            bioSink
+            {
+                type            scalarSemiImplicitSource;
+                selectionMode   all;
+                volumeMode      specific;
+                injectionRateSuSp { C (0 -1.0e-4); }
+            }
+            // (3) 표층 재폭기 (flux-limited, a=250)
+            surfaceReaer
+            {
+                type            scalarSemiImplicitSource;
+                selectionMode   cellZone;
+                cellZone        surface;
+                volumeMode      specific;
+                injectionRateSuSp { C (0.053354 -0.006475); }
+            }
+            // (4) 바닥 SOD (a=250)
+            sedimentSOD
+            {
+                type            scalarSemiImplicitSource;
+                selectionMode   cellZone;
+                cellZone        sediment;
+                volumeMode      specific;
+                injectionRateSuSp { C (-0.003806 0); }
+            }
+        }
+    }
+}
+
+// ************************************************************************* //

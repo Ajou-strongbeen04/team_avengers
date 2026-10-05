@@ -1,0 +1,17 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX1 · 와점성 nut (AWT: nutUSpaldingWallFunction = 연속 벽처리)               |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class volScalarField; object nut; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -1 0 0 0 0];
+internalField   uniform 0;
+
+boundaryField
+{
+    top     { type calculated; value uniform 0; }
+    bottom  { type nutUSpaldingWallFunction; value uniform 0; }   // AWT 핵심
+    walls   { type nutUSpaldingWallFunction; value uniform 0; }
+}
+
+// ************************************************************************* //

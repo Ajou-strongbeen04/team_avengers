@@ -1,0 +1,17 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX1 · 속도장 (z-상향: top=자유수면 slip, bottom/walls=no-slip)               |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class volVectorField; object U; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    top     { type slip; }              // rigid-lid + free-slip
+    bottom  { type noSlip; }
+    walls   { type noSlip; }
+}
+
+// ************************************************************************* //

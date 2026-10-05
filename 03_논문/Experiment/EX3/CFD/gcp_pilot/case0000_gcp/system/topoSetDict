@@ -1,0 +1,11 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| 漁벤져스 EX3 A층 파일럿 · 자동생성 (generate_cases.py) — 수정 금지          |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object topoSetDict; }
+
+actions
+(
+    { name plumeCells; type cellSet; action new; source cylinderToCell;
+      point1 (0.02 0.035 0.02); point2 (0.02 0.035 0.21); radius 0.01; }
+    { name plume; type cellZoneSet; action new; source setToCellZone; set plumeCells; }
+);

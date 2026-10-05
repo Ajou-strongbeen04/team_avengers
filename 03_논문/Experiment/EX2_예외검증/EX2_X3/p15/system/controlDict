@@ -1,0 +1,91 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX2 파일럿 · Stage A 유동(pimpleFoam, 과도 URANS) — 타이밍 측정용            |
+|  DO는 여기서 안 품(Stage B에서 동결 평균유동 위 scalarTransport).            |
+|  fieldAverage로 UMean/pMean/nut·k·omegaMean/phiMean 누적 → Stage B 입력.      |
+|  준정상 도달 후 timeStart부터 평균. adjustTimeStep(maxCo 1)로 dt 자동.        |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object controlDict; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     pimpleFoam;
+
+startFrom       latestTime;     // warm-start/재시작 지원
+startTime       0;
+stopAt          endTime;
+endTime         200;            // 물리시간[s] (준정상+평균창; 파일럿서 재조정)
+
+deltaT          0.005;
+adjustTimeStep  yes;
+maxCo           1.0;
+maxDeltaT  0.02;
+
+writeControl    adjustableRunTime;
+writeInterval   20;             // [s] 스냅샷 (purgeWrite로 최소 유지)
+purgeWrite      3;
+writeCompression on;
+writeFormat     ascii;
+writePrecision  8;
+timeFormat      general;
+runTimeModifiable yes;
+
+libs            ("libfieldFunctionObjects.so" "libsampling.so");
+
+functions
+{
+    // ---- 시간평균장(솔버가 직접 누적) : Stage B DO의 동결 입력 ----
+    fieldAverage1
+    {
+        type            fieldAverage;
+        libs            (fieldFunctionObjects);
+        timeStart       40;         // 준정상 도달 후(파일럿서 확인·조정)
+        writeControl    writeTime;
+        fields
+        (
+            U     { mean on; prime2Mean on; base time; }
+            p     { mean on; prime2Mean off; base time; }
+            k     { mean on; prime2Mean off; base time; }
+            omega { mean on; prime2Mean off; base time; }
+            nut   { mean on; prime2Mean off; base time; }
+            phi   { mean on; prime2Mean off; base time; }
+        );
+    }
+
+    // ---- 프로브 시계열(수렴/Strouhal 판정, 실측 대조) ----
+    //  ※ 폭기위치가 이동하므로 도메인 전역(4코너+중앙, 표/중/저) 기본값.
+    //     최종 격자는 검증 위치 확정 시 재조정.
+    probes1
+    {
+        type            probes;
+        libs            (sampling);
+        writeControl    timeStep;
+        writeInterval   10;
+        fields          (U p);
+        probeLocations
+        (
+            (0.235 0.11 0.1050)   // pos0 중앙 중층(고정 기준)
+            (0.235 0.11 0.1800)    // pos1 중앙 표층
+            (0.235 0.11 0.0300)    // pos2 중앙 저층
+            (0.035 0.175 0.1800)    // pos3 근플룸 횡측 표
+            (0.035 0.175 0.1050)   // pos4 근플룸 횡측 중
+            (0.035 0.175 0.0300)    // pos5 근플룸 횡측 저
+            (0.235 0.035 0.1800)    // pos6 긴벽 하류 표
+            (0.235 0.035 0.1050)   // pos7 긴벽 하류 중
+            (0.235 0.035 0.0300)    // pos8 긴벽 하류 저
+            (0.435 0.175 0.1800)    // pos9 최원코너 표
+            (0.435 0.175 0.1050)   // pos10 최원코너 중
+            (0.435 0.175 0.0300)    // pos11 최원코너 저(dead-spot)
+        );
+    }
+
+    // ---- 순간 최저/최고(최악 위험 추적, DO는 Stage B에서) ----
+    minMaxU
+    {
+        type            fieldMinMax;
+        libs            (fieldFunctionObjects);
+        fields          (U p);
+        writeControl    timeStep;
+        writeInterval   20;
+    }
+}
+
+// ************************************************************************* //

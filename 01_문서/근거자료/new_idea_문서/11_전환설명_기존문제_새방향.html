@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漁벤져스 — 왜 방향을 바꿨나 (기존 문제 → 새 방향)</title>
+<style>
+  :root{
+    --ink:#1b2a33; --sub:#5a6b74; --line:#dfe6ea;
+    --sea:#0e7c86; --sea2:#0b5d64; --wash:#eef6f7;
+    --warn:#c0562b; --warnbg:#fbeee8; --good:#2f8f5b; --goodbg:#e9f5ee;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-snap-type:y mandatory;}
+  body{margin:0; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    color:var(--ink); line-height:1.7; background:#f6f8f9;}
+  section{min-height:100vh; scroll-snap-align:start; display:flex; flex-direction:column;
+    justify-content:center; padding:6vh 8vw; border-bottom:1px solid var(--line); background:#fff;}
+  section:nth-child(even){background:var(--wash);}
+  .num{font-size:.85rem; color:var(--sea); letter-spacing:.1em; font-weight:700; margin-bottom:.6rem;}
+  h1{font-size:2.5rem; line-height:1.25; margin:.2rem 0 1rem;}
+  h2{font-size:1.95rem; line-height:1.3; margin:.2rem 0 1.2rem;}
+  h3{font-size:1.15rem; color:var(--sea2); margin:1.2rem 0 .4rem;}
+  p,li{font-size:1.12rem;}
+  .lead{font-size:1.3rem; color:var(--sub);}
+  .big{font-size:1.45rem; font-weight:700; color:var(--sea2);}
+  ul{padding-left:1.2rem;} li{margin:.5rem 0;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:1.1rem 1.3rem; margin:.6rem 0;}
+  .card.bad{border-left:6px solid var(--warn); background:var(--warnbg);}
+  .card.good{border-left:6px solid var(--good); background:var(--goodbg);}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:1rem;}
+  .tag{display:inline-block; background:var(--sea); color:#fff; padding:.15rem .7rem; border-radius:999px; font-size:.9rem; font-weight:700;}
+  .tag.warn{background:var(--warn);} .tag.good{background:var(--good);}
+  .quote{border-left:5px solid var(--sea); padding:.6rem 1.2rem; background:var(--wash); font-size:1.25rem; font-weight:600;}
+  .warn{color:var(--warn); font-weight:700;} .good{color:var(--good); font-weight:700;}
+  .small{font-size:.98rem; color:var(--sub);}
+  table{border-collapse:collapse; width:100%; margin:.6rem 0; font-size:1.02rem;}
+  th,td{border:1px solid var(--line); padding:.6rem .7rem; text-align:left; vertical-align:top;}
+  th{background:var(--sea); color:#fff;}
+  td.bad{background:var(--warnbg);} td.good{background:var(--goodbg);}
+  .arrow{text-align:center; font-size:1.6rem; color:var(--sea); margin:.4rem 0; font-weight:700;}
+  .hint{position:fixed; bottom:14px; right:18px; font-size:.8rem; color:var(--sub);
+    background:#fff; border:1px solid var(--line); border-radius:999px; padding:.3rem .8rem;}
+  b.k{color:var(--sea2);}
+</style>
+</head>
+<body>
+
+<!-- 1 표지 -->
+<section>
+  <div class="num">漁벤져스 · 팀 브리핑 (2026-07-11)</div>
+  <h1>왜 우리는 방향을 바꿨나<br><span style="color:var(--sea2);">바다 양식장 → 집 안 어항</span></h1>
+  <p class="lead">"틀려서 갈아엎는 것"이 아닙니다.<br>
+  <b class="k">같은 물리·AI 실력을 그대로 들고, "증명할 수 있는 문제"로 옮겨 타는 것</b>입니다.</p>
+  <p class="small">기존 연구의 문제 4가지와, 새 방향이 그걸 어떻게 푸는지 비유로 설명합니다.</p>
+</section>
+
+<!-- 2 원래 뭐였나 -->
+<section>
+  <div class="num">00 · 배경</div>
+  <h2>원래 우리가 하던 것</h2>
+  <p><b class="k">바다에 떠 있는 대형 가두리(양식장)</b> 안에서 물고기가 대량 폐사하는 걸 막는 시스템이었습니다.
+  핵심은 <b>"물속 산소가 어디에 얼마나 있는지"</b>를 물리로 계산해 위험을 예측하는 것.</p>
+  <div class="card">
+    <h3>명분은 훌륭했다</h3>
+    <p>식량산업 · 기후변화 · 대량폐사 — <b>사회적 임팩트가 큰</b> 문제였습니다.
+    그래서 우리 모두 여기에 끌렸습니다.</p>
+  </div>
+  <p class="lead">그런데 진행할수록 <span class="warn">"이건 대회에서 못 이기겠다"</span>는 신호가 4개 나왔습니다. 하나씩 봅시다.</p>
+</section>
+
+<!-- 3 문제1 검증불가 -->
+<section>
+  <div class="num">01 · 문제 ①  (가장 치명적)</div>
+  <h2>맞는지 틀리는지 확인할 방법이 없다</h2>
+  <p class="lead">지도교수님 한마디로 요약됩니다: <span class="warn">"그 실험, 의미가 없다."</span></p>
+  <div class="card bad">
+    <h3>무슨 뜻이냐면</h3>
+    <p>우리는 "바다 가두리 속 산소 분포는 이럴 것이다"라고 <b>컴퓨터로 계산</b>합니다.
+    그런데 <b class="k">진짜 바다 가두리에 들어가 실제 산소를 측정할 방법이 없습니다.</b><br>
+    → 우리가 세운 답을, 우리가 만든 시뮬레이션으로만 확인하는 <b>"자문자답"</b>이 됩니다.</p>
+  </div>
+  <p>과학에서 제일 중요한 건 <b>"틀렸다는 걸 증명할 수 있는가(반증 가능성)"</b>입니다.
+  채점할 정답지가 없으면, 아무리 그럴듯해도 심사위원을 설득하기 어렵습니다.</p>
+</section>
+
+<!-- 4 문제2 유속항 버림 -->
+<section>
+  <div class="num">02 · 문제 ②</div>
+  <h2>핵심 물리를 "반쪽"만 쓰게 됐다</h2>
+  <p>산소가 퍼지는 걸 계산하는 우리 방정식은 원래 세 부분입니다:
+  <b class="k">① 물살이 실어 나름(이송) + ② 저절로 번짐(확산) + ③ 만들어지고 소모됨(수지).</b></p>
+  <div class="card bad">
+    <h3>그런데 바다 가두리에선…</h3>
+    <p>거대한 가두리 안쪽은 물살이 거의 <b>멈춰 있습니다(유속 ≈ 0)</b>.
+    그래서 우리는 어쩔 수 없이 <span class="warn">①번 "물살이 실어 나름"을 통째로 지워야</span> 했습니다.
+    </p>
+  </div>
+  <p class="small">즉, "이송-확산을 제대로 풀고 싶다"는 원래 목표와 도메인이 서로 안 맞았습니다.</p>
+</section>
+
+<!-- 5 문제3 실물 불가 -->
+<section>
+  <div class="num">03 · 문제 ③</div>
+  <h2>보여줄 "실물"을 만들 수 없다</h2>
+  <div class="grid">
+    <div class="card bad">
+      <h3>양식장의 현실</h3>
+      <p>10m급 바다 가두리를 우리가 만들 수는 없습니다.
+      결국 데모는 <b>화면 속 시뮬레이션</b>뿐 — 심사위원 눈에는 <span class="warn">추상적</span>으로 보입니다.</p>
+    </div>
+    <div class="card">
+      <h3>대회에서 불리한 점</h3>
+      <p>대회는 <b>"작동하는 걸 직접 보여주는 팀"</b>이 강합니다.
+      만질 수 있는 결과물이 없으면 인상이 약합니다.</p>
+    </div>
+  </div>
+  <p>데이터도 마찬가지였습니다. 현장 데이터가 희소해 <b>남의 논문 숫자에 의존</b>해야 했습니다.</p>
+</section>
+
+<!-- 6 문제4 범위과대 -->
+<section>
+  <div class="num">04 · 문제 ④</div>
+  <h2>범위가 너무 넓다 (교수님도 우려)</h2>
+  <p>바다 양식 전체를 다루려니 <b class="k">"이걸 한 학기에 어디까지 하겠다는 거냐"</b>는 지적이 나왔습니다.</p>
+  <div class="card bad">
+    <p>거대한 문제 + 검증 불가 + 실물 불가가 겹치면,
+    발표에서 <span class="warn">"그래서 실제로 뭘 완성했는데?"</span>라는 질문에 답이 궁색해집니다.</p>
+  </div>
+</section>
+
+<!-- 7 문제 요약 -->
+<section>
+  <div class="num">05 · 여기까지 정리</div>
+  <h2>기존 연구의 문제 4가지</h2>
+  <table>
+    <tr><th>#</th><th>문제</th><th>한 줄 요약</th></tr>
+    <tr><td>①</td><td class="bad"><b>검증 불가</b></td><td>진짜 바다를 못 재니 정답지가 없다 → "자문자답"</td></tr>
+    <tr><td>②</td><td class="bad"><b>반쪽 물리</b></td><td>유속이 0이라 핵심인 "물살 이송"을 버려야 했다</td></tr>
+    <tr><td>③</td><td class="bad"><b>실물 불가</b></td><td>바다 가두리를 못 만든다 → 데모가 추상적</td></tr>
+    <tr><td>④</td><td class="bad"><b>범위 과대</b></td><td>"한 학기에 어디까지?"에 답이 궁색</td></tr>
+  </table>
+  <p class="big">공통점: 문제 자체가 나빠서가 아니라, <span class="warn">"증명하고 완성해 보이기"가 불가능한 무대</span>였다는 것.</p>
+</section>
+
+<!-- 8 전환 -->
+<section>
+  <div class="num">06 · 전환</div>
+  <h2>그래서 무대를 바꿉니다</h2>
+  <div class="arrow">바다 대형 가두리  ⟶  집 안 어항(1m 이하)</div>
+  <p class="lead">문제의 <b class="k">본질(물속 산소 분포 예측)은 그대로</b> 두고,
+  <b>우리가 소유하고 측정할 수 있는 작은 무대</b>로 옮깁니다.</p>
+  <div class="card good">
+    <h3>왜 어항인가 — 한 문장</h3>
+    <p>어항은 <b>우리가 사서·꾸미고·직접 잴 수 있는</b> "손안의 바다"입니다.
+    앞의 문제 4개가 여기선 정확히 뒤집힙니다.</p>
+  </div>
+</section>
+
+<!-- 9 해결1 -->
+<section>
+  <div class="num">07 · 해결 ①</div>
+  <h2>이제 "정답지"를 우리가 만든다 (검증 가능)</h2>
+  <div class="grid">
+    <div class="card bad"><span class="tag warn">이전</span>
+      <p>바다 산소를 못 재서 <b>확인 불가</b>. 자문자답.</p></div>
+    <div class="card good"><span class="tag good">지금</span>
+      <p>어항에 <b>정밀 산소 센서를 여러 곳(8~9점)</b> 꽂아 진짜 산소 지도를 잽니다.
+      우리 계산과 <b class="k">직접 대조 → 맞으면 채택, 틀리면 반증.</b></p></div>
+  </div>
+  <p>①번 문제(가장 치명적)가 <span class="good">정면으로 해결</span>됩니다. 심사위원이 "검증했냐"고 물으면 "네, 실측으로"라 답합니다.</p>
+</section>
+
+<!-- 10 해결2 -->
+<section>
+  <div class="num">08 · 해결 ②</div>
+  <h2>버렸던 "물살 이송"이 되살아난다 (완전한 물리)</h2>
+  <p>어항에는 <b>필터 펌프와 기포기</b>가 있어 물살이 <b class="k">실제로 흐르고, 그 흐름을 우리가 측정할 수 있습니다.</b></p>
+  <div class="card good">
+    <p>덕분에 지웠던 <b>①물살 이송</b> 항을 <span class="good">되살려 완전한 방정식</span>을 씁니다.
+    역설적이게도 <b>"이송-확산을 제대로 풀고 싶다"는 원래 꿈은 어항에서 더 잘 이뤄집니다.</b></p>
+  </div>
+</section>
+
+<!-- 11 해결3 -->
+<section>
+  <div class="num">09 · 해결 ③</div>
+  <h2>만질 수 있는 실물 + 진짜 데이터</h2>
+  <div class="grid">
+    <div class="card good"><h3>약 5만원 실물 세트</h3>
+      <p>어항 · 센서 · 카메라 · 기포기 · 앱을 <b>실제로 조립</b>해 데모합니다.
+      화면 시뮬레이션이 아니라 <b class="k">작동하는 물건</b>을 보여줍니다.</p></div>
+    <div class="card good"><h3>직접 수집한 데이터</h3>
+      <p>남의 논문 숫자가 아니라 <b>우리가 잰 실측 데이터</b>로 말합니다.</p></div>
+  </div>
+  <p>③번 문제 해결. 대회에서 가장 강한 인상 = <span class="good">"직접 만들어 작동시킨 팀"</span>.</p>
+</section>
+
+<!-- 12 해결4 -->
+<section>
+  <div class="num">10 · 해결 ④</div>
+  <h2>범위가 딱 좁아지고, 시장 빈칸도 뚜렷</h2>
+  <div class="grid">
+    <div class="card good"><h3>스코프가 명확</h3>
+      <p>"바다 전체"가 아니라 <b>어항 1대 · 담수 · 특정 조건</b>.
+      "한 학기에 뭘 하냐"에 <b class="k">한 문장으로</b> 답합니다.</p></div>
+    <div class="card good"><h3>아무도 안 한 빈칸</h3>
+      <p>스마트 어항 제품은 많지만(레드오션),
+      <b>산소가 "어디에·왜" 부족한지(공간 지도)</b>를 다루는 건 <span class="good">사실상 없음.</span></p></div>
+  </div>
+  <p class="big">우리 승부처 = 산소의 "값"이 아니라 "지도"를 그려주는 것.</p>
+</section>
+
+<!-- 13 재사용 -->
+<section>
+  <div class="num">11 · 오해 방지</div>
+  <h2>이건 "처음부터 다시"가 아니다</h2>
+  <p class="lead">지금까지 쌓은 것의 <b class="k">약 8할을 그대로 이어 씁니다.</b> 도메인만 바뀝니다.</p>
+  <div class="grid">
+    <div class="card good"><h3>그대로 이어지는 것</h3>
+      <ul>
+        <li>이송-확산 / 산소 물리 코어 (오히려 완전형으로 강화)</li>
+        <li>물리 예측 + 희소 센서 보정 아키텍처</li>
+        <li>물고기 행동(수면 뻐끔)→산소부족 인식 (카메라로 이식)</li>
+        <li>산소 입출금(호흡·폭기·질산화) 지식</li>
+      </ul></div>
+    <div class="card"><h3>바뀌는 것</h3>
+      <ul>
+        <li>무대 규모: 바다 → 어항</li>
+        <li>하드웨어: 시뮬레이션 → 실물 제작</li>
+        <li>시장 프레이밍: 산업 B2B → 반려어 소비자</li>
+      </ul></div>
+  </div>
+</section>
+
+<!-- 14 Before/After -->
+<section>
+  <div class="num">12 · 한눈에</div>
+  <h2>Before → After 요약</h2>
+  <table>
+    <tr><th>축</th><th>기존 · 바다 양식장</th><th>새 방향 · 집 안 어항</th></tr>
+    <tr><td>검증</td><td class="bad">불가 (자문자답)</td><td class="good">우리가 재서 반증 가능</td></tr>
+    <tr><td>물리</td><td class="bad">반쪽 (유속 버림)</td><td class="good">완전형 (유속 복원)</td></tr>
+    <tr><td>실물</td><td class="bad">못 만듦 → 추상적</td><td class="good">5만원 실물 데모</td></tr>
+    <tr><td>범위</td><td class="bad">과대 (교수 우려)</td><td class="good">좁고 명확</td></tr>
+    <tr><td>데이터</td><td class="bad">논문 의존</td><td class="good">직접 실측</td></tr>
+    <tr><td>포지션</td><td>임팩트 크나 증명 난</td><td class="good">임팩트는 작아도 증명·완성 가능</td></tr>
+  </table>
+</section>
+
+<!-- 15 마무리 -->
+<section>
+  <div class="num">13 · 마무리 · 다음 할 일</div>
+  <h2>한 문장으로 기억할 것</h2>
+  <div class="quote">"틀려서 바꾸는 게 아니다. 같은 물리·AI 실력을 <b>증명할 수 있고, 실물로 만들 수 있는 무대</b>로 옮기는 것 —
+  그게 바다에서 어항으로의 전환이다."</div>
+  <div class="grid" style="margin-top:1rem;">
+    <div class="card"><h3>기계 팀</h3><p>어항·기포기 세팅, 다점 산소 측정 + CFD로 "정답지" 확보 (검증 담당)</p></div>
+    <div class="card"><h3>SW 팀</h3><p>사진→배치 인식(Gemini), 센서·카메라 융합, 위험/안전 판정 앱</p></div>
+  </div>
+  <p class="small">더 깊은 근거: 같은 폴더의 00(요약) · 01(문제점) · 06(지배방정식) · 07(방법론), 그리고 05_레퍼런스/트랙비교 문서. 질문 환영합니다.</p>
+</section>
+
+<div class="hint">↓ 스크롤 또는 ↑↓ 방향키로 넘기기</div>
+<script>
+  // 최소한의 키보드 넘김만 (과한 JS 지양)
+  const secs=[...document.querySelectorAll('section')]; let i=0;
+  addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='PageDown'){i=Math.min(i+1,secs.length-1);secs[i].scrollIntoView();e.preventDefault();}
+    if(e.key==='ArrowUp'||e.key==='PageUp'){i=Math.max(i-1,0);secs[i].scrollIntoView();e.preventDefault();}
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漁벤져스 — 시스템 구성도</title>
+<style>
+  :root {
+    --hw:   #475569;   /* 하드웨어 */
+    --hw-bg:#f1f5f9;
+    --mcu:  #0f766e;   /* ESP32 */
+    --mcu-bg:#ecfdf5;
+    --app:  #1d4ed8;   /* 앱 */
+    --app-bg:#eff6ff;
+    --ai:   #b45309;   /* AI */
+    --ai-bg:#fffbeb;
+    --line: #94a3b8;
+    --ink:  #0f172a;
+    --muted:#64748b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 40px 24px;
+    font-family: "Pretendard", "Malgun Gothic", "맑은 고딕", system-ui, sans-serif;
+    color: var(--ink); background: #fff;
+    max-width: 1100px; margin-inline: auto;
+  }
+  header { border-bottom: 3px solid var(--ink); padding-bottom: 14px; margin-bottom: 8px; }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.5px; }
+  header p { margin: 0; color: var(--muted); font-size: 13px; }
+
+  section { margin-top: 52px; page-break-inside: avoid; }
+  h2 {
+    font-size: 18px; margin: 0 0 4px;
+    padding-left: 10px; border-left: 4px solid var(--ink);
+  }
+  .sub { margin: 0 0 18px 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  svg { width: 100%; height: auto; display: block; }
+
+  .note {
+    margin-top: 16px; padding: 14px 16px; background: #f8fafc;
+    border-left: 3px solid var(--line); border-radius: 0 6px 6px 0;
+    font-size: 13px; line-height: 1.75; color: #334155;
+  }
+  .note b { color: var(--ink); }
+  .note code {
+    background: #e2e8f0; padding: 1px 5px; border-radius: 3px;
+    font-family: ui-monospace, Consolas, monospace; font-size: 12px;
+  }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e2e8f0; }
+  th { background: #f8fafc; font-weight: 600; color: #334155; }
+  td code { font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+
+  @media print {
+    body { padding: 0; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>漁벤져스 — 스마트 어항 케어 시스템</h1>
+  <p>수온·탁도 측정 기반 관상어 건강 모니터링 · 시스템 구성도</p>
+</header>
+
+<!-- ==================== 1. 전체 구성 ==================== -->
+<section>
+  <h2>1. 전체 시스템 구성</h2>
+  <p class="sub">센서에서 측정한 물리량이 앱 화면과 AI 판정에 이르기까지의 경로입니다.</p>
+
+  <svg viewBox="0 0 1040 420" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="#94a3b8"/>
+      </marker>
+      <style>
+        .box  { rx: 8; stroke-width: 1.6; }
+        .t    { font: 600 13px "Malgun Gothic", sans-serif; }
+        .s    { font: 400 11px "Malgun Gothic", sans-serif; fill: #64748b; }
+        .lbl  { font: 600 10.5px "Malgun Gothic", sans-serif; fill: #475569; }
+        .grp  { font: 700 11px "Malgun Gothic", sans-serif; letter-spacing: .5px; }
+        .wire { stroke: #94a3b8; stroke-width: 1.6; fill: none; marker-end: url(#ar); }
+      </style>
+    </defs>
+
+    <!-- 그룹 1: 어항/프로브 -->
+    <rect x="10" y="46" width="212" height="330" fill="#f8fafc" stroke="#e2e8f0" rx="10"/>
+    <text x="116" y="34" class="grp" fill="#475569" text-anchor="middle">어항 · 프로브</text>
+
+    <rect x="32" y="72" width="168" height="58" class="box" fill="#f1f5f9" stroke="#475569"/>
+    <text x="116" y="95"  class="t" fill="#334155" text-anchor="middle">DS18B20</text>
+    <text x="116" y="113" class="s" text-anchor="middle">방수 수온 센서 · 1-Wire</text>
+
+    <rect x="32" y="146" width="168" height="58" class="box" fill="#f1f5f9" stroke="#475569"/>
+    <text x="116" y="169" class="t" fill="#334155" text-anchor="middle">IR LED 850nm</text>
+    <text x="116" y="187" class="s" text-anchor="middle">광원 · 8단 전류 구동</text>
+
+    <rect x="32" y="220" width="168" height="58" class="box" fill="#f1f5f9" stroke="#475569"/>
+    <text x="116" y="243" class="t" fill="#334155" text-anchor="middle">포토트랜지스터</text>
+    <text x="116" y="261" class="s" text-anchor="middle">수광 · 광학 경로 50mm</text>
+
+    <rect x="32" y="298" width="168" height="52" class="box" fill="#fff" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+    <text x="116" y="320" class="s" text-anchor="middle" font-weight="600">투과광 감쇠 = 탁도</text>
+    <text x="116" y="337" class="s" text-anchor="middle">부유물이 많을수록 수광량 ↓</text>
+
+    <!-- 그룹 2: ESP32 -->
+    <rect x="262" y="46" width="228" height="330" fill="#ecfdf5" stroke="#a7f3d0" rx="10"/>
+    <text x="376" y="34" class="grp" fill="#0f766e" text-anchor="middle">ESP32 (WROOM-32)</text>
+
+    <rect x="284" y="72" width="184" height="52" class="box" fill="#fff" stroke="#0f766e"/>
+    <text x="376" y="93"  class="t" fill="#0f766e" text-anchor="middle">R-DAC 구동</text>
+    <text x="376" y="110" class="s" text-anchor="middle">GPIO 25·26·27 → 8단계</text>
+
+    <rect x="284" y="138" width="184" height="52" class="box" fill="#fff" stroke="#0f766e"/>
+    <text x="376" y="159" class="t" fill="#0f766e" text-anchor="middle">ADC1 측정</text>
+    <text x="376" y="176" class="s" text-anchor="middle">SIG(34) · SENSE(36)</text>
+
+    <rect x="284" y="204" width="184" height="60" class="box" fill="#fff" stroke="#0f766e"/>
+    <text x="376" y="226" class="t" fill="#0f766e" text-anchor="middle">신호 처리</text>
+    <text x="376" y="243" class="s" text-anchor="middle">암전류 보정 · 전류 정규화</text>
+    <text x="376" y="257" class="s" text-anchor="middle">오토레인징 · NTU 환산</text>
+
+    <rect x="284" y="278" width="184" height="52" class="box" fill="#fff" stroke="#0f766e"/>
+    <text x="376" y="299" class="t" fill="#0f766e" text-anchor="middle">BLE GATT 서버</text>
+    <text x="376" y="316" class="s" text-anchor="middle">1초 주기 Notify</text>
+
+    <!-- 그룹 3: 앱 -->
+    <rect x="600" y="46" width="228" height="330" fill="#eff6ff" stroke="#bfdbfe" rx="10"/>
+    <text x="714" y="34" class="grp" fill="#1d4ed8" text-anchor="middle">안드로이드 앱</text>
+
+    <rect x="622" y="72" width="184" height="52" class="box" fill="#fff" stroke="#1d4ed8"/>
+    <text x="714" y="93"  class="t" fill="#1d4ed8" text-anchor="middle">Capacitor WebView</text>
+    <text x="714" y="110" class="s" text-anchor="middle">HTML · JS 단일 코드베이스</text>
+
+    <rect x="622" y="138" width="184" height="52" class="box" fill="#fff" stroke="#1d4ed8"/>
+    <text x="714" y="159" class="t" fill="#1d4ed8" text-anchor="middle">실시간 모니터링</text>
+    <text x="714" y="176" class="s" text-anchor="middle">편차 게이지 · 상태 판정</text>
+
+    <rect x="622" y="204" width="184" height="60" class="box" fill="#fff" stroke="#1d4ed8"/>
+    <text x="714" y="226" class="t" fill="#1d4ed8" text-anchor="middle">알림 엔진</text>
+    <text x="714" y="243" class="s" text-anchor="middle">상태 전이 감지 · 진동 억제</text>
+    <text x="714" y="257" class="s" text-anchor="middle">급여 시간 · 연결 이상</text>
+
+    <rect x="622" y="278" width="184" height="52" class="box" fill="#fff" stroke="#1d4ed8"/>
+    <text x="714" y="299" class="t" fill="#1d4ed8" text-anchor="middle">어항 프로필</text>
+    <text x="714" y="316" class="s" text-anchor="middle">어종별 적정 범위 기준</text>
+
+    <!-- 그룹 4: AI -->
+    <rect x="868" y="46" width="162" height="330" fill="#fffbeb" stroke="#fde68a" rx="10"/>
+    <text x="949" y="34" class="grp" fill="#b45309" text-anchor="middle">Gemini API</text>
+
+    <rect x="884" y="100" width="130" height="70" class="box" fill="#fff" stroke="#b45309"/>
+    <text x="949" y="124" class="t" fill="#b45309" text-anchor="middle">3D 좌표 분석</text>
+    <text x="949" y="141" class="s" text-anchor="middle">어항 사진 →</text>
+    <text x="949" y="155" class="s" text-anchor="middle">구조물 실측 좌표</text>
+
+    <rect x="884" y="204" width="130" height="70" class="box" fill="#fff" stroke="#b45309"/>
+    <text x="949" y="228" class="t" fill="#b45309" text-anchor="middle">AI 상담</text>
+    <text x="949" y="245" class="s" text-anchor="middle">측정값 맥락 기반</text>
+    <text x="949" y="259" class="s" text-anchor="middle">사육 조언</text>
+
+    <!-- 연결선 -->
+    <path class="wire" d="M200 101 H 284"/>
+    <text x="242" y="94" class="lbl" text-anchor="middle">온도</text>
+
+    <path class="wire" d="M376 124 V 138" marker-end="none" stroke-dasharray="3 3"/>
+    <path class="wire" d="M200 175 H 240 V 164 H 284"/>
+    <text x="240" y="150" class="lbl" text-anchor="middle">구동</text>
+    <path class="wire" d="M200 249 H 240 V 176 H 284"/>
+    <text x="240" y="268" class="lbl" text-anchor="middle">수광</text>
+
+    <path class="wire" d="M376 190 V 204" marker-end="none"/>
+    <path class="wire" d="M376 264 V 278" marker-end="none"/>
+
+    <path class="wire" d="M468 304 H 622" stroke-width="2.4"/>
+    <text x="545" y="296" class="lbl" text-anchor="middle" font-size="11">BLE Notify</text>
+    <text x="545" y="322" class="lbl" text-anchor="middle" font-family="ui-monospace, Consolas, monospace" fill="#0f766e">"25.43,12.1"</text>
+
+    <path class="wire" d="M714 264 V 278" marker-end="none"/>
+    <path class="wire" d="M806 137 H 884"/>
+    <path class="wire" d="M806 239 H 884"/>
+    <text x="845" y="130" class="lbl" text-anchor="middle">사진</text>
+    <text x="845" y="232" class="lbl" text-anchor="middle">질문</text>
+  </svg>
+
+  <div class="note">
+    <b>설계 요점.</b> ESP32 한 개가 광원 구동·수광 측정·신호 처리를 모두 담당합니다.
+    별도의 연산 증폭기나 커패시터 없이 <code>R-DAC + ADC</code> 조합만으로 아날로그 프런트엔드를 대체해,
+    부품 수와 실패 지점을 줄였습니다. 앱은 화면 로직을 그대로 둔 채 Capacitor로 감싸 네이티브 BLE만 연결합니다.
+  </div>
+</section>
+
+<!-- ==================== 2. 탁도 측정 원리 ==================== -->
+<section>
+  <h2>2. 탁도 측정 원리 — 왜 비율(ratio)로 재는가</h2>
+  <p class="sub">단순히 "받은 빛의 양"을 재면 LED가 늙거나 온도가 변할 때마다 값이 흔들립니다.<br>
+     보낸 빛과 받은 빛을 동시에 재서 <b>비율</b>로 환산하면 이 변동이 상쇄됩니다.</p>
+
+  <svg viewBox="0 0 1040 340" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="#94a3b8"/>
+      </marker>
+      <marker id="arL" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#f59e0b"/>
+      </marker>
+    </defs>
+
+    <!-- 3V3 rail -->
+    <line x1="60" y1="42" x2="980" y2="42" stroke="#ef4444" stroke-width="2"/>
+    <text x="60" y="34" font="600 11px sans-serif" fill="#ef4444">3V3</text>
+
+    <!-- R-DAC -->
+    <rect x="90" y="72" width="150" height="118" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.6"/>
+    <text x="165" y="94" font="600 12.5px 'Malgun Gothic'" fill="#0f766e" text-anchor="middle">R-DAC 8단 구동</text>
+    <text x="112" y="118" font="400 11px ui-monospace" fill="#334155">GPIO 25 / 26 / 27</text>
+    <text x="112" y="138" font="400 11px ui-monospace" fill="#334155">150R · 330R · 680R</text>
+    <text x="112" y="158" font="400 10px 'Malgun Gothic'" fill="#64748b">핀↔저항 배정은 부팅 시 자동 측정</text>
+    <text x="165" y="180" font="400 10px 'Malgun Gothic'" fill="#64748b" text-anchor="middle">OFF = 하이임피던스(INPUT)</text>
+    <line x1="165" y1="42" x2="165" y2="72" stroke="#ef4444" stroke-width="1.6"/>
+
+    <!-- LED -->
+    <path d="M240 131 H 300" stroke="#94a3b8" stroke-width="1.6"/>
+    <polygon points="300,120 300,142 322,131" fill="#f59e0b"/>
+    <line x1="322" y1="118" x2="322" y2="144" stroke="#f59e0b" stroke-width="2.5"/>
+    <text x="311" y="110" font="600 11px 'Malgun Gothic'" fill="#b45309" text-anchor="middle">D1</text>
+    <text x="311" y="164" font="400 10.5px 'Malgun Gothic'" fill="#64748b" text-anchor="middle">IR 850nm</text>
+
+    <!-- shunt -->
+    <path d="M322 131 H 360" stroke="#94a3b8" stroke-width="1.6"/>
+    <rect x="360" y="119" width="44" height="24" rx="3" fill="#fff" stroke="#475569" stroke-width="1.5"/>
+    <text x="382" y="136" font="600 11px ui-monospace" fill="#334155" text-anchor="middle">22R</text>
+    <line x1="404" y1="131" x2="430" y2="131" stroke="#94a3b8" stroke-width="1.6"/>
+    <line x1="422" y1="123" x2="422" y2="139" stroke="#334155" stroke-width="1.6"/>
+    <line x1="416" y1="143" x2="428" y2="143" stroke="#334155" stroke-width="1.6"/>
+    <line x1="419" y1="147" x2="425" y2="147" stroke="#334155" stroke-width="1.6"/>
+
+    <line x1="382" y1="119" x2="382" y2="88" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <text x="382" y="80" font="600 11px 'Malgun Gothic'" fill="#0f766e" text-anchor="middle">SENSE (GPIO36)</text>
+    <text x="382" y="66" font="400 10px 'Malgun Gothic'" fill="#64748b" text-anchor="middle">= 실제 LED 전류</text>
+
+    <!-- 광학 경로 -->
+    <rect x="452" y="88" width="180" height="130" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.6" stroke-dasharray="5 3"/>
+    <text x="542" y="110" font="600 12px 'Malgun Gothic'" fill="#1d4ed8" text-anchor="middle">개방 수중 광학 경로</text>
+    <text x="542" y="127" font="400 10.5px 'Malgun Gothic'" fill="#64748b" text-anchor="middle">L = 50mm</text>
+    <path d="M466 152 H 620" stroke="#f59e0b" stroke-width="3" marker-end="url(#arL)" opacity="0.85"/>
+    <circle cx="500" cy="168" r="4" fill="#94a3b8"/><circle cx="536" cy="180" r="5" fill="#94a3b8"/>
+    <circle cx="572" cy="166" r="3.5" fill="#94a3b8"/><circle cx="600" cy="182" r="4.5" fill="#94a3b8"/>
+    <text x="542" y="205" font="400 10.5px 'Malgun Gothic'" fill="#64748b" text-anchor="middle">부유물이 빛을 산란·흡수</text>
+
+    <!-- 포토트랜지스터 -->
+    <circle cx="700" cy="131" r="26" fill="#fff" stroke="#475569" stroke-width="1.8"/>
+    <line x1="700" y1="42" x2="700" y2="105" stroke="#ef4444" stroke-width="1.6"/>
+    <text x="740" y="118" font="600 11px 'Malgun Gothic'" fill="#334155">Q1</text>
+    <text x="740" y="134" font="400 10px 'Malgun Gothic'" fill="#64748b">포토트랜지스터</text>
+    <line x1="700" y1="157" x2="700" y2="196" stroke="#94a3b8" stroke-width="1.6"/>
+    <rect x="678" y="196" width="44" height="24" rx="3" fill="#fff" stroke="#475569" stroke-width="1.5"/>
+    <text x="700" y="213" font="600 11px ui-monospace" fill="#334155" text-anchor="middle">15k</text>
+    <line x1="700" y1="220" x2="700" y2="240" stroke="#94a3b8" stroke-width="1.6"/>
+    <line x1="688" y1="240" x2="712" y2="240" stroke="#334155" stroke-width="1.6"/>
+    <line x1="692" y1="245" x2="708" y2="245" stroke="#334155" stroke-width="1.6"/>
+    <line x1="696" y1="250" x2="704" y2="250" stroke="#334155" stroke-width="1.6"/>
+
+    <line x1="722" y1="180" x2="790" y2="180" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <text x="800" y="177" font="600 11px 'Malgun Gothic'" fill="#0f766e">SIG (GPIO34)</text>
+    <text x="800" y="192" font="400 10px 'Malgun Gothic'" fill="#64748b">= 받은 빛의 양</text>
+
+    <!-- 수식 박스 -->
+    <rect x="90" y="252" width="860" height="66" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4"/>
+    <text x="118" y="280" font="600 13px 'Malgun Gothic'" fill="#0f172a">ratio =</text>
+    <text x="188" y="273" font="400 12px ui-monospace" fill="#334155">SIG(점등) − SIG(소등)</text>
+    <line x1="186" y1="279" x2="352" y2="279" stroke="#334155" stroke-width="1.2"/>
+    <text x="196" y="296" font="400 12px ui-monospace" fill="#334155">SENSE ÷ 22Ω  (mA)</text>
+    <text x="380" y="286" font="600 14px sans-serif" fill="#94a3b8">→</text>
+    <text x="416" y="278" font="400 12px 'Malgun Gothic'" fill="#334155">분자의 뺄셈이 <b>주변광</b>을 지웁니다.</text>
+    <text x="416" y="298" font="400 12px 'Malgun Gothic'" fill="#334155">분모의 나눗셈이 <b>LED 밝기 변화</b>를 지웁니다.</text>
+    <text x="750" y="286" font="600 12.5px 'Malgun Gothic'" fill="#0f766e">남는 건 물의 탁한 정도뿐</text>
+  </svg>
+
+  <div class="note">
+    <b>왜 이 구조가 필요한가.</b><br>
+    ① <b>주변광 제거</b> — 어항 조명은 켜졌다 꺼집니다. LED를 끈 상태와 켠 상태를 매번 쌍으로 재서 빼면,
+    조명이 바뀌어도 값이 흔들리지 않습니다.<br>
+    ② <b>LED 변동 제거</b> — IR LED는 온도와 사용 시간에 따라 밝기가 변합니다. 션트 저항으로 <i>실제로 흘린 전류</i>를
+    함께 재서 나누면, 밝기가 달라져도 같은 물에서는 같은 값이 나옵니다.<br>
+    ③ 최종 환산은 램버트-비어 법칙을 따릅니다. <code>NTU = K × (−log₁₀(ratio / ratio_clear))</code>
+  </div>
+</section>
+
+<!-- ==================== 3. 측정 시퀀스 ==================== -->
+<section>
+  <h2>3. 1회 측정 시퀀스 (1초 주기)</h2>
+  <p class="sub">구동 세기를 자동으로 골라 ADC 포화를 피하고, 매번 암전류를 새로 잡습니다.</p>
+
+  <svg viewBox="0 0 1040 250" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="ar3" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+
+    <!-- 단계 박스 -->
+    <g font-family="'Malgun Gothic', sans-serif">
+      <rect x="16" y="60" width="150" height="76" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+      <text x="91" y="84" font-size="12.5" font-weight="600" fill="#0f766e" text-anchor="middle">① LED 소등</text>
+      <text x="91" y="104" font-size="10.5" fill="#64748b" text-anchor="middle">암(dark) 기준값 측정</text>
+      <text x="91" y="120" font-size="10.5" fill="#64748b" text-anchor="middle">= 주변광 수준</text>
+
+      <rect x="196" y="60" width="150" height="76" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+      <text x="271" y="84" font-size="12.5" font-weight="600" fill="#0f766e" text-anchor="middle">② LED 점등</text>
+      <text x="271" y="104" font-size="10.5" fill="#64748b" text-anchor="middle">SIG · SENSE 동시 측정</text>
+      <text x="271" y="120" font-size="10.5" fill="#64748b" text-anchor="middle">32회 평균</text>
+
+      <rect x="376" y="60" width="150" height="76" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.6"/>
+      <text x="451" y="84" font-size="12.5" font-weight="600" fill="#b45309" text-anchor="middle">③ 포화 판정</text>
+      <text x="451" y="104" font-size="10.5" fill="#64748b" text-anchor="middle">원시값이 상한을 넘었나</text>
+      <text x="451" y="120" font-size="10.5" fill="#64748b" text-anchor="middle">넘으면 구동을 낮춰 재시도</text>
+
+      <rect x="556" y="60" width="150" height="76" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+      <text x="631" y="84" font-size="12.5" font-weight="600" fill="#0f766e" text-anchor="middle">④ 정규화</text>
+      <text x="631" y="104" font-size="10.5" fill="#64748b" text-anchor="middle">ratio = ΔSIG / I_LED</text>
+      <text x="631" y="120" font-size="10.5" fill="#64748b" text-anchor="middle">→ NTU 환산</text>
+
+      <rect x="736" y="60" width="150" height="76" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="811" y="84" font-size="12.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">⑤ BLE 전송</text>
+      <text x="811" y="104" font-size="10.5" fill="#64748b" text-anchor="middle">"수온,탁도" CSV</text>
+      <text x="811" y="120" font-size="10.5" fill="#64748b" text-anchor="middle">20바이트 이내</text>
+
+      <rect x="916" y="60" width="110" height="76" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="971" y="90" font-size="12.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">앱 갱신</text>
+      <text x="971" y="110" font-size="10.5" fill="#64748b" text-anchor="middle">게이지 · 판정</text>
+
+      <path d="M166 98 H 196" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar3)"/>
+      <path d="M346 98 H 376" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar3)"/>
+      <path d="M526 98 H 556" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar3)"/>
+      <path d="M706 98 H 736" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar3)"/>
+      <path d="M886 98 H 916" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar3)"/>
+
+      <!-- 재시도 루프 -->
+      <path d="M451 136 V 172 H 271 V 136" stroke="#f59e0b" stroke-width="1.6" fill="none"
+            stroke-dasharray="5 3" marker-end="url(#ar3)"/>
+      <text x="361" y="188" font-size="10.5" fill="#b45309" text-anchor="middle">포화 시 · 구동 전류 낮춰 재측정 (오토레인징)</text>
+
+      <!-- 상단 라벨 -->
+      <text x="91"  y="44" font-size="10.5" fill="#94a3b8" text-anchor="middle">3ms 안정화</text>
+      <text x="271" y="44" font-size="10.5" fill="#94a3b8" text-anchor="middle">3ms 안정화</text>
+      <text x="811" y="44" font-size="10.5" fill="#94a3b8" text-anchor="middle">1초마다</text>
+    </g>
+  </svg>
+
+  <div class="note">
+    <b>오토레인징이 필요한 이유.</b> 맑은 물에서는 빛이 거의 그대로 도달해 ADC가 포화되고,
+    탁한 물에서는 신호가 너무 약해집니다. 고정된 세기로는 두 상황을 모두 커버할 수 없습니다.<br>
+    펌웨어는 부팅 시 8단계의 <b>실제 전류를 직접 측정</b>해 순서를 정하므로,
+    어느 GPIO에 어느 저항이 물렸는지와 무관하게 항상 올바르게 동작합니다.
+  </div>
+</section>
+
+<!-- ==================== 4. 앱 판정 흐름 ==================== -->
+<section>
+  <h2>4. 앱의 상태 판정과 알림 흐름</h2>
+  <p class="sub">측정값을 그대로 보여주는 대신, 어종별 기준과 비교해 상태로 바꾸고 <b>변화가 있을 때만</b> 알립니다.</p>
+
+  <svg viewBox="0 0 1040 300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="ar4" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+    <g font-family="'Malgun Gothic', sans-serif">
+      <!-- 입력 -->
+      <rect x="16" y="96" width="140" height="66" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.6"/>
+      <text x="86" y="122" font-size="12.5" font-weight="600" fill="#0f766e" text-anchor="middle">측정값 수신</text>
+      <text x="86" y="142" font-size="10.5" fill="#64748b" text-anchor="middle">수온 · 탁도</text>
+
+      <!-- 기준 -->
+      <rect x="196" y="26" width="150" height="66" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="271" y="52" font-size="12.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">어종별 기준</text>
+      <text x="271" y="72" font-size="10.5" fill="#64748b" text-anchor="middle">적정 · 주의 범위</text>
+
+      <!-- 편차 -->
+      <rect x="196" y="96" width="150" height="66" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="271" y="122" font-size="12.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">편차 계산</text>
+      <text x="271" y="142" font-size="10.5" fill="#64748b" text-anchor="middle">기준에서 얼마나 벗어났나</text>
+
+      <!-- 상태 -->
+      <rect x="386" y="96" width="150" height="66" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="461" y="118" font-size="12.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">상태 분류</text>
+      <text x="416" y="142" font-size="11" font-weight="600" fill="#16a34a">양호</text>
+      <text x="457" y="142" font-size="11" font-weight="600" fill="#f97316">주의</text>
+      <text x="498" y="142" font-size="11" font-weight="600" fill="#dc2626">경고</text>
+
+      <!-- 안정화 -->
+      <rect x="576" y="96" width="160" height="66" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
+      <text x="656" y="118" font-size="12.5" font-weight="600" fill="#b45309" text-anchor="middle">전이 확정</text>
+      <text x="656" y="136" font-size="10.5" fill="#64748b" text-anchor="middle">연속 3회 일치해야 인정</text>
+      <text x="656" y="151" font-size="10.5" fill="#64748b" text-anchor="middle">동일 항목 60초 최소 간격</text>
+
+      <!-- 출력 -->
+      <rect x="776" y="26" width="150" height="60" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="851" y="50" font-size="12.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">화면 갱신</text>
+      <text x="851" y="70" font-size="10.5" fill="#64748b" text-anchor="middle">게이지 · 배지 (매초)</text>
+
+      <rect x="776" y="106" width="150" height="60" rx="8" fill="#fff" stroke="#dc2626" stroke-width="1.6"/>
+      <text x="851" y="130" font-size="12.5" font-weight="600" fill="#dc2626" text-anchor="middle">알림 발생</text>
+      <text x="851" y="150" font-size="10.5" fill="#64748b" text-anchor="middle">상태가 바뀔 때만</text>
+
+      <rect x="776" y="186" width="150" height="60" rx="8" fill="#fff" stroke="#b45309" stroke-width="1.6"/>
+      <text x="851" y="210" font-size="12.5" font-weight="600" fill="#b45309" text-anchor="middle">AI 상담 맥락</text>
+      <text x="851" y="230" font-size="10.5" fill="#64748b" text-anchor="middle">현재 수치를 함께 전달</text>
+
+      <path d="M156 129 H 196" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar4)"/>
+      <path d="M271 92 V 96" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar4)"/>
+      <path d="M346 129 H 386" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar4)"/>
+      <path d="M536 129 H 576" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar4)"/>
+      <path d="M736 129 H 776 V 136" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar4)"/>
+      <path d="M461 96 V 60 H 776" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar4)"/>
+      <path d="M86 162 V 216 H 776" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#ar4)"/>
+
+      <text x="656" y="200" font-size="10.5" fill="#b45309" text-anchor="middle">경계에서 값이 흔들려도 알림이 쏟아지지 않도록</text>
+    </g>
+  </svg>
+
+  <table>
+    <thead>
+      <tr><th style="width:22%">항목</th><th style="width:26%">판정 기준</th><th>비고</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>수온</td>
+        <td>적정 범위 중앙값 대비 편차</td>
+        <td>양방향으로 나빠짐 — 너무 낮아도, 너무 높아도 위험</td>
+      </tr>
+      <tr>
+        <td>탁도</td>
+        <td>0 NTU 기준 편차</td>
+        <td>한방향으로만 나빠짐 — 맑을수록 좋음</td>
+      </tr>
+      <tr>
+        <td>종합 건강</td>
+        <td>수온·탁도 기반 용존산소 추정</td>
+        <td>추정값은 내부 계산에만 사용하고 화면에는 상태로만 표시</td>
+      </tr>
+      <tr>
+        <td>센서 이상</td>
+        <td>무효 센티널 수신 <code>-99</code> / <code>-1</code></td>
+        <td>값을 얼려두지 않고 <code>--</code>로 표시 — 낡은 값이 정상으로 보이는 것을 방지</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>

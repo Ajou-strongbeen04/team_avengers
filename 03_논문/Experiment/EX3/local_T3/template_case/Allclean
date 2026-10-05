@@ -1,0 +1,9 @@
+#!/bin/sh
+cd "${0%/*}" || exit 1
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions
+
+# 漁벤져스 EX3 A층 · 실행 잔재 완전 초기화 (재실행 전)
+cleanCase                 # 시간디렉터리·processor*·postProcessing·polyMesh·log 제거, 0.orig 보존
+rm -rf 0                  # restore0Dir이 0.orig에서 복원하므로 제거
+echo "== cleaned =="
+#------------------------------------------------------------------------------

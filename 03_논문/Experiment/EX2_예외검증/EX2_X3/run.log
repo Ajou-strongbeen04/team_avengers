@@ -1,0 +1,201 @@
+########## stage1 · D군 시드런 (Su=1.773) ##########
+
+===== d18   Su=1.773  수위=0.18 m  nz=32   07-29 02:17 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d18
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d18
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d18
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d18 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d18
+ExecutionTime = 1465.061 s  ClockTime = 1465 s
+
+===== d15   Su=1.773  수위=0.15 m  nz=26   07-29 02:42 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15
+ExecutionTime = 1040.408 s  ClockTime = 1040 s
+
+===== d12   Su=1.773  수위=0.12 m  nz=21   07-29 02:59 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12
+ExecutionTime = 802.889 s  ClockTime = 803 s
+
+===== d09   Su=1.773  수위=0.09 m  nz=16   07-29 03:13 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09
+ExecutionTime = 580.877 s  ClockTime = 581 s
+
+########## 수위별 고정점 산출 ##########
+============================================================================================
+ 수위별 alpha_g 자기일관 고정점    U_gs = 0.0637 m/s (수위 무관)    n = 0.511
+============================================================================================
+
+case     d[m]  H_p[m]   V[L]     W 시드      α_g     Su 고정점     W 예측   a[1/m]    Su 변화
+------------------------------------------------------------------------------------
+d21      0.21    0.19   20.7   0.2930   0.1813     1.7781   0.2934     2175     0.3 %
+d18      0.18    0.16   17.8   0.2929   0.1813     1.7783   0.2934     2175     0.3 %
+d15      0.15    0.13   14.8   0.2686   0.1907     1.8707   0.2761     2288     5.5 %
+d12      0.12    0.10   11.8   0.2340   0.2065     2.0258   0.2505     2478    14.3 %
+d09      0.09    0.07    8.9   0.2127   0.2181     2.1393   0.2341     2617    20.7 %
+
+  → fp_result.csv 기록 (5 수준)
+     다음: python3 gen_cases.py --stage 2   (D군 fvOptions 갱신)
+           bash run.sh stage2
+
+  [주의] Su 이동이 3 % 를 넘는 수준: d15, d12, d09 → stage2 재실행 필수
+
+########## stage2 · D군 자기일관 재실행 ##########
+  d18: Su 1.773 → 1.778  (+0.3 %, 3 % 이내) → 재실행 불필요
+  d15: Su 1.773 → 1.871  (+5.5 %) → fvOptions 갱신, 재실행 필요
+  d12: Su 1.773 → 2.026  (+14.3 %) → fvOptions 갱신, 재실행 필요
+  d09: Su 1.773 → 2.139  (+20.7 %) → fvOptions 갱신, 재실행 필요
+
+stage2 재실행 대상: d15 d12 d09  (stage2_todo.txt 기록)
+
+===== d15   Su=1.871  수위=0.15 m  nz=26   07-29 03:23 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d15
+ExecutionTime = 1149.608 s  ClockTime = 1150 s
+
+===== d12   Su=2.026  수위=0.12 m  nz=21   07-29 03:42 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d12
+ExecutionTime = 872.26 s  ClockTime = 872 s
+
+===== d09   Su=2.139  수위=0.09 m  nz=16   07-29 03:57 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/d09
+ExecutionTime = 637.252 s  ClockTime = 638 s
+
+============================================================================================
+ 수위별 alpha_g 자기일관 고정점    U_gs = 0.0637 m/s (수위 무관)    n = 0.511
+============================================================================================
+
+case     d[m]    Su 입력     W 실측    α_g 입력     α_g 되먹임       잔차  판정
+------------------------------------------------------------------
+d21      0.21    1.773   0.2930    0.1807      0.1815     0.4 %  ✅
+d18      0.18    1.773   0.2929    0.1807      0.1815     0.4 %  ✅
+d15      0.15    1.871   0.2710    0.1907      0.1936     1.5 %  ✅
+d12      0.12    2.026   0.2494    0.2065      0.2072     0.3 %  ✅
+d09      0.09    2.139   0.2335    0.2180      0.2186     0.2 %  ✅
+
+  → ✅ 전 수준 자기일관  (허용 ±3 %)
+
+########## stage3 · P군 위치 강건성 (d=0.21, Su=1.773) ##########
+
+===== p15   Su=1.773  수위=0.21 m  nz=37   07-29 04:08 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p15
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p15
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p15
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p15 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p15
+ExecutionTime = 1844.581 s  ClockTime = 1844 s
+
+===== p04   Su=1.773  수위=0.21 m  nz=37   07-29 04:39 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p04
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p04
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p04
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p04 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p04
+ExecutionTime = 1903.518 s  ClockTime = 1903 s
+
+===== p01   Su=1.773  수위=0.21 m  nz=37   07-29 05:11 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p01
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p01
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p01
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p01 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/p01
+ExecutionTime = 2056.061 s  ClockTime = 2056 s
+
+########## stage4 · M군 medium 앵커 ##########
+
+===== m21   Su=1.773  수위=0.21 m  nz=48   07-29 05:45 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/m21
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/m21
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/m21
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/m21 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/Ex_exception3/m21
+ExecutionTime = 5939.636 s  ClockTime = 5940 s
+
+########## 집계 ##########
+
+====================================================================================================
+ [1] 수위 레버 — EX2 hold-out 축   (T = 25 °C)
+====================================================================================================
+
+case     d[m]    H_p   V[L]       셀수      Su     α_g  a[1/m]       W     Qp  K_La[1/h]    τ[분]    플룸%     기준비
+-------------------------------------------------------------------------------------------------------------
+d21      0.21   0.19   20.7  114,996   1.773  0.1815    2178  0.2930   6.16      2.928    20.5     85    100 %
+d18      0.18   0.16   17.8   99,456   1.773  0.1815    2178  0.2929   6.19      2.955    20.3     82    101 %
+d15      0.15   0.13   14.8   80,808   1.871  0.1936    2323  0.2710   5.83      3.250    18.5     81    111 %
+d12      0.12   0.10   11.8   65,268   2.026  0.2072    2487  0.2494   5.59      3.503    17.1     78    120 %
+d09      0.09   0.07    8.9   49,728   2.139  0.2186    2623  0.2335   4.85      3.551    16.9     71    121 %
+
+  레버 = 최저수위 K_La / 기준 K_La. §1.2 표(해석추정)와 대조할 것.
+
+====================================================================================================
+ [2] κ 위치 무의존성 — 방법론 §6.2 '2–3위치에서 κ 일치'
+====================================================================================================
+
+  신규 coarse · Su=1.773
+    case                   플룸축      Su        W      Qp  K_La[1/h]
+    p15         (0.035, 0.075)   1.773   0.2615    5.45      3.173
+    p04         (0.075, 0.035)   1.773   0.2982    6.38      2.892
+    p01         (0.015, 0.035)   1.773   0.3379    6.46      2.426
+    → K_La = 2.830 ± 0.377 /h,  범위 2.43–3.17,  **CV 13.3 %**
+
+  기존 medium · Su=2.86 (동일 3위치, 디스크 상주)
+    case                   플룸축      Su        W      Qp  K_La[1/h]
+    pos15       (0.035, 0.075)    2.86   0.3201    6.39      2.666
+    pos4        (0.075, 0.035)    2.86   0.3786    6.87      2.127
+    pos1        (0.015, 0.035)    2.86   0.4153    8.53      2.218
+    → K_La = 2.337 ± 0.288 /h,  범위 2.13–2.67,  **CV 12.3 %**
+
+  판정: 위치 산포가 운전점에 보존되는가
+    Su=2.86  CV 12.3 %   ↔   Su=1.773  CV 13.3 %   차이 1.0 %p
+    → ✅ 보존  (허용 2 %p)
+      보존이면 16위치 medium 스윕(33 h, Su=2.86)의 **상대 산포 결론**을
+      새 운전점에서도 인용할 수 있다 → 16위치 재실행 불필요.
+
+====================================================================================================
+ [3] medium 앵커 — 절대 κ 와 coarse 편향의 Su 불변성
+====================================================================================================
+
+    coarse/medium W 편향 @ Su=2.86  : -0.44 %
+    coarse/medium W 편향 @ Su=1.773 : -2.62 %
+    → ❌ Su 의존  (차이 2.17 %p, 허용 1 %p)
+      불변이면 coarse 로 돌린 D·P군에 단일 보정계수를 적용해
+      medium 급 절대값을 복원할 수 있다.
+
+    medium 앵커 절대값: W 0.3009  α_g 0.1775  a 2130 /m  K_La 2.785 /h  τ 21.5 분
+
+  → results.csv 기록 (11 행)
+
+완료 2026년 07월 29일 수 오전  7:25:08. 결과를 README.md §5 표에 기입하십시오.

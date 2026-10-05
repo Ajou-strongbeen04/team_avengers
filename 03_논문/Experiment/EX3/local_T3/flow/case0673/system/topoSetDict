@@ -1,0 +1,27 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| 漁벤져스 EX3 A층 · 자동생성 (gen_cases.py) — 수정 금지                       |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object topoSetDict; }
+
+actions
+(
+    { name plumeCells; type cellSet; action new; source cylinderToCell;
+      point1 (0.02 0.035 0.02); point2 (0.02 0.035 0.21); radius 0.01; }
+    { name plume; type cellZoneSet; action new; source setToCellZone; set plumeCells; }
+    // obs0 rock M @(0.061,0.154) box
+    { name obs0Cells; type cellSet; action new; source boxToCell;
+      box (0.0256 0.1235 -0.0001) (0.0956 0.1835 0.0700); }
+    { name obs0; type cellZoneSet; action new; source setToCellZone; set obs0Cells; }
+    // obs1 rock M @(0.124,0.083) box
+    { name obs1Cells; type cellSet; action new; source boxToCell;
+      box (0.0886 0.0527 -0.0001) (0.1586 0.1127 0.0700); }
+    { name obs1; type cellZoneSet; action new; source setToCellZone; set obs1Cells; }
+    // obs2 rock L @(0.252,0.137) box
+    { name obs2Cells; type cellSet; action new; source boxToCell;
+      box (0.1969 0.0967 -0.0001) (0.3069 0.1767 0.1000); }
+    { name obs2; type cellZoneSet; action new; source setToCellZone; set obs2Cells; }
+    // obs3 rock S @(0.253,0.045) box
+    { name obs3Cells; type cellSet; action new; source boxToCell;
+      box (0.2329 0.0245 -0.0001) (0.2729 0.0645 0.0400); }
+    { name obs3; type cellZoneSet; action new; source setToCellZone; set obs3Cells; }
+);

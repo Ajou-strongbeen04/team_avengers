@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="640" viewBox="0 0 980 640" font-family="Noto Sans CJK KR, Malgun Gothic, sans-serif">
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker>
+  <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="none" stroke="#000" stroke-width="1.4"/></marker>
+  <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#000" stroke-width="0.7"/></pattern>
+  <pattern id="hatch2" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#000" stroke-width="0.7"/></pattern>
+  <pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#000"/></pattern>
+</defs>
+<rect width="980" height="640" fill="#fff"/>
+<text x="18" y="30" font-size="17" font-weight="bold">【도 2】</text>
+<text x="490.0" y="56" font-size="15" text-anchor="middle" font-weight="bold">관측 3종 → 비가시 수질 항목 N종</text>
+<text x="150" y="92" font-size="13" text-anchor="middle" font-weight="bold">보이는 것 (관측)</text>
+<rect x="60" y="120" width="180" height="62" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="150.0" y="155.6" font-size="13" text-anchor="middle" font-weight="normal">영상 1장</text>
+<text x="66" y="112" font-size="12" text-anchor="start" font-weight="bold">10 / 11</text>
+<rect x="60" y="240" width="180" height="62" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="150.0" y="275.6" font-size="13" text-anchor="middle" font-weight="normal">수온</text>
+<text x="66" y="232" font-size="12" text-anchor="start" font-weight="bold">71</text>
+<rect x="60" y="360" width="180" height="62" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="150.0" y="395.6" font-size="13" text-anchor="middle" font-weight="normal">탁도</text>
+<text x="66" y="352" font-size="12" text-anchor="start" font-weight="bold">72</text>
+<text x="490" y="92" font-size="13" text-anchor="middle" font-weight="bold">물리모델에서 닫는 것</text>
+<rect x="320" y="110" width="340" height="72" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="490.0" y="142.8" font-size="11" text-anchor="middle" font-weight="normal">도메인·Ω_air·Γ_filter</text>
+<text x="490.0" y="156.8" font-size="11" text-anchor="middle" font-weight="normal">장애물·어류 개체수</text>
+<rect x="320" y="230" width="340" height="72" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="490.0" y="262.9" font-size="11" text-anchor="middle" font-weight="normal">C*(T), k_L(T), D_mol(T)</text>
+<text x="490.0" y="276.9" font-size="11" text-anchor="middle" font-weight="normal">Q10, pK_a(T), K1(T), K2(T)</text>
+<rect x="320" y="350" width="340" height="72" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="490.0" y="382.9" font-size="11" text-anchor="middle" font-weight="normal">부유입자 C_p</text>
+<text x="490.0" y="396.9" font-size="11" text-anchor="middle" font-weight="normal">P_TAN·저질산소요구량 진폭</text>
+<line x1="240" y1="151" x2="320" y2="146" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="240" y1="271" x2="320" y2="266" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="240" y1="391" x2="320" y2="386" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="830" y="92" font-size="13" text-anchor="middle" font-weight="bold">보이지 않는 것 (추정, 공간분포)</text>
+<rect x="700" y="110" width="250" height="38" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="825.0" y="132.8" font-size="11" text-anchor="middle" font-weight="normal">용존산소 DO</text>
+<rect x="700" y="156" width="250" height="38" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="825.0" y="178.8" font-size="11" text-anchor="middle" font-weight="normal">용존 이산화탄소 CO2</text>
+<rect x="700" y="202" width="250" height="38" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="825.0" y="224.8" font-size="11" text-anchor="middle" font-weight="normal">pH (국소 평형)</text>
+<rect x="700" y="248" width="250" height="38" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="825.0" y="270.9" font-size="11" text-anchor="middle" font-weight="normal">비이온 암모니아 NH3</text>
+<rect x="700" y="294" width="250" height="38" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="825.0" y="316.9" font-size="11" text-anchor="middle" font-weight="normal">총암모니아성질소 TAN</text>
+<rect x="700" y="340" width="250" height="38" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="825.0" y="362.9" font-size="11" text-anchor="middle" font-weight="normal">아질산 NO2- · 질산 NO3-</text>
+<rect x="700" y="386" width="250" height="38" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="825.0" y="408.9" font-size="11" text-anchor="middle" font-weight="normal">부유입자·퇴적 분포</text>
+<rect x="320" y="440" width="340" height="86" rx="5" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="490" y="470" font-size="13" text-anchor="middle" font-weight="bold">물리 추론부 (2계층 축소모델)</text>
+<text x="490" y="494" font-size="11" text-anchor="middle" font-weight="normal">유동장 1회 계산 → 스칼라 N개 병렬 풀이</text>
+<text x="326" y="434" font-size="12" text-anchor="start" font-weight="bold">40</text>
+<line x1="320" y1="146" x2="296" y2="146" stroke="#000" stroke-width="0.9"/>
+<line x1="320" y1="266" x2="296" y2="266" stroke="#000" stroke-width="0.9"/>
+<line x1="320" y1="386" x2="296" y2="386" stroke="#000" stroke-width="0.9"/>
+<line x1="296" y1="146" x2="296" y2="483" stroke="#000" stroke-width="0.9"/>
+<line x1="296" y1="483" x2="320" y2="483" stroke="#000" stroke-width="0.9" marker-end="url(#a)"/>
+<line x1="660" y1="483" x2="680" y2="483" stroke="#000" stroke-width="0.9"/>
+<line x1="680" y1="483" x2="700" y2="129" stroke="#000" stroke-width="0.9" marker-end="url(#a)"/>
+<line x1="680" y1="483" x2="700" y2="175" stroke="#000" stroke-width="0.9" marker-end="url(#a)"/>
+<line x1="680" y1="483" x2="700" y2="221" stroke="#000" stroke-width="0.9" marker-end="url(#a)"/>
+<line x1="680" y1="483" x2="700" y2="267" stroke="#000" stroke-width="0.9" marker-end="url(#a)"/>
+<line x1="680" y1="483" x2="700" y2="313" stroke="#000" stroke-width="0.9" marker-end="url(#a)"/>
+<line x1="680" y1="483" x2="700" y2="359" stroke="#000" stroke-width="0.9" marker-end="url(#a)"/>
+<line x1="680" y1="483" x2="700" y2="405" stroke="#000" stroke-width="0.9" marker-end="url(#a)"/>
+<text x="60" y="560" font-size="13" text-anchor="start" font-weight="normal">요지 : 관측은 3종으로 고정되고, 항목을 늘려도 센서가 늘지 않는다.</text>
+<text x="60" y="586" font-size="11" text-anchor="start" font-weight="normal">난류확산 계수가 항목에 무관하므로 하나의 유동장이 모든 항목의 공간 골격을 결정한다.</text>
+<text x="60" y="610" font-size="11" text-anchor="start" font-weight="normal">항목을 가르는 것은 표면 경계조건의 종류와 소스항뿐이다.</text>
+</svg>

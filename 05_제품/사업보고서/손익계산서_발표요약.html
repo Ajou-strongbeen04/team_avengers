@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>손익계산서(예시) 발표 요약 — 漁벤져스</title>
+<style>
+  body { font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+         max-width: 960px; margin: 0 auto; padding: 32px 24px; line-height: 1.65; color: #1a1a1a; }
+  h1 { font-size: 1.5rem; border-bottom: 2px solid #1a1a1a; padding-bottom: 8px; margin-bottom: 4px; }
+  h2 { font-size: 1.15rem; margin-top: 36px; border-left: 4px solid #1a1a1a; padding-left: 10px; }
+  h3 { font-size: 1rem; margin-top: 22px; }
+  .sub { color: #666; font-size: 0.85rem; margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.9rem; }
+  th, td { border: 1px solid #ccc; padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: #f2f2f2; font-weight: 600; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .hl { background: #fffbe6; }
+  .box { border: 1px solid #ccc; background: #fafafa; padding: 12px 16px; margin: 14px 0; font-size: 0.9rem; }
+  .warn { border-left: 4px solid #c0392b; }
+  .q { font-weight: 600; margin-bottom: 2px; }
+  .a { margin: 0 0 14px 0; font-size: 0.92rem; }
+  figure { margin: 18px 0; }
+  figcaption { font-size: 0.82rem; color: #666; margin-top: 4px; }
+  small { color: #666; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  li { margin: 3px 0; }
+</style>
+</head>
+<body>
+
+<h1>관상어 헬스케어 스마트센서 — 손익계산서(예시) 발표 요약</h1>
+<p class="sub">원자료: 경영부문 송두산 · <code>관상어_스마트센서_손익계산서.xlsx</code> + <code>손익계산서_가정근거설명.md</code> (2026-08-01) · 요약 정리 2026-08-03</p>
+
+<div class="box">
+<strong>한 줄 요약</strong> — 판매단가 39,900원 / 단위원가 6,800원 구조에서 매출총이익률 83.0%,
+3년차 매출 약 1.20억 원 · 당기순이익 약 7,515만 원. 단, <strong>판매수량은 외부 근거가 없는 임의 성장 시나리오</strong>이며
+이 모델은 확정치가 아니라 <strong>1차 추정</strong>입니다.
+</div>
+
+<h2>1. 3개년 핵심 수치</h2>
+
+<table>
+<tr><th>과목</th><th class="num">Year 1</th><th class="num">Year 2</th><th class="num">Year 3</th></tr>
+<tr><td>판매수량(대)</td><td class="num">500</td><td class="num">1,500</td><td class="num">3,000</td></tr>
+<tr class="hl"><td>매출액</td><td class="num">19,950,000</td><td class="num">59,850,000</td><td class="num">119,700,000</td></tr>
+<tr><td>매출원가</td><td class="num">3,400,000</td><td class="num">10,200,000</td><td class="num">20,400,000</td></tr>
+<tr><td>매출총이익</td><td class="num">16,550,000</td><td class="num">49,650,000</td><td class="num">99,300,000</td></tr>
+<tr><td>매출총이익률</td><td class="num">83.0%</td><td class="num">83.0%</td><td class="num">83.0%</td></tr>
+<tr><td>판매비와관리비(인증비 포함)</td><td class="num">7,936,640</td><td class="num">8,809,920</td><td class="num">17,619,840</td></tr>
+<tr class="hl"><td>영업이익</td><td class="num">8,613,360</td><td class="num">40,840,080</td><td class="num">81,680,160</td></tr>
+<tr><td>영업이익률</td><td class="num">43.17%</td><td class="num">68.24%</td><td class="num">68.24%</td></tr>
+<tr><td>법인세비용(실효 8.0%)</td><td class="num">689,069</td><td class="num">3,267,206</td><td class="num">6,534,413</td></tr>
+<tr class="hl"><td><strong>당기순이익</strong></td><td class="num"><strong>7,924,291</strong></td><td class="num"><strong>37,572,874</strong></td><td class="num"><strong>75,145,747</strong></td></tr>
+<tr><td>순이익률</td><td class="num">39.72%</td><td class="num">62.78%</td><td class="num">62.78%</td></tr>
+</table>
+<p><small>단위: 원. 엑셀 수식 재계산으로 검증 완료(가정근거설명.md 기재값과 일치). 영업외손익 0원 가정.</small></p>
+
+<figure>
+<svg viewBox="0 0 900 265" xmlns="http://www.w3.org/2000/svg" width="100%" role="img" aria-label="3개년 매출·영업이익·당기순이익 막대그래프">
+  <line x1="70" y1="210" x2="870" y2="210" stroke="#333" stroke-width="1"/>
+  <line x1="70" y1="20" x2="70" y2="210" stroke="#333" stroke-width="1"/>
+  <text x="70" y="14" font-size="11" fill="#666">단위: 백만 원</text>
+  <g font-size="10" fill="#666">
+    <line x1="70" y1="30" x2="870" y2="30" stroke="#eee"/><text x="40" y="34">120</text>
+    <line x1="70" y1="75" x2="870" y2="75" stroke="#eee"/><text x="46" y="79">90</text>
+    <line x1="70" y1="120" x2="870" y2="120" stroke="#eee"/><text x="46" y="124">60</text>
+    <line x1="70" y1="165" x2="870" y2="165" stroke="#eee"/><text x="46" y="169">30</text>
+    <text x="52" y="214">0</text>
+  </g>
+  <g>
+    <rect x="140" y="180.1" width="46" height="29.9" fill="#2c3e50"/>
+    <rect x="190" y="197.1" width="46" height="12.9" fill="#7f8c8d"/>
+    <rect x="240" y="198.1" width="46" height="11.9" fill="#bdc3c7"/>
+    <text x="213" y="228" font-size="12" text-anchor="middle">Year 1</text>
+    <text x="163" y="175" font-size="10" text-anchor="middle" fill="#2c3e50">20.0</text>
+    <text x="213" y="192" font-size="10" text-anchor="middle" fill="#555">8.6</text>
+    <text x="263" y="193" font-size="10" text-anchor="middle" fill="#555">7.9</text>
+  </g>
+  <g>
+    <rect x="400" y="120.2" width="46" height="89.8" fill="#2c3e50"/>
+    <rect x="450" y="148.7" width="46" height="61.3" fill="#7f8c8d"/>
+    <rect x="500" y="153.6" width="46" height="56.4" fill="#bdc3c7"/>
+    <text x="473" y="228" font-size="12" text-anchor="middle">Year 2</text>
+    <text x="423" y="115" font-size="10" text-anchor="middle" fill="#2c3e50">59.9</text>
+    <text x="473" y="144" font-size="10" text-anchor="middle" fill="#555">40.8</text>
+    <text x="523" y="149" font-size="10" text-anchor="middle" fill="#555">37.6</text>
+  </g>
+  <g>
+    <rect x="660" y="30.4" width="46" height="179.6" fill="#2c3e50"/>
+    <rect x="710" y="87.5" width="46" height="122.5" fill="#7f8c8d"/>
+    <rect x="760" y="97.3" width="46" height="112.7" fill="#bdc3c7"/>
+    <text x="733" y="228" font-size="12" text-anchor="middle">Year 3</text>
+    <text x="683" y="25" font-size="10" text-anchor="middle" fill="#2c3e50">119.7</text>
+    <text x="733" y="83" font-size="10" text-anchor="middle" fill="#555">81.7</text>
+    <text x="783" y="93" font-size="10" text-anchor="middle" fill="#555">75.1</text>
+  </g>
+  <g font-size="11">
+    <rect x="600" y="246" width="12" height="10" fill="#2c3e50"/><text x="618" y="255">매출액</text>
+    <rect x="686" y="246" width="12" height="10" fill="#7f8c8d"/><text x="704" y="255">영업이익</text>
+    <rect x="782" y="246" width="12" height="10" fill="#bdc3c7"/><text x="800" y="255">당기순이익</text>
+  </g>
+</svg>
+<figcaption>3개년 매출·영업이익·당기순이익 (백만 원)</figcaption>
+</figure>
+
+<h3>매출 100원의 구조 (Year 3 기준)</h3>
+<figure>
+<svg viewBox="0 0 900 90" xmlns="http://www.w3.org/2000/svg" width="100%" role="img" aria-label="Year3 매출 100원의 비용·이익 구성 비율 막대">
+  <rect x="50" y="22" width="136.3" height="40" fill="#34495e"/>
+  <rect x="186.3" y="22" width="117.8" height="40" fill="#7f8c8d"/>
+  <rect x="304.1" y="22" width="43.7" height="40" fill="#b2bec3"/>
+  <rect x="347.8" y="22" width="502.2" height="40" fill="#dfe6e9"/>
+  <text x="118" y="47" font-size="11" fill="#fff" text-anchor="middle">원가 17.0%</text>
+  <text x="245" y="47" font-size="11" fill="#fff" text-anchor="middle">판관비 14.7%</text>
+  <text x="326" y="16" font-size="10" fill="#555" text-anchor="middle">세금 5.5%</text>
+  <text x="599" y="47" font-size="12" fill="#2d3436" text-anchor="middle">당기순이익 62.8%</text>
+  <text x="50" y="80" font-size="10" fill="#666">0%</text>
+  <text x="832" y="80" font-size="10" fill="#666">100%</text>
+</svg>
+<figcaption>Year 3 매출액 대비 비용·이익 구성. Year 1은 인증비 500만 원(1회성)이 추가로 얹혀 순이익률이 39.7%로 낮음.</figcaption>
+</figure>
+
+<h2>2. 가정치와 그 근거 — "이 숫자 어디서 나왔나"</h2>
+
+<table>
+<tr><th>가정</th><th class="num">값</th><th>근거·출처</th><th>한계 (선제 고백)</th></tr>
+<tr>
+  <td>판매단가(ASP)</td><td class="num">39,900원</td>
+  <td>사전조사에서 비중이 가장 많았던 가격대를 기준으로 채택. 완제품 스마트 어항이 아닌 <strong>부착형 센서 모듈</strong>이라는 제품 성격 반영</td>
+  <td>WTP(지불의사)를 설문·사전판매로 검증한 값은 아님. 유사 카테고리 가격대 내 추정치</td>
+</tr>
+<tr>
+  <td>단위원가</td><td class="num">6,800원</td>
+  <td>실제 시제품 부품 구매 내역(지원금 사용내역) 기반 <strong>상향식 합산</strong>. 온도센서(DS18B20) + 자체제작 IR 탁도센서(IR LED+포토다이오드+LM358) + ESP32 + 하우징(사출 성형 가정) + PCB + 소모성 부품을 대량구매 단가로 재계산</td>
+  <td>계산값 약 8,470원을 6,800원으로 반올림 조정(팀 지시). <strong>배터리·방수 처리 인건비·조립비·품질검사비·포장비 미반영</strong> → 실제보다 낮게 나올 가능성</td>
+</tr>
+<tr>
+  <td>판매수량</td><td class="num">500 / 1,500 / 3,000대</td>
+  <td>—</td>
+  <td><strong>외부 통계·벤치마크 없는 임의의 3배 성장 시나리오.</strong> 매출액 전체를 결정하는 최대 변수. 사전예약·MOU·입점 계획이 확정되면 반드시 교체</td>
+</tr>
+<tr>
+  <td>판관비율</td><td class="num">14.71%</td>
+  <td>한국은행 「2024년 기업경영분석」 p.362, <strong>C282,4,9(기타 전기장비) 제조업</strong> 손익계산서의 13개 항목별 구성비를 그대로 적용(급여 3.69% / 기타판매비와관리비 6.19% / 경상개발비·연구비 1.63% 등). 업종분류를 센서 C26 → 전기장비 C28로 변경하며 23.26%에서 갱신</td>
+  <td>이 업종은 <strong>소기업 전용 통계가 없어 '전체기업'(대+중견+중소 합산)</strong> 수치를 사용. 대기업의 규모의 경제가 섞여 실제 소기업보다 낮게 잡혔을 가능성. KSIC 세세분류 코드 미확인</td>
+</tr>
+<tr>
+  <td>실효 법인세율</td><td class="num">8.0%</td>
+  <td>국세청 「법인세 세율(2026년 이후)」 과세표준 2억 원 이하 <strong>기본세율 10%</strong> × 조세특례제한법 제7조 <strong>소기업 특별세액감면 20%</strong>(제조업·수도권 내) → 10%×(1−20%) = 8.0%</td>
+  <td>수도권 소재 가정(수도권 밖이면 30% 감면으로 더 유리). 3개년 세전이익이 모두 2억 원 미만이라 단일구간 적용 가능</td>
+</tr>
+<tr>
+  <td>인증비(1회성)</td><td class="num">Year1 500만원</td>
+  <td>전파법상 전파인증 + KC 안전인증 필요. 산업평균 판관비율에 포함되지 않는 별도 규제비용이라 가산</td>
+  <td>정확한 견적 미수령. 소형 IoT 기기 통상 수준을 감안한 개략치. 국립전파연구원(RRA) 인증 대행업체 견적 필요</td>
+</tr>
+</table>
+
+<h2>3. "우리는 소기업인가" — 세제 근거</h2>
+<ul>
+<li><strong>결론: 소기업 해당.</strong> 중소기업기본법 시행령 별표1(중소기업 규모기준) + 별표3(소기업 규모기준).</li>
+<li>업종 C28(전기장비 제조업 / 기타 전기장비)의 소기업 기준은 <strong>평균매출액 120억 원 이하</strong>(별표3상 C26과 동일 구간). Year3 매출 약 1.2억 원은 기준의 <strong>1% 수준</strong>.</li>
+<li>자산총액 5천억 원 미만, 대기업집단 비계열 등 독립성 요건도 충족.</li>
+<li>→ 조세특례제한법 제7조 특별세액감면 20% 적용 가능.</li>
+</ul>
+
+<h3>개인사업자 전환 검토 결과 — 법인 유지</h3>
+<table>
+<tr><th></th><th class="num">Year 1</th><th class="num">Year 2</th><th class="num">Year 3</th></tr>
+<tr><td>세전이익(참고)</td><td class="num">8,613,360</td><td class="num">40,840,080</td><td class="num">81,680,160</td></tr>
+<tr><td>법인세+지방소득세</td><td class="num">757,976</td><td class="num">3,593,927</td><td class="num">7,187,854</td></tr>
+<tr><td>종합소득세+지방소득세(개인)</td><td class="num">375,585</td><td class="num">4,084,091</td><td class="num">11,865,250</td></tr>
+<tr class="hl"><td>유리한 쪽</td><td>개인 (약 38만원)</td><td>법인 (약 49만원)</td><td>법인 (약 468만원)</td></tr>
+</table>
+<p><small>감면 20%는 개인사업자 종합소득세에도 동일 적용되므로 차이는 <strong>세율 구조</strong>에서 발생 — 법인 단일 10%(실효 8%) vs 개인 누진(6 / 15 / 24 / 35%). 이익이 커질수록 법인이 유리. 세금 외에도 투자 유치·지분 배분·정부 R&amp;D 과제 요건·유한책임 측면에서 법인 형태가 적합. (참고용 근사치이며 확정 판단은 세무사 상담 필요)</small></p>
+
+<h2>4. 예상 질문 &amp; 답변</h2>
+
+<p class="q">Q1. Year2부터 영업이익률이 43% → 68%로 급등하는 이유는?</p>
+<p class="a">A. 두 가지입니다. ① Year1에만 있는 <strong>인증비 500만 원(1회성)</strong>이 빠집니다. ② 판관비를 <strong>매출액 대비 정률(14.71%)</strong>로 잡아 수량이 늘어도 비율이 그대로 유지됩니다. 즉 이 모델에는 <strong>고정비 개념이 들어가 있지 않다</strong>는 것이 구조적 한계이며, 실제로는 인건비 같은 고정비가 초기에 더 크게 잡힐 것으로 보고 있습니다.</p>
+
+<p class="q">Q2. 순이익률 62.8%는 제조업치고 너무 높지 않나?</p>
+<p class="a">A. 맞습니다. 높게 나온 이유는 ① 단위원가 6,800원에 <strong>노무비·조립비·품질검사비·포장비가 아직 반영되지 않았고</strong>, ② 판관비를 대기업이 섞인 '전체기업' 평균(14.71%)으로 잡아 실제 소기업보다 낮게 추정했을 가능성이 있기 때문입니다. 두 항목 모두 <strong>비용이 과소 추정된 방향</strong>이므로, 실제 수익성은 이보다 낮아질 것으로 보고 갱신할 계획입니다.</p>
+
+<p class="q">Q3. 판매수량 500 → 1,500 → 3,000대의 근거는?</p>
+<p class="a">A. <strong>외부 통계 근거가 없는 임의의 성장 시나리오입니다.</strong> 실제 목표 물량(사전예약·MOU·입점 계획)이 확정되면 반드시 교체할 항목으로 표시해 두었습니다. 매출액 전체를 결정하는 가장 큰 변수라 가정치임을 분명히 밝힙니다.</p>
+
+<p class="q">Q4. 판관비 비율은 팀에서 임의로 배분한 건가?</p>
+<p class="a">A. 아닙니다. 한국은행 「2024년 기업경영분석」 C282,4,9(기타 전기장비) 제조업 <strong>실제 손익계산서의 13개 항목별 구성비를 그대로</strong> 적용했고, 엑셀에 [판관비 구성비 합계 검증] 행을 넣어 원자료 14.71%와 일치하는지 수식으로 자동 확인합니다(항목별 반올림으로 계산값 14.72%, 오차 0.01%p). 다만 이 업종은 소기업 세분류 통계가 없어 전체기업 수치를 썼습니다.</p>
+
+<p class="q">Q5. DO(용존산소) 센서가 핵심인데 왜 원가에 없나?</p>
+<p class="a">A. DO 센서는 <strong>"온도+탁도로 용존산소를 추정하는 모델(알고리즘)"을 검증하기 위한 R&amp;D 실험 장비</strong>로만 사용했고, 양산 제품에는 물리적으로 들어가지 않습니다. 그래서 R&amp;D비로 처리하고 매출원가(COGS)에서 제외했습니다. 이것이 원가 6,800원의 근거이자 제품의 원가 경쟁력 논리입니다.</p>
+
+<h2>5. 보고 시 반드시 붙일 단서</h2>
+<div class="box warn">
+<strong>"이 모델은 확정치가 아니라 현재까지 확보한 근거로 만든 1차 추정입니다."</strong>
+<ul>
+<li>특히 <strong>판매수량·판매단가는 실제 시장 검증 전 가정</strong>입니다.</li>
+<li>원가·판관비는 모두 <strong>실제보다 낮게 추정되었을 가능성</strong>이 있는 방향입니다.</li>
+<li>실제 견적·계약·시장조사 결과가 나오는 대로 계속 갱신합니다.</li>
+</ul>
+</div>
+
+<h2>6. 다음 갱신 시 채워야 할 항목</h2>
+<ul>
+<li>단위원가에 <strong>배터리·방수 처리 인건비·조립비·품질검사비·포장비</strong> 추가 (현재 부품 원가만 반영)</li>
+<li>판매수량을 실제 목표 물량(사전예약·MOU·입점 계획)으로 교체</li>
+<li>ASP를 설문·사전판매 기반 WTP로 검증</li>
+<li>인증비 — RRA 인증 대행업체 실견적 확보</li>
+<li>KSIC 세세분류 코드 확정 (현재 "기타 전기장비" 업종명만 확인)</li>
+<li>고정비 / 변동비 분리 반영 (현재 판관비가 전부 매출 정률)</li>
+</ul>
+
+<p style="margin-top:40px"><small>본 요약의 모든 수치는 <code>관상어_스마트센서_손익계산서.xlsx</code>의 수식을 재계산해 검증했으며,
+<code>손익계산서_가정근거설명.md</code>에 기재된 값과 일치합니다.</small></p>
+
+</body>
+</html>

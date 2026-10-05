@@ -1,0 +1,19 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX1 · 용존산소 DO [mg/L] · 25°C · 코드BC 미사용(윈도우 호환)                  |
+|  재폭기·SOD 는 BC 가 아니라 표층/바닥층 '체적 소스'로 처리(controlDict fvOptions).|
+|  따라서 여기 벽면은 전부 무플럭스 zeroGradient.                              |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class volScalarField; object C; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 0 0 0 0];       // 스칼라(값을 mg/L 로 해석)
+internalField   uniform 8.0;
+
+boundaryField
+{
+    top     { type zeroGradient; }     // 재폭기는 표층 체적소스로(fvOptions)
+    bottom  { type zeroGradient; }     // SOD 는 바닥층 체적소스로(fvOptions)
+    walls   { type zeroGradient; }     // 무플럭스
+}
+
+// ************************************************************************* //

@@ -1,0 +1,101 @@
+#!/bin/sh
+cd "${0%/*}" || exit 1
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+
+# =============================================================================
+#  EX_exception · case_su177 — 고정점 확인런 (Su = 1.773)
+#
+#  왜 도는가:
+#    case_su168(Su=1.684)은 W ∝ Su^(1/3) 가정으로 잡은 운전점이었는데
+#    실측 W = 0.2869 m/s 로 예측 0.3145 대비 -8.8 % 빗나갔다(게이트 ① 불합격).
+#    두 CFD 점(2.860→0.3752, 1.684→0.2869)이 주는 실측 지수는
+#        n = ln(0.2869/0.3752) / ln(1.684/2.860) = 0.507
+#    이 n 으로 자기일관 고정점을 다시 풀면
+#        alpha_g = 0.18079, Su = 1.773, W_pred = 0.2945 m/s, a = 2170 /m
+#    본 런은 그 고정점이 실제로 자기일관인지(=3회차 반복이 멈추는지) 확인한다.
+#
+#  합격 기준 (../compare.py 가 자동 출력):
+#    (1) alpha_g 잔차 |실측W 되먹임 - 입력| <= 3 %  → W 실측 0.2945 +- 0.009 m/s
+#    (2) 3점 멱법칙 지수 안정 : (2.860, 1.684, 1.773) 쌍별 n 산포 <= 0.02
+#    ※ 게이트 (2)(정체역 구조 불변)는 case_su168 에서 이미 불합격이다.
+#       본 런은 alpha_g 확정용이지 면제 재심이 아니다.
+#
+#  대조군과 다른 것은 system/fvOptions 의 Su 한 줄뿐이다.
+#  격자(84x37x37), controlDict(0->200 s, fieldAverage timeStart 40, maxCo 1.0),
+#  fvSchemes/fvSolution, 플룸 위치(x=0.13, y=0.035), nu(1.0e-6) 전부 동일.
+#
+#  소요: 8코어 약 33분 (case_su168 실측 1955 s)
+# =============================================================================
+
+BASE=../../EX2/CFD/study/coarse_0.02
+SIB=../case_su168
+
+echo "=============================================="
+echo " EX_exception  case_su177   (Su = 1.773)"
+echo " 시작: $(date)"
+echo "=============================================="
+
+# --- 안전장치 1: Su 확인 (복사 실수 방지) ---
+if ! grep -q "0 0 1.773" system/fvOptions; then
+    echo "[ERROR] system/fvOptions 의 Su 가 1.773 이 아닙니다."
+    grep -n "U  " system/fvOptions
+    exit 1
+fi
+echo "[ok] fvOptions  Su = 1.773  (alpha_g = 0.18079, a = 2170 /m)"
+
+# --- 안전장치 2: 대조군과 동일해야 하는 항목 ---
+#     (Windows OpenFOAM 창에 diff 가 없어서 su168 때 검사가 통째로 헛돌았다.
+#      cmp 로 폴백하고, 둘 다 없으면 생략을 명시한다.)
+if   command -v diff >/dev/null 2>&1; then SAME="diff -q"
+elif command -v cmp  >/dev/null 2>&1; then SAME="cmp -s"
+else SAME=""; fi
+
+if [ -n "$SAME" ]; then
+    NDIFF=0
+    for f in system/blockMeshDict system/controlDict system/fvSchemes \
+             system/fvSolution system/topoSetDict constant/transportProperties; do
+        if [ -f "$BASE/$f" ] && ! $SAME "$f" "$BASE/$f" >/dev/null 2>&1; then
+            echo "[WARN] $f 가 대조군과 다릅니다 - 사과-대-사과 비교가 깨집니다."
+            NDIFF=$((NDIFF + 1))
+        fi
+    done
+    [ "$NDIFF" -eq 0 ] && echo "[ok] 대조군 대비 fvOptions 외 차이 없음 ($SAME 로 확인)"
+else
+    echo "[skip] diff/cmp 둘 다 없음 - 동일성 검사 생략됨(수동 확인 요망)"
+fi
+
+# --- 복사해 온 stale 메시/분할 제거 ---
+rm -rf constant/polyMesh processor* log.*
+
+restore0Dir
+runApplication blockMesh
+runApplication topoSet
+runApplication decomposePar
+runParallel $(getApplication)          # pimpleFoam, np = decomposeParDict = 8
+runApplication reconstructPar -latestTime
+rm -rf processor*
+
+echo
+echo "== 벽시간 =="
+grep -E "ExecutionTime|ClockTime" log.pimpleFoam | tail -3
+
+echo
+echo "== 판정 (3점: 대조군 / su168 / su177) =="
+# su168 때 Windows Store 의 python3 스텁이 잡혀 Permission denied 로 죽었다.
+# numpy import 가 실제로 되는 인터프리터만 고른다.
+PY=""
+for c in python3 python py; do
+    if command -v $c >/dev/null 2>&1 && $c -c "import numpy" >/dev/null 2>&1; then
+        PY=$c; break
+    fi
+done
+if [ -n "$PY" ]; then
+    $PY ../compare.py "$BASE" "$SIB" .
+else
+    echo "numpy 가 되는 python 을 못 찾음 -> 수동으로:"
+    echo "  python3 ../compare.py $BASE $SIB ."
+fi
+
+echo
+echo " 종료: $(date)"
+#------------------------------------------------------------------------------

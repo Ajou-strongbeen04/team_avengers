@@ -1,0 +1,63 @@
+# ===== OS / 에디터 =====
+.DS_Store
+~$*
+.obsidian/
+.claude/settings.local.json
+
+# ===== 비밀 (외부 업로드 금지) =====
+00_운영/webhooks.md
+
+# ===== 폐기·임시 자료 =====
+_archive/
+_to_delete/
+**/_tmp_stage/
+
+# ===== CFD / OpenFOAM 대용량 산출물 =====
+03_논문/Experiment/EX3/dataset/
+03_논문/Experiment/EX3/CFD/pilot/
+03_논문/Experiment/야간작업_20260805/
+01_문서/정성실험_CFD/
+**/log.*
+**/processor*/
+**/postProcessing/
+**/polyMesh/
+**/*.foam
+**/*.gz
+**/*.vtk
+**/*.vtu
+**/*.stl
+**/*.f3d
+**/*.glb
+
+# ===== 앱 빌드 / 의존성 =====
+**/node_modules/
+**/build/
+**/.gradle/
+**/dist/
+**/__pycache__/
+*.apk
+*.dex
+*.jar
+*.class
+*.map
+
+# ===== 발표 산출물·바이너리 (대용량) =====
+02_발표/최종발표/산출물/
+02_발표/**/*.pptx
+02_발표/**/*.pdf
+01_문서/(붙임2)*/
+01_문서/미팅_20260707/
+03_논문/References/*.pdf
+03_논문/References/Num*
+*.sketch
+*.mp4
+*.mov
+*.zip
+*.docx
+*.xlsx
+*.hwpx
+
+# ===== API 키 (로컬 전용 — HTML은 config.js 에서 window.GEMINI_API_KEY 를 읽는다) =====
+**/config.js
+**/.env
+!**/.env.example

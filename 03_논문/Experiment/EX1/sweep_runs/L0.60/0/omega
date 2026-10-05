@@ -1,0 +1,17 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX1 · 비소산율 omega (AWT 벽함수)                                            |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class volScalarField; object omega; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 -1 0 0 0 0];
+internalField   uniform 1.0;
+
+boundaryField
+{
+    top     { type zeroGradient; }
+    bottom  { type omegaWallFunction; value uniform 1.0; }   // 저/고Re 자동블렌딩
+    walls   { type omegaWallFunction; value uniform 1.0; }
+}
+
+// ************************************************************************* //

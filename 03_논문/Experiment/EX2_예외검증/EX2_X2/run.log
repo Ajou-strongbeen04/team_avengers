@@ -1,0 +1,142 @@
+[ok] ì§ ë‘ ê°œ í™•ì¸ (pimpleFoam ê²°ê³¼ ìƒì£¼)
+==============================================
+ EX_exception2  sf_su286   (simpleFoam, Su = 2.86)
+ ì‹œì‘: 2026ë…„ 07ì›” 29ì¼ ìˆ˜ ì˜¤ì „  1:34:01
+==============================================
+[ok] Su = 2.86 (ì§ê³¼ ì¼ì¹˜)
+[skip] diff/cmp ì—†ìŒ - ë™ì¼ì„± ê²€ì‚¬ ìƒëµë¨
+     (controlDictÂ·fvSchemesÂ·fvSolution ì€ ì •ìƒí•´ë¼ ë‹¹ì—°íˆ ë‹¤ë¥´ë‹¤. ê²€ì‚¬ ëŒ€ìƒ ì•„ë‹˜)
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su286
+Running topoSet on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su286
+Running decomposePar on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su286
+Running simpleFoam (8 processes) on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su286 
+Running reconstructPar on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su286
+
+== ìˆ˜ë ´ ==
+  [ë¯¸ìˆ˜ë ´] endTime ê¹Œì§€ ê° - ì”ì°¨ê°€ ì •ì²´/ì§„ë™í–ˆì„ ê°€ëŠ¥ì„±.
+           (ë¶€ë ¥ í”Œë£¸ì€ ë³¸ì§ˆì ìœ¼ë¡œ ë¹„ì •ìƒì´ë¯€ë¡œ ì´ê²ƒë„ ê²°ê³¼ë‹¤.)
+ExecutionTime = 161.018 s  ClockTime = 161 s
+ExecutionTime = 161.348 s  ClockTime = 161 s
+
+ ì¢…ë£Œ: 2026ë…„ 07ì›” 29ì¼ ìˆ˜ ì˜¤ì „  1:36:51
+==============================================
+ EX_exception2  sf_su168   (simpleFoam, Su = 1.684)
+ ì‹œì‘: 2026ë…„ 07ì›” 29ì¼ ìˆ˜ ì˜¤ì „  1:36:51
+==============================================
+[ok] Su = 1.684 (ì§ê³¼ ì¼ì¹˜)
+[skip] diff/cmp ì—†ìŒ - ë™ì¼ì„± ê²€ì‚¬ ìƒëµë¨
+     (controlDictÂ·fvSchemesÂ·fvSolution ì€ ì •ìƒí•´ë¼ ë‹¹ì—°íˆ ë‹¤ë¥´ë‹¤. ê²€ì‚¬ ëŒ€ìƒ ì•„ë‹˜)
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su168
+Running topoSet on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su168
+Running decomposePar on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su168
+Running simpleFoam (8 processes) on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su168 
+Running reconstructPar on /c/Users/ê¹€ê°•ë¹ˆ/OneDrive/ë¬¸ì„œ/ajou university/2026/2í•™ê¸°/AI-Integrated-Capston-Design/Claude/03_ë…¼ë¬¸/Experiment/EX_exception2/sf_su168
+
+== ìˆ˜ë ´ ==
+  [ë¯¸ìˆ˜ë ´] endTime ê¹Œì§€ ê° - ì”ì°¨ê°€ ì •ì²´/ì§„ë™í–ˆì„ ê°€ëŠ¥ì„±.
+           (ë¶€ë ¥ í”Œë£¸ì€ ë³¸ì§ˆì ìœ¼ë¡œ ë¹„ì •ìƒì´ë¯€ë¡œ ì´ê²ƒë„ ê²°ê³¼ë‹¤.)
+ExecutionTime = 157.069 s  ClockTime = 157 s
+ExecutionTime = 157.363 s  ClockTime = 158 s
+
+ ì¢…ë£Œ: 2026ë…„ 07ì›” 29ì¼ ìˆ˜ ì˜¤ì „  1:39:37
+
+############ íŒì • 1 Â· ê°™ì€ Su(2.86)ì—ì„œ ì†”ë²„ ëŒ€ì¡° ############
+
+==============================================================================
+ EX_exception ¡¤ Su ¼·µ¿ ÆÇÁ¤   (Q_air ½ÇÃø 1.2 L/min ¡¤ T = 25 ¡ÆC)
+==============================================================================
+
+case                    solver  field     Su        nu     t  mean|U|  max|U|       W  Qp[L/m]      nu_t  stag%
+---------------------------------------------------------------------------------------------------------------
+coarse_0.02         pimpleFoam  UMean  2.860 1.000e-06   200  0.03617  0.6263  0.3752     7.90 7.225e-05   6.16
+sf_su286            simpleFoam      U  2.860 1.000e-06  3000  0.03679  0.6462  0.3904     8.35 7.178e-05   5.21
+
+  [note] Æò±ÕÀå(UMean)°ú Á¤»óÇØ(U)¸¦ ¼¯¾î ºñ±³ Áß - ÀÌ Á¶ÇÕÀÇ Â÷ÀÌ°¡ °ğ 'Á¤»ó ±Ù»ç' ¿ÀÂ÷´Ù(EX_exception2).
+
+==============================================================================
+ ÆÇÁ¤ : sf_su286   (baseline = coarse_0.02)
+==============================================================================
+
+[¨ç] W ¡ğ Su^(1/3)
+    baseline : Su = 2.860 ¡æ W = 0.3752 m/s
+    ¿¹Ãø     : Su = 2.860 ¡æ W = 0.3752 m/s
+    ½ÇÃø     :               W = 0.3904 m/s   ¡æ ¿ÀÂ÷ +4.07 %
+Traceback (most recent call last):
+  File "C:\Users\±è°­ºó\OneDrive\¹®¼­\ajou university\2026\2ÇĞ±â\AI-Integrated-Capston-Design\Claude\03_³í¹®\Experiment\EX_exception\compare.py", line 325, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\±è°­ºó\OneDrive\¹®¼­\ajou university\2026\2ÇĞ±â\AI-Integrated-Capston-Design\Claude\03_³í¹®\Experiment\EX_exception\compare.py", line 254, in main
+    print(f"    ¡æ {'\u2705 ÇÕ°İ' if ok1 else '\u274c ºÒÇÕ°İ'} (Çã¿ë ¡¾{100*TOL_W:.0f} %)")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp949' codec can't encode character '\u274c' in position 6: illegal multibyte sequence
+
+############ íŒì • 2 Â· ê°™ì€ Su(1.684)ì—ì„œ ì†”ë²„ ëŒ€ì¡° ############
+
+==============================================================================
+ EX_exception ¡¤ Su ¼·µ¿ ÆÇÁ¤   (Q_air ½ÇÃø 1.2 L/min ¡¤ T = 25 ¡ÆC)
+==============================================================================
+
+case                    solver  field     Su        nu     t  mean|U|  max|U|       W  Qp[L/m]      nu_t  stag%
+---------------------------------------------------------------------------------------------------------------
+case_su168          pimpleFoam  UMean  1.684 1.000e-06   200  0.02781  0.4805  0.2869     6.04 5.355e-05  10.66
+sf_su168            simpleFoam      U  1.684 1.000e-06  3000  0.02853  0.4905  0.2939     6.16 5.498e-05  11.49
+
+  [note] Æò±ÕÀå(UMean)°ú Á¤»óÇØ(U)¸¦ ¼¯¾î ºñ±³ Áß - ÀÌ Á¶ÇÕÀÇ Â÷ÀÌ°¡ °ğ 'Á¤»ó ±Ù»ç' ¿ÀÂ÷´Ù(EX_exception2).
+
+==============================================================================
+ ÆÇÁ¤ : sf_su168   (baseline = case_su168)
+==============================================================================
+
+[¨ç] W ¡ğ Su^(1/3)
+    baseline : Su = 1.684 ¡æ W = 0.2869 m/s
+    ¿¹Ãø     : Su = 1.684 ¡æ W = 0.2869 m/s
+    ½ÇÃø     :               W = 0.2939 m/s   ¡æ ¿ÀÂ÷ +2.42 %
+Traceback (most recent call last):
+  File "C:\Users\±è°­ºó\OneDrive\¹®¼­\ajou university\2026\2ÇĞ±â\AI-Integrated-Capston-Design\Claude\03_³í¹®\Experiment\EX_exception\compare.py", line 325, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\±è°­ºó\OneDrive\¹®¼­\ajou university\2026\2ÇĞ±â\AI-Integrated-Capston-Design\Claude\03_³í¹®\Experiment\EX_exception\compare.py", line 254, in main
+    print(f"    ¡æ {'\u2705 ÇÕ°İ' if ok1 else '\u274c ºÒÇÕ°İ'} (Çã¿ë ¡¾{100*TOL_W:.0f} %)")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp949' codec can't encode character '\u2705' in position 6: illegal multibyte sequence
+
+############ íŒì • 3 Â· simpleFoam ë‚´ë¶€ Su ì„­ë™ (ì§€ìˆ˜ n ì¬í˜„) ############
+   pimpleFoam ì‹¤ì¸¡ n = 0.5064 (2.860â†’1.684). simpleFoam ì´ ê°™ì€ n ì„ ì£¼ëŠ”ê°€?
+
+==============================================================================
+ EX_exception ¡¤ Su ¼·µ¿ ÆÇÁ¤   (Q_air ½ÇÃø 1.2 L/min ¡¤ T = 25 ¡ÆC)
+==============================================================================
+
+case                    solver  field     Su        nu     t  mean|U|  max|U|       W  Qp[L/m]      nu_t  stag%
+---------------------------------------------------------------------------------------------------------------
+sf_su286            simpleFoam      U  2.860 1.000e-06  3000  0.03679  0.6462  0.3904     8.35 7.178e-05   5.21
+sf_su168            simpleFoam      U  1.684 1.000e-06  3000  0.02853  0.4905  0.2939     6.16 5.498e-05  11.49
+
+------------------------------------------------------------------------------
+ ¸è¹ıÄ¢ Áö¼ö n  (W ¡ğ Su^n, ½Öº° ½ÇÃø)
+------------------------------------------------------------------------------
+          sf_su286 ¡ê sf_su168        Su 2.860¡æ1.684   n = 0.5365
+
+    ½ÇÃø n = 0.5365 ·Î ´Ù½Ã Ç¬ ÀÚ±âÀÏ°ü °íÁ¤Á¡
+      ¥á_g = 0.17808   Su = 1.747   W_pred = 0.2997 m/s   a = 6¥á_g/d_b = 2137 /m
+
+==============================================================================
+ ÆÇÁ¤ : sf_su168   (baseline = sf_su286)
+==============================================================================
+
+[¨ç] W ¡ğ Su^(1/3)
+    baseline : Su = 2.860 ¡æ W = 0.3904 m/s
+    ¿¹Ãø     : Su = 1.684 ¡æ W = 0.3272 m/s
+    ½ÇÃø     :               W = 0.2939 m/s   ¡æ ¿ÀÂ÷ -10.20 %
+Traceback (most recent call last):
+  File "C:\Users\±è°­ºó\OneDrive\¹®¼­\ajou university\2026\2ÇĞ±â\AI-Integrated-Capston-Design\Claude\03_³í¹®\Experiment\EX_exception\compare.py", line 325, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\±è°­ºó\OneDrive\¹®¼­\ajou university\2026\2ÇĞ±â\AI-Integrated-Capston-Design\Claude\03_³í¹®\Experiment\EX_exception\compare.py", line 254, in main
+    print(f"    ¡æ {'\u2705 ÇÕ°İ' if ok1 else '\u274c ºÒÇÕ°İ'} (Çã¿ë ¡¾{100*TOL_W:.0f} %)")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp949' codec can't encode character '\u274c' in position 6: illegal multibyte sequence
+
+ì™„ë£Œ 2026ë…„ 07ì›” 29ì¼ ìˆ˜ ì˜¤ì „  1:39:39. íŒì • ê²°ê³¼ë¥¼ README.md Â§4 í‘œì— ê¸°ì…í•˜ì‹­ì‹œì˜¤.

@@ -1,0 +1,112 @@
+
+===== e02   Su=1.751   z_start=0.02 m   08-02 18:29 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02
+ExecutionTime = 6987.379 s  ClockTime = 6987 s
+
+===== e08   Su=1.751   z_start=0.08 m   08-02 20:26 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08
+ExecutionTime = 5932.736 s  ClockTime = 5933 s
+
+===== e17   Su=1.751   z_start=0.17 m   08-02 22:06 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17
+ExecutionTime = 3346.746 s  ClockTime = 3347 s
+
+########## alpha_g 고정점 산출 ##########
+========================================================================================================
+ EX2 CFD_v2 · alpha_g 자기일관   U_gs = 0.06366 m/s (Q_air 1.2 L/min 실측)   U_slip = 0.0578 m/s
+========================================================================================================
+  case      z    H_p    Su(시드)   W_seed   a_g_fp    Su_fp     W_fp     이동%   a[1/m]
+-----------------------------------------------------------------------------------
+   e02  0.020  0.190    1.7510  0.32552   0.1697   1.6651  0.31726   -4.91     2037
+   e08  0.080  0.130    1.7510  0.28627   0.1831   1.7957  0.28998    2.55     2197
+   e17  0.170  0.040    1.7510  0.17160   0.2452   2.4054  0.20183   37.37     2942
+
+  -> fp_result.csv (3 행). 최대 Su 이동 37.4 %
+     stage2 재실행 필요
+  다음:  python3 gen_cases.py --stage 2
+
+########## stage2 fvOptions 갱신 ##########
+========================================================================================
+ EX2 CFD_v2 · 실측 3수준   폭기축 (0.035, 0.195) (실험 실측)   격자 108x48x48
+========================================================================================
+  case  z_start     H_p     플룸층        셀수    예상[분]   대응 실측
+   e02    0.020   0.190    43.4   248,832       89   S1·S2·S3 (생산 운전점, n=3)
+   e08    0.080   0.130    29.7   248,832       89   S4
+   e17    0.170   0.040     9.1   248,832       89   S5 (hold-out)
+    합계                                                  266 분 (stage2 재실행까지 최대 ×2)
+  e02: Su 1.7510 -> 1.6651 (+4.9 %)  재실행
+  e08: Su 1.7510 -> 1.7957 (+2.6 %)  수렴(유지)
+  e17: Su 1.7510 -> 2.4054 (+37.4 %)  재실행
+
+  3개 fvOptions 갱신. 재실행 대상: e02 e17  -> stage2_todo.txt
+
+===== e02   Su=1.665   z_start=0.02 m   08-02 23:02 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e02
+ExecutionTime = 7025.089 s  ClockTime = 7025 s
+
+===== e17   Su=2.405   z_start=0.17 m   08-03 01:00 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e17
+ExecutionTime = 3808.135 s  ClockTime = 3808 s
+
+========================================================================================================
+ EX2 CFD_v2 · alpha_g 자기일관   U_gs = 0.06366 m/s (Q_air 1.2 L/min 실측)   U_slip = 0.0578 m/s
+========================================================================================================
+  case      z    Su(런)     W(실측)   a_g(Su)    a_g(W)      잔차%  판정
+-----------------------------------------------------------------
+   e02  0.020   1.6650   0.31744    0.1697    0.1697    -0.04  OK
+   e08  0.080   1.7960   0.28627    0.1831    0.1850     1.06  OK
+   e17  0.170   2.4050   0.20129    0.2452    0.2457     0.23  OK
+
+  자기일관 판정: 통과 (허용 ±3 %)
+
+완료 2026년 08월  3일 월 오전  2:04:08.
+  다음:  python run_reaer.py      # 가상 재폭기 5런 (OpenFOAM 불필요)
+         python compare_exp.py    # 실측 정량비교표
+
+===== e08   Su=1.796   z_start=0.08 m   08-03 12:08 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX2/CFD_v2/e08
+ExecutionTime = 6028.374 s  ClockTime = 6028 s
+
+완료 2026년 08월  3일 월 오후  1:49:20.
+  다음:  python run_reaer.py      # 가상 재폭기 5런 (OpenFOAM 불필요)
+         python compare_exp.py    # 실측 정량비교표
+========================================================================================================
+ EX2 CFD · alpha_g 자기일관   U_gs = 0.06366 m/s (Q_air 1.2 L/min 실측)   U_slip = 0.0578 m/s
+========================================================================================================
+  case      z    Su(런)     W(실측)   a_g(Su)    a_g(W)      잔차%  판정
+-----------------------------------------------------------------
+   e02  0.020   1.6650   0.31744    0.1697    0.1697    -0.04  OK
+   e08  0.080   1.7960   0.28997    0.1831    0.1831    -0.01  OK
+   e17  0.170   2.4050   0.20129    0.2452    0.2457     0.23  OK
+
+  자기일관 판정: 통과 (허용 ±3 %)

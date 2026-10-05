@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+<rect width="1280" height="720" fill="#FFFFFF"/>
+<text x="40" y="50" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="27" font-weight="700" fill="#111111">한눈에 보기 — 목차와 평가항목 대응</text>
+<text x="1240" y="50" text-anchor="end" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="14" fill="#888888">1차보고서 · 어(魚)벤져스</text>
+<text x="40" y="76" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#555555">가정용 어항 다항목 수질 진단 디바이스 — 사진 한 장과 수온 · 탁도 두 지표로 수조의 상태를 추정합니다</text>
+<rect x="40" y="100" width="1200" height="98" rx="6" fill="#EAF1F8"/>
+<text x="62" y="128" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#1F4E79">문 제</text>
+<text x="126" y="128" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="600" fill="#111111">사육을 포기하는 이유는 관리가 힘들어서가 아니라, 판단할 근거가 없어서입니다</text>
+<text x="62" y="156" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#1F4E79">방 법</text>
+<text x="126" y="156" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="600" fill="#111111">AI는 보는 일과 말하는 일만 합니다. 위험한지 아닌지는 물리 법칙이 판단합니다</text>
+<text x="62" y="184" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#1F4E79">근 거</text>
+<text x="126" y="184" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="600" fill="#111111">315케이스로 한 지점 관측이 어항 전체를 대표함을 입증했습니다</text>
+<line x1="40" y1="228" x2="1240" y2="228" stroke="#333333" stroke-width="1.6"/>
+<text x="52" y="219" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#666666">평 가 항 목</text>
+<text x="316" y="219" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#666666">이 보고서에서 집중한 것</text>
+<text x="1228" y="219" text-anchor="end" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#666666">근 거</text>
+<text x="52" y="262" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="700" fill="#111111">창의성 및 기획성</text>
+<rect x="52" y="272" width="46" height="21" rx="10" fill="#1F4E79"/>
+<text x="75" y="287" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12.5" font-weight="700" fill="#FFFFFF">25점</text>
+<text x="316" y="260" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#222222">사육 포기의 원인을 ‘관리 노동 과다’가 아니라 ‘판단 근거 부재’로 재정의</text>
+<text x="316" y="284" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#222222">AI는 인식 · 전달만 담당하고, 판정과 물리량 계산은 결정론적 모델이 수행</text>
+<text x="1228" y="273" text-anchor="end" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="14" font-weight="600" fill="#1F4E79">p.2–4 · p.9–11</text>
+<line x1="40" y1="310" x2="1240" y2="310" stroke="#E2E2E2" stroke-width="1"/>
+<text x="52" y="344" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="700" fill="#111111">진행성과</text>
+<rect x="52" y="354" width="46" height="21" rx="10" fill="#1F4E79"/>
+<text x="75" y="369" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12.5" font-weight="700" fill="#FFFFFF">30점</text>
+<text x="316" y="342" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#222222">완료 23건 / 예정 7건 — 물리엔진 · 어플리케이션 · 제품 3개 트랙 병행</text>
+<text x="316" y="366" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#222222">CFD 315케이스 전량 통과 · 재폭기 실측 K_La 2.479 ± 0.036 /h · APK 4.9 MB 산출</text>
+<text x="1228" y="355" text-anchor="end" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="14" font-weight="600" fill="#1F4E79">p.5–8 · p.12–16</text>
+<line x1="40" y1="392" x2="1240" y2="392" stroke="#E2E2E2" stroke-width="1"/>
+<text x="52" y="426" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="700" fill="#111111">과제 완성 가능성</text>
+<rect x="52" y="436" width="46" height="21" rx="10" fill="#1F4E79"/>
+<text x="75" y="451" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12.5" font-weight="700" fill="#FFFFFF">25점</text>
+<text x="316" y="424" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#222222">특허 전자출원 완료(10-2026-0149429), 프로브 실측 성능 확보</text>
+<text x="316" y="448" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#222222">잔여 작업 7건과 한계 2건을 본문에 명시하고 대응 방향을 함께 기재</text>
+<text x="1228" y="437" text-anchor="end" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="14" font-weight="600" fill="#1F4E79">p.15 · p.17–18</text>
+<line x1="40" y1="474" x2="1240" y2="474" stroke="#E2E2E2" stroke-width="1"/>
+<text x="52" y="508" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="17" font-weight="700" fill="#111111">기대효과</text>
+<rect x="52" y="518" width="46" height="21" rx="10" fill="#1F4E79"/>
+<text x="75" y="533" text-anchor="middle" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12.5" font-weight="700" fill="#FFFFFF">20점</text>
+<text x="316" y="506" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#222222">BOM 8,251원 · 판매가 29,900원 · 영업이익률 22.3 %</text>
+<text x="316" y="530" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="15" fill="#222222">소비자 조사 n = 116 결과를 기능 계획에 반영</text>
+<text x="1228" y="519" text-anchor="end" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="14" font-weight="600" fill="#1F4E79">p.19–20</text>
+<line x1="40" y1="556" x2="1240" y2="556" stroke="#E2E2E2" stroke-width="1"/>
+<text x="40" y="578" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#666666">목 차</text>
+<rect x="40" y="592" width="164" height="62" rx="5" fill="#F6F6F6"/>
+<text x="54" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" font-weight="700" fill="#1F4E79">1</text>
+<text x="70" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="600" fill="#222222">팀 소개</text>
+<text x="70" y="638" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" fill="#888888">p.1</text>
+<rect x="212" y="592" width="164" height="62" rx="5" fill="#F6F6F6"/>
+<text x="226" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" font-weight="700" fill="#1F4E79">2</text>
+<text x="242" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="600" fill="#222222">프로젝트 개요</text>
+<text x="242" y="638" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" fill="#888888">p.2–4</text>
+<rect x="384" y="592" width="164" height="62" rx="5" fill="#F6F6F6"/>
+<text x="398" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" font-weight="700" fill="#1F4E79">3</text>
+<text x="414" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="600" fill="#222222">프로젝트 추진 경과</text>
+<text x="414" y="638" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" fill="#888888">p.5–8</text>
+<rect x="556" y="592" width="164" height="62" rx="5" fill="#F6F6F6"/>
+<text x="570" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" font-weight="700" fill="#1F4E79">4</text>
+<text x="586" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="600" fill="#222222">AI융합(활용) 내용</text>
+<text x="586" y="638" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" fill="#888888">p.9–11</text>
+<rect x="728" y="592" width="164" height="62" rx="5" fill="#F6F6F6"/>
+<text x="742" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" font-weight="700" fill="#1F4E79">5</text>
+<text x="758" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="600" fill="#222222">주요 성과</text>
+<text x="758" y="638" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" fill="#888888">p.12–16</text>
+<rect x="900" y="592" width="164" height="62" rx="5" fill="#F6F6F6"/>
+<text x="914" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" font-weight="700" fill="#1F4E79">6</text>
+<text x="930" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="600" fill="#222222">향후 추진 계획</text>
+<text x="930" y="638" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" fill="#888888">p.17–18</text>
+<rect x="1072" y="592" width="164" height="62" rx="5" fill="#F6F6F6"/>
+<text x="1086" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" font-weight="700" fill="#1F4E79">7</text>
+<text x="1102" y="617" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13.5" font-weight="600" fill="#222222">기대효과</text>
+<text x="1102" y="638" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="13" fill="#888888">p.19–20</text>
+<text x="40" y="704" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" font-size="11.5" fill="#AAAAAA">각 페이지 하단에 해당 페이지의 주장 · 정량 증거 · 검증 조건 · 한계를 한 줄로 요약해 두었습니다</text>
+</svg>

@@ -1,0 +1,27 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX1 · 셀존 3개: 플룸(원기둥) + 표층(재폭기) + 바닥층(SOD)                     |
+|  기본 L=0.4,B=0.2,d=0.2, 셀 4mm.  표층/바닥층 = 최상/최하 1셀(두께 4mm)      |
+|  ※ 크기 바꾸면 좌표/두께도 갱신(run_sweep.sh)                                |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object topoSetDict; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // --- 폭기 플룸(중앙 원기둥, 전수심) ---
+    { name plumeCells;  type cellSet; action new; source cylinderToCell;
+      point1 (0.2000 0.1000 0.0); point2 (0.2000 0.1000 0.2000); radius 0.01; }
+    { name plume;       type cellZoneSet; action new; source setToCellZone; set plumeCells; }
+
+    // --- 표층 1셀(재폭기 소스): z in [d-dz, d] = [0.196, 0.2] ---
+    { name surfCells;   type cellSet; action new; source boxToCell;
+      box (0 0 0.19600) (0.40 0.2000 0.20010); }
+    { name surface;     type cellZoneSet; action new; source setToCellZone; set surfCells; }
+
+    // --- 바닥층 1셀(SOD 소스): z in [0, dz] = [0, 0.004] ---
+    { name sedCells;    type cellSet; action new; source boxToCell;
+      box (0 0 -0.0001) (0.40 0.2000 0.00400); }
+    { name sediment;    type cellZoneSet; action new; source setToCellZone; set sedCells; }
+);
+
+// ************************************************************************* //

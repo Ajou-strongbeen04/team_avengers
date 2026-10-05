@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>漁벤져스 — 기술 부록 (2026-08-04 2차 미팅 백업)</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; background:#1a1d24; overflow:hidden;
+  font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",sans-serif; }
+#stage { position:absolute; top:50%; left:50%; width:1920px; height:1080px; transform-origin:center center; }
+.slide { position:absolute; inset:0; background:#fff; display:none; padding:56px 76px; color:#232733; }
+.slide.on { display:block; }
+
+h1.t { font-size:46px; font-weight:800; letter-spacing:-1px; color:#1b2030; }
+h1.t .num { color:#0f766e; }
+.sub { margin-top:10px; font-size:23px; color:#5b6479; font-weight:500; }
+.rule { height:3px; background:linear-gradient(90deg,#0f766e 0%,#0f766e 200px,#e3e7f0 200px); margin:18px 0 26px; }
+.badge { position:absolute; right:76px; top:60px; font-size:18px; font-weight:700; color:#0f766e;
+  background:#ecfdf5; border:1px solid #a7f3d0; border-radius:6px; padding:6px 14px; }
+.tag { display:inline-block; font-size:18px; font-weight:700; color:#0f766e;
+  background:#ecfdf5; border-radius:5px; padding:5px 12px; margin-bottom:12px; }
+
+.cols { display:flex; gap:28px; }
+.col { flex:1; }
+.card { background:#f7f8fb; border:1px solid #e4e8f1; border-radius:10px; padding:20px 24px; }
+.card.hi { background:#ecfdf5; border-color:#a7f3d0; }
+.card.warn { background:#fff7ed; border-color:#fed7aa; }
+.card.neg { background:#fef2f2; border-color:#fecaca; }
+.card h3 { font-size:23px; font-weight:800; margin-bottom:11px; color:#1b2030; }
+.card h3 .k { color:#0f766e; }
+ul { list-style:none; }
+li { font-size:20px; line-height:1.55; color:#3a4257; padding-left:19px; position:relative; margin-bottom:5px; }
+li:before { content:"·"; position:absolute; left:5px; color:#8b95ad; font-weight:800; }
+li b { color:#1b2030; font-weight:800; }
+.red { color:#c8332f; font-weight:800; }
+.bl { color:#0d6c64; font-weight:800; }
+.gy { color:#6b7386; }
+.sm li { font-size:18px; line-height:1.5; margin-bottom:3px; }
+
+table { width:100%; border-collapse:collapse; font-size:19px; }
+th,td { padding:8px 11px; text-align:center; border-bottom:1px solid #e4e8f1; }
+thead th { background:#eceff6; font-weight:700; color:#41495d; font-size:17px; border-bottom:2px solid #cfd6e5; }
+td.l,th.l { text-align:left; }
+tbody tr:nth-child(even) { background:#f7f8fb; }
+table.xs { font-size:17px; }
+table.xs th,table.xs td { padding:6px 8px; }
+table.xs thead th { font-size:15px; }
+
+.eq { font-family:"Times New Roman",serif; font-size:29px; text-align:center; padding:13px 0; color:#1b2030; }
+.eqbox { background:#f0fdfa; border:1px solid #a7f3d0; border-radius:9px; }
+.mono { font-family:"SF Mono",Consolas,monospace; font-size:17px; background:#f4f5f8;
+  border:1px solid #e4e8f1; border-radius:7px; padding:14px 18px; line-height:1.6; color:#2c3444;
+  white-space:pre; overflow:hidden; }
+
+.note { margin-top:16px; font-size:19px; color:#5b6479; background:#f7f8fb;
+  border-left:4px solid #0f766e; padding:12px 18px; border-radius:0 7px 7px 0; }
+.note b { color:#1b2030; }
+.note.r { border-left-color:#c8332f; background:#fef7f7; }
+
+.kpis { display:flex; gap:16px; }
+.kpi { flex:1; background:#fff; border:1px solid #e4e8f1; border-radius:10px; padding:16px 6px; text-align:center; }
+.kpi .v { font-size:33px; font-weight:800; color:#0d6c64; letter-spacing:-1px; }
+.kpi .v.r { color:#c8332f; }
+.kpi .n { font-size:16px; color:#6b7386; margin-top:5px; line-height:1.35; }
+
+.cover { background:linear-gradient(135deg,#0b2e2b 0%,#134e48 55%,#0f766e 130%); color:#fff; padding:0; }
+.cover .in { position:absolute; left:110px; top:330px; }
+.cover .team { font-size:27px; opacity:.72; letter-spacing:6px; }
+.cover h1 { font-size:88px; font-weight:800; margin:20px 0 16px; letter-spacing:-3px; }
+.cover .d { font-size:29px; opacity:.85; line-height:1.55; }
+.cover .mem { position:absolute; left:114px; bottom:110px; font-size:21px; opacity:.7; line-height:1.7; }
+
+.idx { display:flex; gap:24px; }
+.idx table { font-size:20px; }
+.idx td.l { padding:7px 12px; }
+.idx td.n { width:62px; font-weight:800; color:#0f766e; text-align:left; }
+
+#bar { position:fixed; bottom:0; left:0; height:4px; background:#0f766e; z-index:20; transition:width .3s; }
+#pg { position:fixed; right:20px; bottom:14px; font-size:15px; color:#8b95ad; z-index:20; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ===== 1 표지 ===== -->
+<section class="slide cover on">
+  <div class="in">
+    <div class="team">漁 벤 져 스</div>
+    <h1>기술 부록</h1>
+    <div class="d">2차 미팅 백업 자료 — 본 발표에 넣지 않은 상세 기술 내용<br>
+      2026. 08. 04 (화)</div>
+  </div>
+  <div class="mem">본 발표자료: <b>발표_0804_2차미팅.html</b> · 이 자료는 질의응답 시 열람용<br>
+    모든 수치는 <b>03_논문/</b>(frozen) 및 실험·설계 문서에 기재된 값만 사용 · 미확정·불일치는 그대로 표기</div>
+</section>
+
+<!-- ===== 2 색인 ===== -->
+<section class="slide">
+  <div class="badge">부록 색인</div>
+  <h1 class="t">예상 질문 → 해당 장</h1>
+  <div class="rule"></div>
+  <div class="idx">
+    <table>
+      <tbody>
+        <tr><td class="n">A1</td><td class="l">"방정식과 경계조건을 전부 보여달라"</td></tr>
+        <tr><td class="n">A2</td><td class="l">"소스 닫음을 어떻게 했는가 — α_g는 어디서 왔나"</td></tr>
+        <tr><td class="n">A3</td><td class="l">"왜 지수가 1/3이 아니라 1/2인가"</td></tr>
+        <tr><td class="n">A4</td><td class="l">"유동을 얼려서 DO를 푸는 게 정당한가"</td></tr>
+        <tr><td class="n">A5</td><td class="l">"격자 수렴은 확인했나 · GCI는?"</td></tr>
+        <tr><td class="n">A6</td><td class="l">"무차원수로 레짐을 특정했나"</td></tr>
+        <tr><td class="n">A7</td><td class="l">"재폭기 시험 프로토콜이 표준을 따르나"</td></tr>
+        <tr><td class="n">A8</td><td class="l">"측정 신뢰성 — 보정은 어떻게 검증했나"</td></tr>
+        <tr><td class="n">A9</td><td class="l">"폭기 기하를 바꾸면 얼마나 변하나"</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <tbody>
+        <tr><td class="n">A10</td><td class="l">"κ가 상수가 아니면 방법론이 무너지지 않나"</td></tr>
+        <tr><td class="n">A11</td><td class="l">"완전혼합 가정은 검증했나"</td></tr>
+        <tr><td class="n">A12</td><td class="l">"ROM 성능 근거를 전부 보여달라"</td></tr>
+        <tr><td class="n">A13</td><td class="l">"±50 mm라는 허용오차는 어떻게 나왔나"</td></tr>
+        <tr><td class="n">A14</td><td class="l">"VLM이 3D 좌표를 정말 보는가"</td></tr>
+        <tr><td class="n">A15</td><td class="l">"앱 안의 물리는 논문과 같은가"</td></tr>
+        <tr><td class="n">A16</td><td class="l">"센서 요구사항과 검증 계획"</td></tr>
+        <tr><td class="n">A17</td><td class="l">"선행연구 대비 신규성 · 특허 청구 구조"</td></tr>
+        <tr><td class="n">A18</td><td class="l">"아직 못 한 것 · 문서 간 불일치"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note"><b>이 부록의 원칙</b> — 미확정·미검증·문서 불일치를 숨기지 않는다. A18에 전부 모아 놓았고,
+    각 장에도 <span class="red">붉은 표기</span>로 남겨 두었다. 감추면 자기 문서로 반박당한다.</div>
+</section>
+
+<!-- ===== 3 A1 지배방정식 ===== -->
+<section class="slide">
+  <div class="badge">A1</div>
+  <h1 class="t"><span class="num">A1.</span> 지배방정식 · 경계조건 (전체)</h1>
+  <div class="sub">단일 진실원 = <b>Experiment/CFD_method.md</b> §1–§4 · z축 하향(+), 자유수면 z=0, 바닥 z=d</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag">유동 — URANS · 비압축 · 단상</div>
+      <div class="eqbox" style="padding:6px 10px">
+        <div class="eq" style="font-size:26px;padding:8px 0">∇·<b>U</b> = 0</div>
+        <div class="eq" style="font-size:25px;padding:6px 0">
+          ∂<b>U</b>/∂t + (<b>U</b>·∇)<b>U</b> = −(1/ρ)∇p* + ∇·[(ν+ν<sub>t</sub>)∇<b>U</b>] + (1/ρ)<b>F</b><sub>air</sub></div>
+      </div>
+      <ul class="sm" style="margin-top:12px">
+        <li>ν<sub>t</sub> : SST k-ω (Menter) 와점성 [R15]</li>
+        <li>공간 등온 → <b>열부력 무시</b>, 정수압은 p*에 흡수</li>
+        <li>외력은 폭기 소스 하나 — 여과가 폭기와 일체형이라 <b>F<sub>filter</sub> 없이 합산</b></li>
+      </ul>
+      <div class="eqbox" style="margin-top:12px">
+        <div class="eq" style="font-size:24px">
+          <b>F</b><sub>air</sub> = −(ρ<sub>l</sub>−ρ<sub>g</sub>)·α<sub>g</sub>·g·ê<sub>z</sub>·1<sub>Ω_air</sub> ≈ −ρ<sub>l</sub>α<sub>g</sub>g ê<sub>z</sub>1<sub>Ω_air</sub></div>
+      </div>
+      <div class="tag" style="margin-top:16px">DO — 과도 이송-확산</div>
+      <div class="eqbox">
+        <div class="eq" style="font-size:26px">∂C/∂t + ∇·(<b>U</b>C) = ∇·(D<sub>eff</sub>∇C) + S<sub>air</sub></div>
+        <div class="eq" style="font-size:23px;padding-top:0">
+          S<sub>air</sub> = k<sub>L</sub>(T)·a·(C*(T) − C)·1<sub>Ω_air</sub> ,　a = 6α<sub>g</sub>/d<sub>b</sub></div>
+      </div>
+      <ul class="sm" style="margin-top:10px">
+        <li>D<sub>eff</sub> = D<sub>mol</sub>(T) + ν<sub>t</sub>/Sc<sub>t</sub> [R4] · 비압축이라 ∇·(<b>U</b>C) = <b>U</b>·∇C</li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="tag">경계조건</div>
+      <table class="xs">
+        <thead><tr><th class="l">경계</th><th class="l">유동</th><th class="l">DO</th></tr></thead>
+        <tbody>
+          <tr><td class="l"><b>자유수면 z=0</b></td>
+            <td class="l">rigid-lid + free-slip<br>w=0, ∂u/∂z=∂v/∂z=0</td>
+            <td class="l"><b>Robin</b> −D<sub>eff</sub>∂C/∂z = k<sub>L</sub>(T)(C*−C)</td></tr>
+          <tr><td class="l"><b>바닥 z=d</b></td><td class="l">no-slip <b>U</b>=0</td><td class="l">무플럭스 ∂C/∂n=0 (무저질)</td></tr>
+          <tr><td class="l"><b>측면 4면</b></td><td class="l">no-slip <b>U</b>=0</td><td class="l">무플럭스 ∂C/∂n=0</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card neg" style="margin-top:18px">
+        <h3 style="color:#9b2c28">생물 소스·싱크는 방정식에서 제거했다 — 의도된 설계다</h3>
+        <ul class="sm">
+          <li>어류 호흡·부유 질화·식물 대사·저서 SOD(OCR₂₀, M_fish, r_nit,20, K_b, θ_b, Y_O2, SOD₂₀, θ_s) 전부 제외</li>
+          <li>이유: 어항마다 다른 조건(사육밀도·식재)에 종속 → 고정 물리로 두지 않고 <b>제품 단계에서 기하인식/센서가 공급하는 BC</b>로 분리</li>
+          <li><b>인공 국소 산소싱크(전기화학 ORR·화학)도 폐기</b>(2026-07-19). 구 국소싱크 전극면 BC도 제거</li>
+          <li>귀결: <b>CFD 스윕의 DO장은 싱크가 없어 전역 near-saturation</b>(레거시 pos1 공간편차 ~0.36 %, 앵커 m21은 0.0058 mg/L)</li>
+          <li>CFD 결과의 용도는 두 가지뿐 — <b>(i) A층 ROM 학습용 유동장 (ii) 가상 재폭기 κ</b></li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>공간 구조는 무엇이 만드는가</h3>
+        <ul class="sm">
+          <li>국소 폭기 소스로 들어온 산소와 소비로 생긴 결손을 <b>유동장이 공간 재분배</b>하고, 저유속 정체역에서 재산소화가 지연된다</li>
+          <li>표층 재폭기(입력)와 소비(B층)는 <b>배경 수준·구배 진폭</b>을 정한다</li>
+          <li><b>어디가 최소인지(구조)는 대부분 이송이 만든다</b> — 이것이 §3-2(b) 역할 분해의 근거</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4 A2 소스 닫음 ===== -->
+<section class="slide">
+  <div class="badge">A2</div>
+  <h1 class="t"><span class="num">A2.</span> 소스 닫음 — 미지수 3개, 식 3개</h1>
+  <div class="sub">폭기가 <b>부력(운동량식)</b>과 <b>계면적(DO식)</b> 두 곳에 동시에 들어간다. 둘 다 α_g가 결정한다</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col" style="flex:1.05">
+      <table class="xs" style="margin-bottom:16px">
+        <thead><tr><th class="l" style="width:150px">식</th><th class="l">내용</th><th class="l">성격</th></tr></thead>
+        <tbody>
+          <tr><td class="l"><b>① 계면적</b></td><td class="l">a = 6α<sub>g</sub>/d<sub>b</sub></td>
+            <td class="l">구의 표면적/체적 = 6/d — <b>기하학</b></td></tr>
+          <tr><td class="l"><b>② 홀드업</b></td><td class="l">α<sub>g</sub> = U<sub>gs</sub>/(W + U<sub>slip</sub>)</td>
+            <td class="l">기포 <b>질량보존</b> (drift-flux 고정점)</td></tr>
+          <tr><td class="l"><b>③ 멱법칙</b></td><td class="l">W = C·Su<sup>0.511</sup>, Su = α<sub>g</sub>·g</td>
+            <td class="l">CFD 3점 log-log LSQ — <b>순환을 끊는 맵</b></td></tr>
+        </tbody>
+      </table>
+
+      <div class="card hi">
+        <h3>② 유도 — "넣는 속도 ÷ 나가는 속도"</h3>
+        <ul class="sm">
+          <li>플룸 단면 A<sub>p</sub>를 지나는 기포 부피유량 = α<sub>g</sub>·(W + U<sub>slip</sub>)·A<sub>p</sub> = Q<sub>air</sub></li>
+          <li>양변 ÷ A<sub>p</sub> , U<sub>gs</sub> ≡ Q<sub>air</sub>/A<sub>p</sub> → <b>α<sub>g</sub> = U<sub>gs</sub>/(W+U<sub>slip</sub>)</b></li>
+          <li>물살이 빠르면 기포가 휩쓸려 나가 <b>덜 차 있고</b>, 느리면 오래 머물러 많이 차 있다</li>
+        </ul>
+      </div>
+
+      <div class="mono" style="margin-top:16px">Q_air 1.200 L/min (물치환 500 mL 3회, SD 0.036 s = ±0.14 %)
+   ↓  ÷ A_p = 3.14e-4 m² (r_p = 0.01 m)
+U_gs = 0.0637 m/s
+   ↓  ┌─ α_g = U_gs/(W + 0.0578) ────┐
+      └─ W = C·Su^0.511, Su = α_g·g ─┘   고정점 반복
+α_g = 0.1785 · Su = 1.751 · W = 0.3009 m/s
+   ↓  a = 6α_g/d_b = 6×0.1785/0.0005
+a = 2142 /m
+   ↓  × k_L,b = 1.08e-4 m/s  + 자유수면항
+K_La = 2.604 /h = 2.160 (플룸) + 0.444 (자유수면)</div>
+    </div>
+
+    <div class="col">
+      <div class="card neg">
+        <h3 style="color:#9b2c28">왜 역할을 나눠야 했는가 — 이것이 핵심</h3>
+        <ul class="sm">
+          <li>α<sub>g</sub>는 <b>부력</b>과 <b>계면적</b>을 동시에 움직인다. 캘리브레이션에서 α<sub>g</sub>를 자유롭게 두면 <b>유동 오차를 전달 오차로 감출 수 있다</b></li>
+          <li>규약 ① <b>부력쪽 α<sub>g</sub>는 실측 Q<sub>air</sub>로 물리적으로 고정</b> — 조정 금지</li>
+          <li>규약 ② 캘리브레이션 자유도는 <b>전달쪽 a 와 Sc<sub>t</sub>만</b> (단일 DO 시계열이라 개별 분리 불가 → 유효계수로 집약)</li>
+          <li>덕분에 <b>κ가 "유동은 손대지 않은 상태에서 전달만 얼마나 어긋나는가"</b>를 재는 정직한 숫자가 된다</li>
+        </ul>
+      </div>
+
+      <div class="tag" style="margin-top:18px">α_g · a 이력 — 실측이 들어올 때마다 갈아엎었다</div>
+      <table class="xs">
+        <thead><tr><th class="l">시점</th><th>α<sub>g</sub></th><th>a [1/m]</th><th class="l">사유</th></tr></thead>
+        <tbody>
+          <tr><td class="l">초기</td><td>0.29</td><td>3480</td><td class="l">W≈0.31 m/s <b>가정</b>값</td></tr>
+          <tr><td class="l">07-19</td><td>0.257</td><td>3082</td><td class="l">CFD 16위치 W 평균 0.3735 되먹임</td></tr>
+          <tr><td class="l">07-29</td><td>0.1807</td><td>2169</td><td class="l"><b>Q_air 실측</b> + n=0.511 (coarse)</td></tr>
+          <tr style="background:#ecfdf5"><td class="l"><b>확정</b></td><td><b>0.1785</b></td><td><b>2142</b></td><td class="l">medium 앵커 m21 (W=0.3009)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note r"><b>미검증으로 남은 것</b> — 기존 CFD 16케이스와 EX3 253케이스는 Su=2.86으로 돌았고
+        <b>부력측은 보정하지 않았다</b>(전달측 a만 사후 교체). 재실행 면제 근거인 "Su −12 %가 공간구조를 안 바꾼다"는
+        Re_plume 6,000–8,300 동일 레짐이라는 것 외에 <b>직접 검증된 바 없다.</b>
+        검증 케이스 pos1_su235는 t≈20 s에서 중단되어 판정이 없다.</div>
+
+      <div class="note"><b>d<sub>b</sub> = 0.5 mm는 4픽셀 측정</b>(±1 px = ±25 %)이고 a ∝ 1/d<sub>b</sub>다.
+        다만 식에는 항상 <b>k<sub>L</sub>·a 곱으로만</b> 들어가므로 d<sub>b</sub> 오차는 κ에 흡수된다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5 A3 n=1/2 ===== -->
+<section class="slide">
+  <div class="badge">A3</div>
+  <h1 class="t"><span class="num">A3.</span> 왜 n = 1/3 이 아니라 1/2 인가</h1>
+  <div class="sub">1/3 게이트는 <b>−8.76 %로 불합격</b>했다. 그 뒤 왜 1/2인지를 세 층으로 나눠 답한다</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag">① 거의 완전히 설명됨 — 차원해석</div>
+      <table class="xs">
+        <thead><tr><th class="l">파라미터화</th><th>단위</th><th class="l">속도 스케일</th><th>지수</th></tr></thead>
+        <tbody>
+          <tr><td class="l">MTT 부력<b>플럭스</b> B</td><td>m⁴/s³</td><td class="l">(B/z)<sup>1/3</sup></td><td><b>1/3</b></td></tr>
+          <tr style="background:#ecfdf5"><td class="l">우리 <b>Su = α<sub>g</sub>g</b> (단위질량당 체적력)</td><td>m/s²</td><td class="l">√(Su·ℓ)</td><td><b>1/2</b></td></tr>
+        </tbody>
+      </table>
+      <ul class="sm" style="margin-top:12px">
+        <li>Su와 B는 <b>차원이 다르다</b> → 두 지수를 직접 비교하는 것 자체가 성립하지 않는다</li>
+        <li>기하 고정 + Su만 스윕 ⟹ 만들 수 있는 속도 스케일이 √(Su·ℓ) 하나 ⟹ <b>1/2은 차원해석이 강제</b></li>
+        <li>계수까지 확인: W = 0.2178 Su<sup>0.511</sup> 에 H<sub>p</sub>=0.19 m를 넣으면 <b>W ≈ 0.50·√(Su·H<sub>p</sub>)</b> — Su=1.773에서 0.290 vs 실제 0.293 (<b>1 % 이내</b>)</li>
+        <li>계수 0.5는 부력이 한 일의 <b>약 6 %만</b> 평균 상승운동에너지로 가고 나머지는 연행·난류·반류 손실이라는 뜻 (손실 없는 자유상승이면 √(2Su·H<sub>p</sub>))</li>
+      </ul>
+
+      <div class="tag" style="margin-top:18px">② 정성적으로 설명됨 — 왜 MTT가 아닌가</div>
+      <ul class="sm">
+        <li><b>소스가 희석되지 않는다.</b> fvOptions가 고정 반경 실린더(r<sub>p</sub>=1 cm)에 균일 체적력 Su를 넣는다. 1/3의 출발점인 <b>연행 희석 자체가 없다</b></li>
+        <li><b>자기유사 발달구간이 없다.</b> H<sub>p</sub>/D<sub>plume</sub> ≈ 0.19/0.02 = <b>9.5</b> (MTT는 소스 직경 수십 배 필요)</li>
+        <li><b>주변류가 정지 상태가 아니다.</b> 수조 폭 0.21 m라 반류가 플룸 옆을 지난다</li>
+      </ul>
+      <div class="note">문서 표현 그대로 — "플룸 상승속도가 부력 스케일 √(Su·ℓ)로 결정된다는 쪽에 부합하고,
+        부력플럭스 기반 B<sup>1/3</sup>(플룸 유량이 고정일 때 성립)과는 다르다.
+        <b>폐쇄수조에서 플룸 단면과 높이가 고정돼 있으니 후자가 안 맞는 게 자연스럽다.</b>"</div>
+    </div>
+
+    <div class="col">
+      <div class="tag">검증 강도</div>
+      <table class="xs">
+        <thead><tr><th class="l">근거</th><th class="l">값</th></tr></thead>
+        <tbody>
+          <tr><td class="l">3점 log-log LSQ</td><td class="l">n = <b>0.511</b>, 최대 잔차 <b>0.28 %</b><br>
+            <span class="gy">(Su 2.860/W 0.3752 +0.03 % · 1.684/0.2869 +0.25 % · 1.773/0.2930 −0.28 %)</span></td></tr>
+          <tr><td class="l">2점 실측 지수</td><td class="l">0.506 = ln(0.2869/0.3752)/ln(1.684/2.860)</td></tr>
+          <tr><td class="l"><b>독립 4번째 점</b> (EX2_X5, Su=2.376)</td><td class="l">예측 0.3403 vs 실측 0.3445 = <b>+1.2 %</b></td></tr>
+          <tr><td class="l">다른 솔버 (simpleFoam)</td><td class="l">n = 0.536 — 1/2 대에 있음 (Δn 0.025, 허용 0.02 근소 초과)</td></tr>
+          <tr><td class="l">1/3 게이트</td><td class="l">실측 0.2869 vs 예측 0.3145 = <span class="red">−8.76 % 불합격</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="card neg" style="margin-top:18px">
+        <h3 style="color:#9b2c28">③ 설명되지 않는 것 — 반드시 함께 말할 것</h3>
+        <ul class="sm">
+          <li><b>길이 스케일 ℓ이 특정되지 않았다.</b> √(Su·H<sub>p</sub>)를 z_start 스윕에 적용하면 깨진다 ↓</li>
+        </ul>
+        <table class="xs" style="margin:10px 0">
+          <thead><tr><th>z_start</th><th>H<sub>p</sub></th><th>0.5√(Su·H<sub>p</sub>)</th><th>CFD W</th><th>오차</th></tr></thead>
+          <tbody>
+            <tr><td>0.02</td><td>0.19</td><td>0.291</td><td>0.2930</td><td>−0.8 %</td></tr>
+            <tr><td>0.05</td><td>0.16</td><td>0.263</td><td><b>0.3023</b></td><td class="red">−12.9 %</td></tr>
+            <tr><td>0.08</td><td>0.13</td><td>0.243</td><td>0.2857</td><td class="red">−14.9 %</td></tr>
+            <tr><td>0.11</td><td>0.10</td><td>0.218</td><td>0.2696</td><td class="red">−19 %</td></tr>
+          </tbody>
+        </table>
+        <ul class="sm">
+          <li><b>W가 단조가 아니다</b> — 바닥에서 3 cm 띄우면 no-slip 저항에서 벗어나 오히려 빨라진다(0.2930 → 0.3023)</li>
+          <li>⟹ 검증된 것은 <b>"Su 방향 지수가 1/2"</b>이고 길이 방향 스케일은 미확인. 그래서 문서는 멱법칙을
+            <b>W(Su) = W_seed·(Su/1.773)<sup>0.511</sup></b> 정규화 비율 형태로만 쓴다 (기하가 바뀌면 seed 재설정)</li>
+          <li><b>0.511이 정확히 1/2인지 판별할 통계력이 없다.</b> 잔차 0.28 %는 적합도이고 모델 판별력이 아니다.
+            쌍별 지수는 조건수 때문에 0.407까지 흔들린다(Su 간격 5.3 %면 W 오차 0.3 %가 Δn 0.058로 증폭)</li>
+          <li><b>스윕 폭이 Su 1.684~2.860 = 1.7배</b>뿐이다</li>
+          <li><b>실물에서 검증된 게 아니다.</b> 재폭기 실측은 K_La 총량만 재고 W(유속)는 측정하지 않았다
+            → 정확히는 <b>"CFD 수치실험에서 1/2"</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6 A4 풀이 순서 ===== -->
+<section class="slide">
+  <div class="badge">A4</div>
+  <h1 class="t"><span class="num">A4.</span> 풀이 순서 · 시간척도 분리</h1>
+  <div class="sub">폭기 와류로 유동은 단일 정상상태로 수렴하지 않는다 → <b>유동은 과도로 계산해 시간평균</b>, DO는 그 위에서 푼다</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col" style="flex:1.1">
+      <div class="mono">Boundary Conditions
+   ├─ Wall & Bottom : U = 0
+   ├─ Free Surface  : w = 0, ∂u/∂z = ∂v/∂z = 0
+   ├─ Surface DO    : −D_eff ∂C/∂z = k_L (C* − C)   (z=0, Robin)
+   └─ Bottom & Side : ∂C/∂n = 0                     (무플럭스, 무저질)
+        ▼
+Continuity + URANS  (pimpleFoam · SST k-ω · μ_eff · ΣF = F_air)
+        ▼
+   U(x,y,z,t)  →  준정상 도달 후 시간평균  Ū(x)   ※ 이후 동결
+        ▼
+ ┌──────────────────────────┬──────────────────────────┐
+ (A) 정상 DO장                (B) 가상 재폭기
+ ∂C/∂t = 0, ΣS = S_air       C(x,0)=0 에서 과도 적분
+ → 공간 QoI (C̄ · CV ·        → 벌크평균 C̄_CFD(t)
+    min C̄ · 정체역 좌표)      → 실측과 동일 유효창 (0.15, 0.92)
+ → ROM 위치 게이트 · GCI 대상    단일지수 피팅 → K_La_eff,CFD
+ └──────────────────────────┴──────────────────────────┘
+                             ▼
+                  κ = K_La_meas / K_La_CFD</div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>시간성 규약</h3>
+        <ul class="sm">
+          <li>DO의 화학 시간척도(수시간)가 유동 변동(초)보다 훨씬 길다 → <b>시간평균 유동장 위에서 DO를 푼다</b></li>
+          <li>위험판정은 순간최저가 아니라 <b>시간평균 DO장의 공간 최저값</b></li>
+          <li>평균창 정책 [C안, 07-20 확정] — 데이터셋 전체 <b>endTime 200, 시간평균창 t = 40~200 s</b> 단일 규격 (혼재 없음)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card neg">
+        <h3 style="color:#9b2c28">⚠ 미이행 검증 — 정직하게 말할 것</h3>
+        <ul class="sm">
+          <li>"<b>Ū로 얼려서 DO를 풀어도 되는가</b>"의 직접 검증은 아직 하지 않았다</li>
+          <li>정당화 근거는 <b>정상성이 아니라 시간척도 분리</b>다</li>
+          <li>이행하려면 pimpleFoam + <span class="mono" style="padding:2px 6px;font-size:15px">scalarTransport</span> 공동풀이 <b>1케이스</b>가 필요하다 (논문 §3.5 (iv))</li>
+        </ul>
+      </div>
+
+      <div class="tag" style="margin-top:18px">정상해(simpleFoam) 대체는 폐기됐다 — EX2_X2 게이트 5개</div>
+      <table class="xs">
+        <thead><tr><th class="l">게이트</th><th class="l">결과</th></tr></thead>
+        <tbody>
+          <tr><td class="l"><b>D 수렴</b></td><td class="l"><span class="red">실패.</span> 3000반복 residualControl 1e-4 미달.
+            잔차가 줄다 멈춘 게 아니라 <b>리밋사이클</b>. sf_su168은 500→1000반복에서 잔차 상승
+            → <b>"이 문제의 정상해는 존재하지 않는다"</b></td></tr>
+          <tr><td class="l"><b>B 구조</b></td><td class="l"><span class="red">결정적 실패.</span> 정규화마스크 IoU <b>0.340</b>(Su 2.86) / <b>0.499</b>(Su 1.684), 기준 0.80.
+            "솔버를 바꾸는 것이 부력을 41 % 줄이는 것(IoU 0.597)보다 정체역 구조를 더 많이 흐트러뜨린다"</td></tr>
+          <tr><td class="l"><b>A 적분량</b></td><td class="l">갈림. Su 1.684 합격 / Su 2.86은 W +4.1 %·Q<sub>p</sub> +5.7 % 불합격(방향은 일관된 과대평가)</td></tr>
+          <tr><td class="l"><b>C 지수</b></td><td class="l">근소 실패. n<sub>simple</sub> 0.536 vs n<sub>pimple</sub> 0.511 (Δ 0.025 > 허용 0.02)</td></tr>
+          <tr><td class="l"><b>비용</b></td><td class="l">12배 빠름(161 s vs 1955 s) — 그러나 "B가 0.34인 이상 살릴 방법이 없다"</td></tr>
+        </tbody>
+      </table>
+      <div class="note">파생: <b>EX1의 정상해 채택도 재검토 대상</b>이 됐다 (EX1도 미수렴 리밋사이클,
+        p 초기잔차 it500 2.8e-3 → it1990 1.1e-2 <b>상승</b>).</div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>수렴 판정 규약</h3>
+        <ul class="sm">
+          <li>프로브 시계열 이동평균이 표류를 멈추고 스펙트럼 피크(Strouhal)가 정상화된 이후 창을 채택</li>
+          <li>적분시간척도 T<sub>int</sub> ≈ 4.2~4.6 s, SEM = σ<sub>u</sub>√(2T<sub>int</sub>/T<sub>win</sub>)
+            → 평균창 160 s에서 <b>독립샘플 ~17개, SEM 4.4~5.2 %</b> (80 s는 6.3~7.3 %)</li>
+          <li>회귀 게이트: 구조물 0개 케이스가 EX2 기준 QoI와 일치. <b>불일치 시 데이터 생성 중단</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7 A5 격자 ===== -->
+<section class="slide">
+  <div class="badge">A5</div>
+  <h1 class="t"><span class="num">A5.</span> 격자 · 이산화 불확실도 — <span class="red">GCI는 산출되지 않았다</span></h1>
+  <div class="sub">3격자 전부 Su=2.86·동일 플룸. medium이 coarse와 fine <b>사이가 아니라 바깥</b>이라 Richardson 외삽이 성립하지 않는다</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col" style="flex:1.15">
+      <table class="xs">
+        <thead><tr><th class="l">QoI</th>
+          <th>coarse<br>114,996 (84×37×37)</th><th>medium<br>248,832 (108×48×48)</th><th>fine<br>538,160</th></tr></thead>
+        <tbody>
+          <tr><td class="l">실행시간 (8코어)</td><td>41 분</td><td>2.24 h</td><td>7.81 h</td></tr>
+          <tr><td class="l">플룸 셀 수</td><td>330</td><td>688</td><td>1568</td></tr>
+          <tr><td class="l">mean |U| [m/s]</td><td>0.03617 (−0.9 %)</td><td>0.03578 (−1.9 %)</td><td>0.03648</td></tr>
+          <tr><td class="l">플룸 W [m/s]</td><td>0.3752 (+2.5 %)</td><td>0.3768 (+2.9 %)</td><td>0.3661</td></tr>
+          <tr><td class="l">Q<sub>p</sub> [L/min]</td><td>7.90 (+2.9 %)</td><td>7.65 (−0.3 %)</td><td>7.68</td></tr>
+          <tr><td class="l">정체분율 |U|&lt;1 cm/s</td><td>6.16 % (−18.6 %)</td><td>6.76 % (−10.7 %)</td><td>7.57 %</td></tr>
+          <tr><td class="l">정체역 centroid</td><td>(0.323, 0.077, 0.091)</td><td>(0.327, 0.090, 0.097)</td><td>(0.324, 0.093, 0.097)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card neg" style="margin-top:16px">
+        <h3 style="color:#9b2c28">study.log 최종 출력</h3>
+        <div class="mono" style="background:#fff;border-color:#fecaca">⚠ 비단조 (e32/e21 = −0.997) → fine 채택 / 정제비 재설계</div>
+        <ul class="sm" style="margin-top:10px">
+          <li>medium(0.03578)이 coarse(0.03617)·fine(0.03648) <b>사이가 아니라 바깥</b></li>
+          <li>⟹ <b>수렴차수 p와 GCI 값이 산출된 적이 없다</b></li>
+          <li>대체 규약 = <b>3격자 최대편차를 이산화 불확실도 상한</b>으로 보고한다</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="tag">보고하는 이산화 불확실도 상한</div>
+      <div class="kpis" style="margin-bottom:8px">
+        <div class="kpi"><div class="v">1.9 %</div><div class="n">mean |U|</div></div>
+        <div class="kpi"><div class="v">2.9 %</div><div class="n">플룸 W · Q<sub>p</sub></div></div>
+        <div class="kpi"><div class="v r">19 %</div><div class="n">정체분율<br>(미수렴)</div></div>
+        <div class="kpi"><div class="v r">16 mm</div><div class="n">정체역<br>centroid y (미수렴)</div></div>
+      </div>
+      <div class="note r"><b>귀결이 중요하다.</b> centroid y가 16 mm 미수렴이므로
+        <b>"정체역 centroid를 16 mm보다 정밀하게" 요구할 수 없다</b>. 이것이 §3-2(d)의 판정 해상도를
+        4×9(5.2 cm)로 고정한 상한 근거이기도 하다.</div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>격자 인용 규약 (CFD_method §6.2)</h3>
+        <ul class="sm">
+          <li><b>coarse의 정체역 절대값(정체분율·centroid)은 인용 금지</b> — coarse에서 centroid y가 fine 대비 15.9 mm(반폭의 15 %) 어긋난다. <b>coarse↔coarse 차분만 유효</b></li>
+          <li><b>절대값은 medium, 상대(레버)는 coarse</b> — 3D/0-D 비가 격자 의존(coarse 0.913–0.923, medium 0.951–0.966)이라 <b>"0.92를 곱한다"로 일반화 금지</b></li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>수치 설정 · 보존성</h3>
+        <ul class="sm">
+          <li>adjustTimeStep, <b>maxCo 1.0</b>, maxDeltaT 0.02 · backward/CN 블렌딩 시간항 · limitedLinear 대류</li>
+          <li>시간간격 독립성 = 대표 케이스에서 <b>Δt×0.5로 {C̄, f} 불변 확인</b></li>
+          <li>질량수지: 전 케이스 게이트 <b>≤ 6×10⁻⁷</b>, worst-10 <b>≤ 1.5e-7</b>, 유계성 0 ≤ C ≤ C*</li>
+          <li>phi 연속성 발산 <b>max 9.5e-13</b> (상대 3e-6 = 기계오차)</li>
+          <li>EX3 격자 1셀 = <b>4.35 mm</b> · 전 케이스 동일 blockMesh 108×48×48 = <b>248,832셀</b></li>
+        </ul>
+      </div>
+
+      <div class="note r" style="margin-top:14px"><b>미보존 자료</b> — postProcessing·솔버로그를 남기지 않아
+        준정상 도달·평균창 충분성의 사후검증이 불가하다. <b>해상 TKE 비율(중앙값 0.068)</b>을 간접근거로 대체했다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8 A6 무차원수 ===== -->
+<section class="slide">
+  <div class="badge">A6</div>
+  <h1 class="t"><span class="num">A6.</span> 무차원수 — 레짐 특정</h1>
+  <div class="sub">구 서술 "플룸 Pe = O(10–100) ~ 정체역 O(0.1)"은 <b>분자확산 기준이라 틀렸다</b>. D_eff 기준으로 다시 쟀다</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag">Péclet 수 — D_eff 기준 (pos1 실측 D_eff = 9.50×10⁻⁵ m²/s)</div>
+      <table class="xs">
+        <thead><tr><th>백분위</th><th>p1</th><th>p5</th><th>p25</th><th>p50</th><th>p75</th><th>p95</th><th>p99</th></tr></thead>
+        <tbody><tr><td><b>Pe</b></td><td>28</td><td>52</td><td>100</td><td><b>153</b></td><td>222</td><td>415</td><td>993</td></tr></tbody>
+      </table>
+      <ul class="sm" style="margin-top:12px">
+        <li>체적평균 Pe = <b>191</b> · 플룸 Pe = <b>1995</b></li>
+        <li>D<sub>eff</sub> = 2.0×10⁻⁹ + 9.50×10⁻⁵ → <b>D<sub>mol</sub> 기여 0.002 %</b></li>
+        <li>실제 범위 <b>O(30) ~ O(10³)</b> — 전부 이송우세이며 최저값도 1을 크게 넘는다</li>
+      </ul>
+      <div class="note"><b>따라서 서술을 이렇게 고쳤다.</b> 공간구조의 근거는 "Pe &lt; 1인 확산지배 구역이 있어서"가 아니라
+        <b>"Pe가 30배 공간변동해서"</b>다. 이 문장을 그대로 쓸 것.</div>
+
+      <div class="tag" style="margin-top:20px">플룸은 "국소 급속포화"가 아니다</div>
+      <div class="eqbox"><div class="eq" style="font-size:26px">
+        Da<sub>plume</sub> = k<sub>L,b</sub>·a·H<sub>p</sub> / W = <b>0.15 – 0.22</b></div></div>
+      <ul class="sm" style="margin-top:10px">
+        <li>→ <b>1패스 평형접근율 14–20 %</b></li>
+        <li>전달은 k<sub>L</sub>a가 아니라 <b>순환 유량으로 제한</b>된다</li>
+        <li>옛 메모의 "플룸 국소 급속포화" 서술은 <b>폐기</b></li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="tag">기포 전달계수 — Frössling</div>
+      <div class="eqbox"><div class="eq" style="font-size:25px">
+        Sh<sub>b</sub> = 2 + 0.6·Re<sub>b</sub><sup>1/2</sup>·Sc<sup>1/3</sup> = <b>27.0</b></div></div>
+      <table class="xs" style="margin-top:12px">
+        <tbody>
+          <tr><td class="l">Re<sub>b</sub> (= U<sub>slip</sub>d<sub>b</sub>/ν)</td><td><b>27.5</b> <span class="gy">(코드 28.9)</span></td>
+              <td class="l">Sc (= ν/D<sub>mol</sub>)</td><td><b>500</b></td></tr>
+          <tr><td class="l">Sh<sub>b</sub></td><td><b>27.0</b></td>
+              <td class="l"><b>k<sub>L,b</sub></b></td><td><b>1.08×10⁻⁴ m/s</b></td></tr>
+        </tbody>
+      </table>
+      <div class="note">k<sub>L,b</sub>는 자유수면 k<sub>L,20</sub>=2.3×10⁻⁵의 <b>4.7배</b>다 — 기포 계면이 수면보다 훨씬 효율적이라는 뜻.</div>
+
+      <div class="tag" style="margin-top:20px">난류 레짐</div>
+      <ul class="sm">
+        <li>Re<sub>plume</sub> = <b>6,000 – 8,300</b> <span class="gy">(별도 표기 ≈7,800)</span></li>
+        <li>해상 TKE 비율 중앙값 <b>0.068</b> (평균창 160 s)</li>
+        <li>Sc<sub>t</sub> = <b>0.7</b> 고정 · 밴드 스윕 0.7 / 0.85 / 1.0 — 판정선 "저산소역 위치 밴드내 불변"</li>
+      </ul>
+      <div class="note r"><b>주의</b> — "Su를 2.86 → 2.52로 −12 % 바꿔도 공간구조는 안 바뀐다"의
+        <b>유일한 근거가 Re_plume 동일 레짐</b>이라는 것이고, <b>이 주장도 아직 검증되지 않았다.</b></div>
+
+      <div class="tag" style="margin-top:20px">기타 물성 · 계수 (A·B·C군)</div>
+      <table class="xs">
+        <tbody>
+          <tr><td class="l">ρ<sub>l</sub> / ρ<sub>g</sub></td><td>998 / 1.20 kg/m³</td>
+              <td class="l">μ (ν)</td><td>1.00e-3 (1.00e-6)</td></tr>
+          <tr><td class="l">D<sub>mol</sub> (20 ℃)</td><td>2.0e-9 m²/s</td>
+              <td class="l">θ<sub>a</sub></td><td>1.024</td></tr>
+          <tr><td class="l">k<sub>L,20</sub> (수면)</td><td>2.3e-5 m/s ≈ 2 m/d</td>
+              <td class="l">C<sub>μB</sub> (Sato, 선택)</td><td>0.6</td></tr>
+          <tr><td class="l">U<sub>slip</sub> @25 ℃</td><td>0.0578 m/s <span class="gy">(20 ℃는 0.055 — 섞지 말 것)</span></td>
+              <td class="l">d<sub>b</sub></td><td>0.5 mm</td></tr>
+        </tbody>
+      </table>
+      <div class="note">C군(k<sub>L,20</sub>)이 <b>실험 대조·캘리브레이션의 실제 표적</b>이고 A·B군은 룩업/표준값이다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 9 A7 재폭기 프로토콜 ===== -->
+<section class="slide">
+  <div class="badge">A7</div>
+  <h1 class="t"><span class="num">A7.</span> 재폭기 시험 프로토콜 — 표준 정합</h1>
+  <div class="sub">근거 표준 <b>[R43] ASCE/EWRI 2-06</b> <i>Measurement of Oxygen Transfer in Clean Water</i> · 적용범위 "실험실 규모(수 갤런)~전규모" → 20.7 L 어항 포함</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag">유효창 (0.15, 0.92)의 근거</div>
+      <ul class="sm">
+        <li>[R43] — 상승부 <b>~85 %까지가 K_La에 민감</b>, <b>90 % 이상 평탄부가 C*에 민감</b>.
+          데이터는 최저 DO ≤ 20 % C* · 최고 ≥ 98 % C*를 span해야 한다</li>
+        <li>도달시각: 하한 15 % = −τln(0.85) = <b>2.3분</b> / 상한 92 % = −τln(0.08) = <b>35분</b> (= <b>2.53 τ</b>), 1 Hz면 유효창 내 ≈2,000점</li>
+        <li>규약 C(<span class="mono" style="padding:1px 5px;font-size:15px">--cstar-mode window</span>), <span class="mono" style="padding:1px 5px;font-size:15px">--basis sat</span>,
+          C*<sub>ref</sub> 8.659 mg/L @23.95 ℃, θ=1.024, 평활 5 s 이동평균 — <b>전 런 동일</b></li>
+        <li><b>실측과 CFD에 공통 적용</b>(사과-대-사과)</li>
+        <li>민감도(lo 0.05~0.30 × hi 0.85~0.98): S4 <b>±3.4 %</b> / S5 <b>±3.2 %</b></li>
+      </ul>
+      <div class="note r"><b>미해소</b> — [R43]은 유료 표준이라 <b>절 번호를 특정하지 못했다</b>(후속판 2-22 존재).</div>
+
+      <div class="tag" style="margin-top:18px">탈산소 · 런 운용</div>
+      <table class="xs">
+        <tbody>
+          <tr><td class="l">시약 (본시험 5런)</td><td class="l"><b>Na₂SO₃ 2.0 g + CoCl₂·6H₂O 30 mg</b>, 수동교반 30 s, 투입 전 런 t = 180 s</td></tr>
+          <tr><td class="l">반응</td><td class="l">2Na₂SO₃ + O₂ →(Co²⁺) 2Na₂SO₄</td></tr>
+          <tr><td class="l">촉매 설계</td><td class="l">Co²⁺ 0.1–0.5 mg/L → 20.7 L에 <b>8–41 mg</b></td></tr>
+          <tr><td class="l">DO &lt; 0.5 도달</td><td class="l">1.5 ~ 15.7분 (교반 강도 의존)</td></tr>
+          <tr><td class="l">불응 구간</td><td class="l">무산소 유지 0.7분 → <b>932 s</b>(S2) / 48.7분 → <b>220 s</b>(S3)<br>
+            <span class="gy">"길게 잡을수록 불응이 짧아진다" — 수면 재폭기 0.444 /h가 잔여 아황산 소모</span></td></tr>
+          <tr><td class="l">런당 소요</td><td class="l">2.5 ~ 5.0 h (z에 따라)</td></tr>
+          <tr><td class="l">로깅 공백</td><td class="l">S1 24.1 % · S2 21.5 % · <b>S3~S5 0 %</b>
+            <span class="gy">(caffeinate -i로 해소)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <div class="tag">프로브 — DFRobot SEN0680 (형광법 RS485, ×1대)</div>
+      <table class="xs">
+        <thead><tr><th class="l">요건</th><th class="l">사양</th><th>판정</th></tr></thead>
+        <tbody>
+          <tr><td class="l">광학식 필수</td><td class="l"><b>형광법</b> — O₂ 무소비·유속 무의존</td><td><b>✅</b> 핵심</td></tr>
+          <tr><td class="l">분해능 ≤0.01~0.05</td><td class="l">0.01 mg/L</td><td>✅</td></tr>
+          <tr><td class="l">절대정확도</td><td class="l">±3 % FS (≈±0.6 mg/L)</td><td>△ 2점보정으로 흡수</td></tr>
+          <tr><td class="l">로깅 ≥1 Hz</td><td class="l">RS485 ModBus-RTU (4800 / addr 1 / 8N1)</td><td>✅</td></tr>
+          <tr><td class="l">팁 ≤4~5 mm</td><td class="l">산업형 바디 <b>≈Ø27 mm</b></td><td><span class="red">❌ 유일한 미충족</span></td></tr>
+        </tbody>
+      </table>
+      <ul class="sm" style="margin-top:10px">
+        <li><b>프로브 1대라 다지점 오프셋 문제가 없다.</b> 관리 대상은 시간 표류뿐이고 136분간 −0.5 %p</li>
+        <li>침입성: 재폭기는 강혼합 벌크라 국소 blockage가 벌크 K_La에 무시할 수준 (구 13지점 설계의 우려 해소)</li>
+        <li>업그레이드 경로: PyroScience OXROB10(Ø3 mm) + FireSting-GO2 — 수백만 원</li>
+      </ul>
+
+      <div class="tag" style="margin-top:18px">프로브 응답시간 판정 — [R43]</div>
+      <div class="eqbox"><div class="eq" style="font-size:25px">K<sub>L</sub>a · τ<sub>p</sub> &lt; 0.02</div></div>
+      <table class="xs" style="margin-top:10px">
+        <tbody>
+          <tr><td class="l">허용 (3-D K_La 2.604 기준)</td><td><b>27.6 s</b></td><td class="l">운용선 ≤26 s (보수적)</td></tr>
+          <tr><td class="l">실측 계단응답 t₉₀−t₁₀</td><td>41.7 s (상승) / 43.8 s (하강)</td><td class="l">1차계 τ = <b>19.0 / 19.9 s</b> ✅</td></tr>
+        </tbody>
+      </table>
+      <ul class="sm" style="margin-top:10px">
+        <li>τ<sub>p</sub> &gt; 28 s면 <span class="mono" style="padding:1px 5px;font-size:15px">fit_kla.py --tau-probe</span> 구현 필요 — <b>현재 미구현</b></li>
+        <li>τ<sub>p</sub> &gt; 26 s면 구현 전까지 본시험 데이터를 κ 산출에 쓰지 않는다</li>
+      </ul>
+      <div class="note r"><b>문서 불일치</b> — 논문 본문은 "τ<sub>p</sub> <b>미측정</b>"으로 기재돼 있는데
+        참고자료 표에는 실측 41.7 s / 19.0 s가 있다. 발표 전 정리 필요.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10 A8 보정·스크립트 ===== -->
+<section class="slide">
+  <div class="badge">A8</div>
+  <h1 class="t"><span class="num">A8.</span> 측정 신뢰성 — 보정 함정 2건 · 스크립트 결함 3건</h1>
+  <div class="sub">"측정을 믿을 수 있나"에 대한 답. <b>실제로 물렸고, 물린 뒤 규약을 고쳤다</b></div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag" style="color:#9a5b12;background:#fff7ed">보정 함정 ① 스팬 편향 −4.52 %</div>
+      <ul class="sm">
+        <li>런 전 100 % 보정 직후 보정매질을 <b>103.7 %</b>로 읽음 → 스팬 오류 확정</li>
+        <li>런 시작 8.594 mg/L @24.91 ℃ = 104.5 % / 종료 8.547 @25.0 ℃ = 104.1 %</li>
+        <li>사후 재보정 직후(24.87 ℃ 안정) = <b>99.78 %</b> ✅</li>
+        <li>보정계수 <b>s = 8.1606/8.5473 = 0.95476</b> (−4.52 %, 구 보정이 <b>+4.74 % 과대판독</b>)</li>
+        <li>재판독 5회 8.150/8.163/8.151/8.167/8.172 (평균 8.1606, SD 0.0087) @24.98 ℃</li>
+        <li>독립검증: 8.161 vs C*(24.98 ℃, 101 kPa) = 8.239 → <b>99.1 % 포화</b></li>
+        <li><b>영향 분리</b> — K_La는 <b>영향 없음</b>(시간불변 아핀 보정오차는 지수 감쇠율 불변) / C*·절대 DO만 ×0.95476</li>
+      </ul>
+
+      <div class="tag" style="margin-top:16px;color:#9a5b12;background:#fff7ed">보정 함정 ② 수온 상승 중 100 % 앵커</div>
+      <ul class="sm">
+        <li>1차 25.67 ℃ → 재보정 27.07 ℃ (<b>+1.4 ℃</b>), 직후 8.224/8.223/8.223 = <b>103.7 %</b></li>
+        <li>원인: <b>데워지는 공기포화수는 낮아진 C* 대비 과포화</b>인데 이를 100 %로 고정하면 스팬이 그만큼 높게 박힌다</li>
+        <li>당시 기재 "±4 % 이내"는 실제 편향 4.74 %를 <b>과소평가</b>했다</li>
+        <li><b>SOP 반영</b> — (1) <span class="mono" style="padding:1px 5px;font-size:15px">--calibrate</span>는 쓰기 명령이므로
+          <span class="mono" style="padding:1px 5px;font-size:15px">--read</span>로 먼저 읽어 기록
+          (2) <b>100 % 보정은 3분간 ΔT &lt; 0.05 ℃일 때만</b></li>
+        <li>08-01 판독 104.12 %는 <b>스팬 편향이 아니라 매질 과포화</b>로 진단 → 재보정하지 않음</li>
+        <li>표류 상한 <b>|표류| ≤ 1.3 % / 3.5 h</b> · 다점 검증 9시점 96.5–100.3 %(101 % 초과 0건)</li>
+        <li>영점: 사후 −0.055~−0.058, 파일럿 −0.077 → <b>|offset| &lt; 0.09 mg/L = 범위의 1.1 %</b></li>
+      </ul>
+      <div class="note r"><b>닫지 못한 것 2건</b> — <b>온도보상 검증 불가</b>(BK dC*/dT = −0.153 mg/L/℃ 확인 실패,
+        세션 추세와 교락, 겉보기 기울기 −1.05, 런 내 온도변동 0.02–0.03 ℃) · <b>영점 표류 미측정</b></div>
+    </div>
+
+    <div class="col">
+      <div class="tag" style="color:#9b2c28;background:#fef2f2">calc_kappa.py 결함 3건 — 내장 CFD 표가 진실원과 불일치</div>
+      <table class="xs">
+        <thead><tr><th>z</th><th>코드값</th><th>규약대로</th><th>오차</th><th class="l">진단</th></tr></thead>
+        <tbody>
+          <tr><td>0.02</td><td>2.604</td><td>2.6040</td><td>—</td><td class="l">정상</td></tr>
+          <tr><td>0.05</td><td>2.221</td><td>2.2206</td><td>+0.02 %</td><td class="l">정상</td></tr>
+          <tr style="background:#fef2f2"><td><b>0.08</b></td><td><b>2.030</b></td><td>1.9557</td><td class="red">+3.8 %</td>
+            <td class="l"><b>앵커 미적용</b> — coarse 원값</td></tr>
+          <tr><td>0.11</td><td>1.685</td><td>1.6792</td><td>+0.35 %</td><td class="l">정상</td></tr>
+          <tr><td>0.14</td><td>1.312</td><td>1.3313</td><td>−1.4 %</td><td class="l">구 선형모델 예측값</td></tr>
+          <tr style="background:#fef2f2"><td><b>0.17</b></td><td><b>0.948</b></td><td>1.0124</td><td class="red">−6.4 %</td>
+            <td class="l"><b>구 선형모델</b> (3-D 이미 완료: 1.051)</td></tr>
+        </tbody>
+      </table>
+      <ul class="sm" style="margin-top:10px">
+        <li>환산 규약: K_La<sub>CFD</sub>(z) = 2.604 × K_La³ᴰ<sub>coarse</sub>(z) / 2.703</li>
+        <li><b>"z=0.08 한 줄 때문에 κ_S4가 1.063 대신 1.024로 나와 문제가 4 %p 작아 보였다"</b></li>
+        <li><b>"hold-out 분모가 6.4 % 틀린 채로 판정할 뻔했다"</b></li>
+      </ul>
+
+      <div class="card warn" style="margin-top:14px">
+        <h3 style="color:#9a5b12">결함 ②③</h3>
+        <ul class="sm">
+          <li><b>--basis 기본값이 온도 미정합</b> — 기본 <span class="mono" style="padding:1px 5px;font-size:15px">raw</span>는
+            실측 원값(23.8~24.2 ℃)을 25 ℃ CFD로 그냥 나눈다</li>
+        </ul>
+        <table class="xs" style="margin:8px 0">
+          <thead><tr><th>basis</th><th>κ(S1)</th><th>κ(z=0.02, 3점)</th><th>위치 CV</th></tr></thead>
+          <tbody>
+            <tr><td>raw (기본)</td><td>0.942</td><td>0.929</td><td>1.73 %</td></tr>
+            <tr style="background:#ecfdf5"><td><b>kla20 --cfd-T 25</b></td><td><b>0.961</b></td><td><b>0.952</b></td><td><b>1.45 %</b></td></tr>
+          </tbody>
+        </table>
+        <ul class="sm">
+          <li>→ 판정에는 <b>항상 --basis kla20 --cfd-T 25</b></li>
+          <li><b>문서 표기 불일치 4건</b> — 런 라벨/좌표 계열 불일치, S2 y=0.175 vs 규약 0.190(<b>15 mm 차</b>),
+            runs.csv 파일명 오지정, 부록 G.2가 z=0.17을 0.948로 기재</li>
+          <li>부수: <span class="mono" style="padding:1px 5px;font-size:15px">--cv-floor 3.0 %</span>는 <b>가정값</b></li>
+        </ul>
+      </div>
+      <div class="note"><b>전부 2026-08-02 수정 완료.</b> 독립 재구현 검산도 통과 —
+        S1 +0.19 % · S2 +0.16 % · S3 +0.39 % · S4 +0.19 %.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 11 A9 z_start 레버 ===== -->
+<section class="slide">
+  <div class="badge">A9</div>
+  <h1 class="t"><span class="num">A9.</span> 폭기 기하를 바꾸면 얼마나 변하나 — z_start 레버</h1>
+  <div class="sub">CFD 실측 6수준. <b>구 해석추정(100/68/44/29/17/8 %)은 32 %p 틀렸다 — 표 폐기</b></div>
+  <div class="rule"></div>
+
+  <table style="margin-bottom:18px">
+    <thead><tr><th class="l">z_start [m]</th><th>0.02</th><th>0.05</th><th>0.08</th><th>0.11</th><th>0.14</th><th>0.17</th></tr></thead>
+    <tbody>
+      <tr><td class="l"><b>3-D K_La [1/h]</b></td><td>2.703</td><td>2.305</td><td>2.030</td><td>1.743</td><td>1.382</td><td>1.051</td></tr>
+      <tr><td class="l">3-D 상대 [%]</td><td>100</td><td>85.3</td><td>75.1</td><td>64.5</td><td>51.1</td><td>38.9</td></tr>
+      <tr><td class="l">(참고) 0-D 상대 [%]</td><td>100</td><td>85.3</td><td>75.6</td><td>64.7</td><td>51.5</td><td>39.3</td></tr>
+      <tr><td class="l">α<sub>g</sub></td><td>0.1815</td><td>0.1768</td><td>0.1854</td><td>0.1945</td><td>0.2135</td><td>0.2436</td></tr>
+      <tr><td class="l">a [1/m]</td><td>2178</td><td>2121</td><td>2224</td><td>2333</td><td>2562</td><td>2923</td></tr>
+      <tr><td class="l">W [m/s]</td><td>0.2930</td><td><b>0.3023</b></td><td>0.2857</td><td>0.2696</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card neg">
+        <h3 style="color:#9b2c28">구 추정이 틀린 원인 3가지</h3>
+        <ul class="sm">
+          <li><b>① W가 단조가 아니다</b> — 0.2930 → <b>0.3023</b>(z05) → 0.2857 → 0.2696.
+            바닥에서 3 cm 띄우면 <b>no-slip 저항에서 벗어나 플룸이 오히려 빨라진다</b></li>
+          <li><b>② Q<sub>p</sub> ∝ H<sub>p</sub><sup>5/3</sup>가 전달 폐합에 안 들어간다</b> —
+            실제 전달항 (V<sub>p</sub>/V)k<sub>L,b</sub>a는 H<sub>p</sub>에 <b>선형</b></li>
+          <li><b>③ 수면항 k<sub>L,s</sub>A<sub>s</sub>/V = 0.444 /h가 전 수준 고정</b> —
+            z02 총량의 <b>15.2 %</b>로, <b>어떤 플룸 기하로도 못 없애는 바닥</b></li>
+        </ul>
+      </div>
+      <div class="note">검산 체인: k<sub>L,20</sub> 2.3e-5 × θ<sub>a</sub><sup>(25−20)</sup> = <b>2.590e-5 m/s</b>,
+        × A<sub>s</sub>/V(4.76) × 3600 = <b>0.444 /h</b> → 문서의 수면항과 일치하므로 이 온도보정 체인은 검증됐다.</div>
+    </div>
+
+    <div class="col">
+      <div class="card hi">
+        <h3>논문에 쓸 결과 문장 (그대로 인용 가능)</h3>
+        <div style="font-size:21px;line-height:1.6;color:#134e48;font-weight:600;margin-top:6px">
+          "20 L급 가정 어항에서 폭기 기하를 크게 바꿔도(H<sub>p</sub> 0.19 → 0.04 m, <b>79 % 단축</b>)
+          K_La 총량은 <b>2.70 → 1.05 /h</b>에 머문다.
+          <b>총량은 로버스트하고, 진단해야 할 것은 총량이 아니라 공간구조다.</b>"</div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h3>기하 예측 규약 — 구간별 지수 γ</h3>
+        <ul class="sm">
+          <li>γ = <b>0.613</b> (z ∈ [0.02, 0.08]) / <b>1.009</b> (z ∈ [0.08, 0.17])</li>
+          <li>전이 잔차 <b>−0.58 %</b>, 외삽 폭 36 %p — <b>α<sub>g</sub>가 +31 % 바뀌는 구간을 폐합 모델이 재현했다</b></li>
+          <li><b>z &lt; 0.02 · z &gt; 0.17 외삽 금지</b></li>
+        </ul>
+      </div>
+      <div class="note r" style="margin-top:14px"><b>수위 축은 무효다.</b> 해석추정 100→53 %였으나 CFD 실측 <b>100→121 %, 부호 반대</b>.
+        V ∝ d라 수면항 A<sub>s</sub>/V = 1/d가 ×2.33 되어 플룸항 감소(×0.859)를 압도한다.
+        채널 분리축으로도 못 쓴다 → <b>"수위는 레버가 아니다 / 1/V 증폭"의 정량 근거로만 보존</b>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 12 A10 κ 진단 ===== -->
+<section class="slide">
+  <div class="badge">A10</div>
+  <h1 class="t"><span class="num">A10.</span> κ 파탄 진단 — 가설 (a)~(d)</h1>
+  <div class="sub">κ(z=0.02) 0.952 ± 0.014 vs κ(z=0.08) <b>1.063 (+11.7 %)</b>. 그런데 0.08 → 0.17 레버는 <b>−0.58 %로 일치</b></div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card hi">
+        <h3>문제의 형태 — "이상은 z = 0.02 한 점에 있다"</h3>
+        <ul class="sm">
+          <li>z=0.02 3런 재현성 <b>CV 1.44 %</b> → 잡음이 아니다</li>
+          <li>S5 hold-out(z=0.17, 외삽 36 %p) κ = <b>1.057</b> — z=0.08의 1.063과 사실상 같다</li>
+          <li>⟹ 파탄은 "κ가 z에 따라 흐른다"가 아니라 <b>z=0.02만 다르다</b></li>
+        </ul>
+      </div>
+
+      <table class="xs" style="margin-top:16px">
+        <thead><tr><th class="l">가설</th><th class="l">검정</th><th>결과</th></tr></thead>
+        <tbody>
+          <tr><td class="l"><b>(a) 기하 오차</b><br><span class="gy">에어스톤 실제 침지가 기록과 다름</span></td>
+            <td class="l">방출중심 실측</td><td><span class="red">기각</span><br>실측 20 mm = 기록값 일치</td></tr>
+          <tr><td class="l"><b>(b) 바닥 차폐</b><br><span class="gy">바닥 근접이 플룸을 막는다</span></td>
+            <td class="l">EX2_X5 c02blk<br>(동일 강제 1:1 대조)</td><td>W 0.29299 → <b>0.17652</b><br><span class="gy">차폐 순효과 큼</span></td></tr>
+          <tr><td class="l"><b>(c) 스크립트 결함</b></td>
+            <td class="l">calc_kappa.py 감사</td><td><b>일부 사실</b> — z=0.08 앵커 미적용 +3.8 % (A8)</td></tr>
+          <tr style="background:#ecfdf5"><td class="l"><b>(d) 폭기 위치</b><br><span class="gy">실제 축이 CFD 축과 다름</span></td>
+            <td class="l">CFD_v2 동일 Su·위치만 변경</td><td><b>부상 중</b><br>W +8.2 % / α<sub>g</sub> −7.0 %</td></tr>
+        </tbody>
+      </table>
+      <div class="note">가설 (d)의 효과가 <b>z=0.02에 집중</b>한다(−4.9 % vs −0.2 % vs +0.9 %)
+        → 예상 κ 격차 <b>10.5 %p → 약 6 %p</b>로 줄어든다. "이상이 한 점에 있다"는 관측과 형태가 맞는다.</div>
+    </div>
+
+    <div class="col">
+      <div class="tag">CFD_v2 재출발 (2026-08-02) — 왜 2.6 GB를 버렸나</div>
+      <ul class="sm">
+        <li>Q<sub>air</sub> 실측이 가정치의 <b>60 %</b>(2 → 1.200 L/min) → α<sub>g</sub> 계열 전면 재확정</li>
+        <li>관련 CFD를 <b>통째로 아카이브</b>하고 폭기축 <b>(0.035, 0.195) 통일 · medium 단일</b>로 재출발</li>
+        <li><b>인용 금지 목록 명시</b> — α<sub>g</sub> 0.29 · 0.257, K_La_CFD 3.799 등</li>
+      </ul>
+      <table class="xs" style="margin-top:12px">
+        <thead><tr><th>케이스</th><th>잔차</th><th>판정</th><th class="l">비고</th></tr></thead>
+        <tbody>
+          <tr><td>e02</td><td>−0.04 %</td><td><b class="bl">✅</b></td><td class="l">기준 운전점</td></tr>
+          <tr style="background:#fef2f2"><td><b>e08</b></td><td class="red">+3.66 %</td><td><span class="red">❌</span></td>
+            <td class="l"><b>재실행 필요 (~99분, P0)</b> — κ 파탄을 만든 S4의 그 케이스</td></tr>
+          <tr><td>e17</td><td>+0.23 %</td><td><b class="bl">✅</b></td><td class="l">Su +37.4 %에서도 성립</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card" style="margin-top:16px">
+        <h3>가상 재폭기 대조군 (CFD_v2 S1)</h3>
+        <ul class="sm">
+          <li>K_La<sub>eff,CFD</sub> = <b>2.474 /h</b> · 3D/0-D = <b>0.9254</b></li>
+          <li><b>프로브 7점 간 CV = 0.00 %</b> ← 실측 위치 산포 1.44 %의 대조군</li>
+        </ul>
+      </div>
+
+      <div class="card neg" style="margin-top:16px">
+        <h3 style="color:#9b2c28">주장을 이렇게 바꿨다</h3>
+        <div style="font-size:20px;line-height:1.6;color:#8a3d3a;margin-top:4px">
+          <s>"κ가 hold-out 축으로 전이된다"</s><br>
+          → <b>"κ는 설계점 보정계수이고, CFD의 z 레버는 과대하다"</b></div>
+      </div>
+      <div class="note r"><b>미결 상태 그대로 보고할 것</b> — κ 값이 아직 <b>두 개</b>다(0.952 / 1.063).
+        e08 재실행이 나와야 확정된다. 그 전까지 구 κ(0.952/1.060)를 논문에 확정으로 쓰지 않는다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 13 A11 t_mix ===== -->
+<section class="slide">
+  <div class="badge">A11</div>
+  <h1 class="t"><span class="num">A11.</span> 완전혼합 가정 — <span class="red">판정 불성립, 주장 철회</span></h1>
+  <div class="sub">2026-08-01 산소결손 펄스 추적 4런(프로브 3위치 + 주입점 대조 1). Na₂SO₃ 50 mg 한 점 주입</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card neg">
+        <h3 style="color:#9b2c28">판정: t_mix ≪ 1/K_La 기준 불성립</h3>
+        <ul class="sm">
+          <li>국소 DO 결손의 <b>위치 간 산포 2.0–3.5배</b>
+            <span class="gy">(baseline 처리 의존: 상수 3.50 / 선형 2.03–2.48 — <b>개별 배수는 확정값 아님</b>)</span></li>
+          <li>프로브 지연 디컨볼루션 후에도 <b>3.1–3.3배 유지</b> → 지연이 원인이 아니다</li>
+          <li>산포가 <b>t+600 s (10분) 이상 지속</b> — 불성립 경계 0.30 × 24.8분 = <b>446 s 초과</b></li>
+          <li>장축 코너는 주입점과 무관하게 항상 균질값 초과(1.95× / 1.22×).
+            단 <b>"항상 최고"는 미검증, 배수는 주장 금지</b></li>
+          <li>t₉₅·k<sub>i</sub> <b>미확정</b> — baseline 표류로 회수율 148–324 %(물리적으로 불가).
+            <b>재측정 1순위 = baseline 제어</b></li>
+          <li><b>경쟁 가설 미배제</b> — "결손 = 수동 스칼라" 전제가 검증되지 않았다</li>
+        </ul>
+      </div>
+
+      <div class="note r"><b>용어 주의</b> — 유속을 측정하지 않았으므로 관측된 것은 <b>저산소역</b>이며
+        <b>정체역</b>과의 대응은 미검증이다. <b>"정체역에 결손이 고인다"로 쓰지 말 것.</b></div>
+    </div>
+
+    <div class="col">
+      <div class="card hi">
+        <h3>결론 — 무엇을 버리고 무엇을 남겼나</h3>
+        <ul class="sm">
+          <li>0-D 축약은 <b>"K_La_eff 총량 산출 도구"로만</b> 쓴다</li>
+          <li><b>"수조가 균질하다"는 주장은 철회한다</b> (방법론 §2 개정)</li>
+          <li>K_La_eff로의 영향은 <b>미정</b> — 위치 편향이 시간불변이면 감쇠율은 보존되나,
+            실측에서 국소/벌크 비가 <b>±25 % 시변</b></li>
+        </ul>
+      </div>
+
+      <div class="card warn" style="margin-top:18px">
+        <h3 style="color:#9a5b12">앱 엔진 헤더가 아직 철회된 논증을 쓰고 있다</h3>
+        <ul class="sm">
+          <li>엔진 헤더·MERGE 문서: "폭기 플룸 이류 순환 <b>12.8 s</b> vs 난류확산 3060 s vs 소비 <b>9.5 h</b> →
+            이류가 소비보다 <b>2,673배</b> 빠르다 → 완전혼합 축약 가능"</li>
+          <li><span class="red">이것이 정확히 t_mix 실측이 철회한 논증이다</span></li>
+          <li>조치: 축약을 폐기하라는 뜻이 아니다. 0-D mean을 <b>"균질 가정의 값이 아니라 총량 수지값"</b>으로 재정의 표기</li>
+          <li>참고 — rev.C 실측 축약 오차는 <b>결핍 기준 3.8 %, DO 기준 0.11 %</b>(0.0091 mg/L = 위험 여유 2.02의 0.45 %).
+            방향이 <b>결핍을 과소평가</b>하므로 안전측이 아니다 → 보수적으로 쓰려면 결핍에 <b>1.04</b>를 곱한다(<b>현재 미적용</b>)</li>
+        </ul>
+      </div>
+
+      <div class="note">이 슬라이드가 이 부록에서 가장 중요합니다. <b>발표에서 "완전혼합이므로"라는 말을 하면
+        자기 문서로 반박당합니다.</b> "총량 수지로 레벨을 잡고, 공간은 ROM이 얹는다"로 말하십시오.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 14 A12 ROM 전체 ===== -->
+<section class="slide">
+  <div class="badge">A12</div>
+  <h1 class="t"><span class="num">A12.</span> ROM 성능 — 전체 근거</h1>
+  <div class="sub">253케이스(Tier0 1 · Tier1 60 · Tier2 192 · <b>Tier3 0</b>) · 격자 2×2×2 풀링 54×24×24(native 108×48×48은 OOM) · POD 에너지 99 % → r=108</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag">장(field) 과제 — 방법 비교 (test 10 고정)</div>
+      <table class="xs">
+        <thead><tr><th class="l">method</th><th>relL2</th><th>anomL2</th><th>IoU_med</th><th>IoU_min</th><th>cdist</th></tr></thead>
+        <tbody>
+          <tr><td class="l">baseline_meanfield</td><td>0.119</td><td>1.000</td><td>0.597</td><td>0.202</td><td>11.4 mm</td></tr>
+          <tr><td class="l">baseline_nn_retrieval</td><td>0.109</td><td>0.917</td><td>0.627</td><td>0.263</td><td>10.4</td></tr>
+          <tr><td class="l">pod_ridge</td><td>0.111</td><td>0.703</td><td>0.563</td><td>0.293</td><td>11.4</td></tr>
+          <tr><td class="l">pod_rf</td><td>0.075</td><td>0.612</td><td>0.718</td><td>0.197</td><td>7.2</td></tr>
+          <tr><td class="l">pod_mlp</td><td>0.123</td><td>0.822</td><td>0.524</td><td>0.301</td><td>12.0</td></tr>
+          <tr><td class="l">3D CNN (Stage 2-B)</td><td>—</td><td>0.713</td><td>0.677</td><td>0.191</td><td>6.6</td></tr>
+          <tr style="background:#ecfdf5"><td class="l"><b>하이브리드</b><br><span class="gy">중첩 + 잔차 POD+RF</span></td>
+            <td>0.087</td><td>0.668</td><td>0.686</td><td><b>0.276</b></td><td><b>5.9</b></td></tr>
+          <tr style="background:#f0f0f4"><td class="l"><i>pod_projection_ceiling</i></td><td>0.033</td><td><i>0.293</i></td><td><i>0.861</i></td><td><i>0.494</i></td><td><i>2.7</i></td></tr>
+        </tbody>
+      </table>
+      <div class="note">승격 기준(anomL2 &lt; 0.612 · IoU_med &gt; 0.718 · IoU_min &gt; 0.20 · cdist &lt; 7.2 mm)에
+        <b>CNN은 미달</b>이고 하이브리드가 IoU_min·cdist를 넘겼다.</div>
+
+      <div class="tag" style="margin-top:16px">데이터 병목이 확정된 방식</div>
+      <ul class="sm">
+        <li>energy 0.99 재실행(r=111): anomL2 0.713 → <b>0.758</b>, cdist 6.6 → <b>7.9 mm</b> — <b>악화</b>
+          ⟹ 절단가설 기각, <b>데이터 병목 확정</b> (train 0.30 ≪ val 0.68)</li>
+        <li>per-case 이봉: plant 0.892/0.835/0.832/0.758 vs <b>rock 0.349/0.448/0.391/0.191</b>
+          (case0141 rock L×2, blk 0.085 — r108 ceiling조차 0.494)</li>
+        <li>학습곡선(RF): N=30 anomL2 0.848 → N=243 <b>0.636 (미포화)</b>, IoU_med ~0.72 <b>평탄</b>, IoU_min 0.16~0.20 <b>정체</b></li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="tag">판정 과제 — 조대 위험맵 (전 253케이스 5-fold CV)</div>
+      <table class="xs">
+        <thead><tr><th>격자</th><th>구역</th><th>블록</th><th>RF top1</th><th>평균장</th><th>조회</th><th>RF−평균장</th><th>top1-Q</th></tr></thead>
+        <tbody>
+          <tr><td>2×3</td><td>6</td><td>10.5×15.7 cm</td><td>0.980</td><td>0.980</td><td>0.976</td><td>0.000</td><td>0.980</td></tr>
+          <tr><td>3×6</td><td>18</td><td>7.0×7.8</td><td>0.952</td><td>0.956</td><td>0.952</td><td>−0.004</td><td>1.000</td></tr>
+          <tr style="background:#ecfdf5"><td><b>4×9</b></td><td><b>36</b></td><td><b>5.2×5.2</b></td><td><b>0.668</b></td><td>0.569</td><td>0.628</td><td><b>+0.099</b></td><td><b>1.000</b></td></tr>
+          <tr><td>6×18</td><td>108</td><td>3.5×2.6</td><td>0.470</td><td>0.355</td><td>0.380</td><td>+0.115</td><td>0.992</td></tr>
+          <tr><td>8×27</td><td>216</td><td>2.6×1.7</td><td>0.355</td><td>0.249</td><td>0.233</td><td>+0.107</td><td>0.992</td></tr>
+        </tbody>
+      </table>
+      <ul class="sm" style="margin-top:10px">
+        <li>학습곡선 4×9: N=30 0.486 → <b>60 0.692</b> → 120 0.684 → 180 0.668 → 202 0.672 ⟹ <b>N=60 포화</b>
+          (6×18은 0.272/0.423/0.446/0.446)</li>
+        <li><b>4×9를 고른 이유</b> — 2×3·3×6은 RF가 평균장을 못 이기고(기여 0), 6×18 이상은 top1이 무너진다.
+          <b>RF−평균장 +0.099로 기여가 처음 유의해지는 해상도</b></li>
+      </ul>
+
+      <div class="card neg" style="margin-top:14px">
+        <h3 style="color:#9b2c28">비가법성 — 중첩법이 깨지는 구성</h3>
+        <table class="xs" style="margin-top:6px">
+          <thead><tr><th class="l">구성</th><th>n</th><th>IoU</th><th>anomL2</th><th>cdist</th><th>판정</th></tr></thead>
+          <tbody>
+            <tr><td class="l">식물만</td><td>74</td><td><b>0.785</b></td><td>0.603</td><td>4.7 mm</td><td><b class="bl">성립</b></td></tr>
+            <tr><td class="l">혼합</td><td>94</td><td>0.568</td><td>0.940</td><td>10.6</td><td>경계</td></tr>
+            <tr style="background:#fef2f2"><td class="l"><b>바위만</b></td><td>84</td><td class="red">0.423</td><td>1.003</td><td>15.2</td><td><span class="red">실패</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note r"><b>test 10은 낙관적이다</b> — 중첩법 test10 IoU 0.657 vs 253 CV 0.570 / meanfield 0.597 → 0.519.
+        <b>발표에는 CV 값을 쓸 것.</b> 유효범위 <b>n_obs ≤ 2</b>(Tier3 미학습) · <b>평행이동 대체법은 실패</b>(+1셀 4.375 mm 이동에 C_min 7.93 → 4.34 붕괴).</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 15 A13 오차예산 ===== -->
+<section class="slide">
+  <div class="badge">A13</div>
+  <h1 class="t"><span class="num">A13.</span> ±50 mm는 어떻게 나왔나 — 오차 예산</h1>
+  <div class="sub">추가 CFD 0건 · Tier1 60 + Tier0 1 + Tier2 근접쌍 20 = <b>81 케이스</b> 재분석 · 재현 앵커 native case0000 C_min = 7.960180 mg/L (소수 6자리 일치)</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag">유도 사슬</div>
+      <div class="mono">ε_DO  (4×9 1위−2위 격차)      중앙 1.65e-4 mg/L
+                              p10  9.9e-5 · 최소 6.5e-6
+S_diff (52.5 mm 앵커쌍 n=37)  중앙 5.4e-7 mg/L/mm
+                              p90  2.1e-6
+   ↓  δ_allow = ε_DO / S_diff
+4×9 :  306 mm (중앙)  /  78 mm (p90)
+   ↓  native 교차검증 (case0001↔0002, 52.5 mm)
+       ε 6.6e-5 · S_diff 9.8e-7 → δ_allow 68 mm
+   ↓  조대격자 편향 보정 (ε ×1.9–2.1, S_diff ×2.17
+       → δ_allow 편향 ×1.22)
+p90 보정 : 77.5 / 1.22 = 63.5 mm  →  기준선 ≈65 mm
+   ↓  안전마진 ×0.77
+채택 :  ±50 mm</div>
+
+      <table class="xs" style="margin-top:14px">
+        <thead><tr><th>해상도</th><th>2×3</th><th>3×6</th><th>4×9</th><th>6×18</th><th>8×27</th></tr></thead>
+        <tbody>
+          <tr><td class="l">δ_allow 중앙 [mm]</td><td>553</td><td>345</td><td><b>306</b></td><td>58</td><td>30</td></tr>
+          <tr><td class="l">δ_allow p90 [mm]</td><td>149</td><td>40</td><td><b>78</b></td><td>15</td><td>9</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>판정 해상도 4×9 고정이 조건이다.</b> 6×18은 ±15 mm를 요구하고 8×27은 성립하지 않는다.</div>
+    </div>
+
+    <div class="col">
+      <div class="tag">flip 확률 검정 — 위치 채널 (4×9)</div>
+      <table class="xs">
+        <thead><tr><th class="l">변위</th><th>n</th><th>flip / top1-Q 위반</th><th>저층 flip</th></tr></thead>
+        <tbody>
+          <tr><td class="l">25 ~ 39 mm</td><td>10</td><td>0.00 / <b>0.00</b></td><td>0.10</td></tr>
+          <tr style="background:#ecfdf5"><td class="l"><b>52.5 mm</b></td><td>37</td><td><b>0.05</b> / <b>0.00</b></td><td>0.08</td></tr>
+          <tr><td class="l">94 mm</td><td>44</td><td>0.07 / 0.00</td><td>0.09</td></tr>
+          <tr><td class="l">130 ~ 200 mm</td><td>—</td><td>0.10 / 0.00</td><td>—</td></tr>
+          <tr><td class="l">&gt; 200 mm</td><td>—</td><td>0.15 / 0.00</td><td>0.21</td></tr>
+        </tbody>
+      </table>
+      <ul class="sm" style="margin-top:10px">
+        <li><b>top1-Q 위반이 전 구간 0.00</b> — "정확히 그 칸"은 틀릴 수 있어도 <b>"위험 상위 25 %"는 절대 안 틀린다</b></li>
+        <li>8×27은 <b>25 mm에서 이미 flip 0.70</b> — 고해상도가 성립하지 않는 직접 증거</li>
+      </ul>
+
+      <div class="tag" style="margin-top:16px">크기 채널</div>
+      <table class="xs">
+        <thead><tr><th class="l">변화</th><th>flip / Q위반</th><th>저층</th><th>Δblockage</th></tr></thead>
+        <tbody>
+          <tr><td class="l">rock S→M (40→70 mm)</td><td>0.00 / 0.00</td><td>—</td><td>+0.011</td></tr>
+          <tr style="background:#fef2f2"><td class="l"><b>rock M→L (70→110)</b></td><td class="red">0.27 / 0.00</td><td>0.36 / 0.09</td><td>+0.028</td></tr>
+          <tr><td class="l">plant 전부</td><td>0.00 / 0.00</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div class="note">그래서 인수기준이 <b>바위 등가치수 ±30 mm</b>(2등급 오판 금지)이고 <b>식물 크기는 무제약</b>이다.</div>
+
+      <div class="card hi" style="margin-top:14px">
+        <h3>오차 합성 — ROM은 예산을 거의 안 쓴다</h3>
+        <div class="eq" style="font-size:24px;padding:6px 0">δ<sub>tot</sub> = √(δ<sub>ROM</sub>² + δ<sub>VLM</sub>²) ≤ 70 mm</div>
+        <ul class="sm">
+          <li>δ<sub>ROM</sub> = <b>5.9 mm</b>(하이브리드) / 7.2 mm(POD+RF) · CFD 격자 1셀 4.35 mm</li>
+          <li>⟹ ROM은 예산의 <b>0.7 %</b>, <b>δ<sub>VLM</sub> 여유 69.7 mm</b></li>
+          <li>VLM 실측 37.1 / 33.1 mm는 이 안에 들어온다</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 16 A14 VLM ===== -->
+<section class="slide">
+  <div class="badge">A14</div>
+  <h1 class="t"><span class="num">A14.</span> VLM이 3D 좌표를 정말 보는가 — <span class="red">깊이축은 대입이다</span></h1>
+  <div class="sub">시험 조건: 수조 50×24×24 cm, 수위 12 cm, 폭기 없음, 바위 2개, 정면 1장, <b>gemini-flash-latest, 2회 실행</b></div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag">축별 정확도 — 사람 대조군과 비교</div>
+      <table class="xs">
+        <thead><tr><th class="l">축</th><th>x</th><th>y</th><th>z</th><th>w</th><th>h</th><th>d</th><th>평균</th></tr></thead>
+        <tbody>
+          <tr><td class="l">절대평균 [cm]</td><td>1.90</td><td>1.13</td><td>1.40</td><td>1.25</td><td>0.93</td><td>1.80</td><td><b>1.40</b></td></tr>
+          <tr><td class="l">상대 [%]</td><td>3.8</td><td>4.7</td><td>5.8</td><td>2.5</td><td>3.9</td><td>7.5</td><td>—</td></tr>
+          <tr><td class="l">사람 대조군 [cm]</td><td>1.25</td><td>0.50</td><td>3.00</td><td>1.00</td><td>1.00</td><td>2.50</td><td><b>1.54</b></td></tr>
+        </tbody>
+      </table>
+      <div class="note">6축 평균 <b>1.40 cm</b>(가로 50 cm의 2.8 %)로 <b>사람 1.54 cm보다 좋다</b>
+        (사람 자체 불확실성 ±3 cm).</div>
+
+      <div class="tag" style="margin-top:16px">재현성 — 동일 사진 2회</div>
+      <table class="xs">
+        <thead><tr><th class="l">축</th><th>w</th><th>d</th><th>x</th><th>h</th><th>y</th><th>z</th></tr></thead>
+        <tbody><tr><td class="l">차이 [cm]</td><td>0.03</td><td>0.01</td><td>0.15</td><td>0.16</td><td>0.37</td><td class="red">2.40</td></tr></tbody>
+      </table>
+
+      <div class="card neg" style="margin-top:16px">
+        <h3 style="color:#9b2c28">실패모드 — 깊이축은 관측이 아니라 대입</h3>
+        <ul class="sm">
+          <li><b>d가 w와 매번 완전 동일</b> (12.2=12.2, 12.3=12.3, 27.3=27.3)</li>
+          <li><b>z가 정확히 10.00 단위로 스냅</b> (40→30, 50→40)</li>
+          <li>보이는 축 대비 <b>6~80배</b> 차이. 1차 실행 z 오차 3.80 cm, 두 실행 평균 ≈2.6 cm
+            → <b>z·d에 단일 정확도를 부여할 수 없다</b></li>
+        </ul>
+      </div>
+      <div class="note">다행히 <b>오분류·누락 섭동은 안전측</b>이다 — 정상 최저DO 7.84 → 수초를 바위로 오분류 8.03 →
+        수초 누락 8.03 (모두 "양호"). 경고가 <b>늦게</b> 켜지는 방향.</div>
+    </div>
+
+    <div class="col">
+      <div class="tag">판정 영향 환산 — 오차가 결론을 바꾸는가</div>
+      <table class="xs">
+        <thead><tr><th class="l">항목</th><th>위치·크기 [상대단위]</th><th>ΔDO [mg/L]</th></tr></thead>
+        <tbody>
+          <tr><td class="l">작은 바위</td><td>3.7 · 6.0</td><td>0.0012</td></tr>
+          <tr><td class="l">큰 바위</td><td>6.5 · 3.2</td><td>0.0019</td></tr>
+          <tr style="background:#ecfdf5"><td class="l"><b>합계</b></td><td>—</td>
+            <td><b>0.0030</b> = 위험 여유(2.02)의 <b>0.15 %</b></td></tr>
+        </tbody>
+      </table>
+      <div class="note">섭동계수 [mg/L per 상대단위]: 바위 위치 2.8e-4 · 바위 크기 2e-5 · 수초 위치 2e-5 ·
+        <b>수초 크기 8.0e-4 (가장 큼)</b> ← 그런데 수초 표본이 0개다.</div>
+
+      <div class="tag" style="margin-top:16px">좌표 규약 — 사진좌표 ≠ CFD좌표</div>
+      <div class="eqbox"><div class="eq" style="font-size:23px">
+        x = x<sub>img</sub>·L　·　y = z<sub>img</sub>·B　·　z = y<sub>img</sub>·d<br>
+        <span style="font-size:19px">(L, B, d) = (0.47, 0.21, 0.21) m</span></div></div>
+      <ul class="sm" style="margin-top:10px">
+        <li><b>2축·3축이 서로 바뀐다.</b> coords_img와 coords_cfd <b>둘 다 필수 필드</b>,
+          한쪽만 있는 레코드는 <b>무효</b></li>
+        <li>앱 구현: CFD x ← 앱 x, CFD y ← 앱 z, CFD z ← (100 − 앱 y). 기계팀 검토 완료 — <b>바꾸지 말 것</b></li>
+      </ul>
+      <div class="note r"><b>특허 §8.4 충돌 (8/7까지 결정)</b> — 명세서는 "단일 해석좌표계, 좌표 변환 없음"인데
+        실제 구현은 위 변환을 한다. <b>출원 전 결정 필수.</b></div>
+
+      <div class="card warn" style="margin-top:14px">
+        <h3 style="color:#9a5b12">인수시험 진행률 · 미작성 문서</h3>
+        <ul class="sm">
+          <li>인수 조건은 <b>3회 전부 통과</b>. 현재 <b>시험 1 완료·PASS, 시험 2·3 예정</b>(시험 3 = 수초 포함)</li>
+          <li>표본 <b>1장</b> · 수초 표본 <b>0개</b> · 수초 크기 오차 <b>미측정</b>(±15 %에서 등급 변화)</li>
+          <li>기하인식 문서 중 <b>02 파이프라인 · 04 프롬프트 설계 · 05 검증계획 · 03 스키마 본문은 "---미정" 스텁</b></li>
+          <li>미해명 잔차: 작은 바위 x 3.70 cm vs 큰 바위 0.10 cm (사람 판독도 8.5 cm로 같은 방향)
+            — tank_x_pct가 흰 받침대까지 잡은 가능성</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 17 A15 앱 엔진 ===== -->
+<section class="slide">
+  <div class="badge">A15</div>
+  <h1 class="t"><span class="num">A15.</span> 앱 물리엔진 내부 — 논문과의 차이를 전부 공개</h1>
+  <div class="sub">do_engine.js rev.C (2026-08-01) · Stage B를 <b>EX3 A층 CFD 315케이스 전량</b>에 풀었다 (phiMean 보존형 FV, 질량보존 1e-10, 139.6분/6워커)</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag">유효 K_La 합성 — 순서가 규약이다</div>
+      <div class="mono">plumeK = max(0, base − KLA_SURFACE) * zStartLever(z)   ① 레버는 플룸 성분에만
+kla25  = (plumeK + KLA_SURFACE) * klaDepthFactor(d)   ② 수위는 총량에
+return   kla25 * klaTempFactor(T)                    ③ 수온은 전체에
+         klaTempFactor(T) = θ_a^(T − 25)    ← 기준 25 ℃</div>
+      <ul class="sm" style="margin-top:10px">
+        <li>수위보정은 <b>비율</b>로 적용한다 — KLA_EFF가 이미 그 수위에서 교정된 값이라 절대값을 쓰면 <b>이중계산</b></li>
+        <li>표 보간은 <b>범위 밖 양 끝값 고정(외삽 금지)</b></li>
+        <li>⚠ <b>①②를 동시에 크게 벗어난 조합은 결합 실측표가 없어 미검증 영역</b></li>
+      </ul>
+
+      <table class="xs" style="margin-top:14px">
+        <thead><tr><th class="l">상수</th><th class="l">값</th><th class="l">비고</th></tr></thead>
+        <tbody>
+          <tr><td class="l"><b>DO_CRIT</b></td><td class="l"><b>6.0</b></td><td class="l">단일 기준. [R29] 밴드 5/3/2는 참고(C7)</td></tr>
+          <tr><td class="l">KLA_EFF</td><td class="l">정지 0.444 / 약 1.809 / <b>보통 3.618</b> / 강 7.235</td>
+            <td class="l"><span class="red">'보통'만 CFD 역산, 약(÷2)·강(×2)은 물리 근거 없는 임의 배수</span></td></tr>
+          <tr><td class="l">KLA_SURFACE</td><td class="l">0.444</td><td class="l">플룸 기하 무관 바닥값 (z02 총량의 15.2 %)</td></tr>
+          <tr><td class="l">KLA_DEPTH_TABLE</td><td class="l">0.09→1.66 / 0.12→1.85 / 0.15→2.19 / 0.18→2.63 / <b>0.21→3.12</b></td><td class="l">N2 실측표</td></tr>
+          <tr><td class="l">Z_START_TABLE</td><td class="l">1.000 / 0.853 / 0.751 / 0.645 / 0.511 / 0.389</td><td class="l">레버 열만 사용(절대값 미사용)</td></tr>
+          <tr><td class="l">SPATIAL_DROP_COEF</td><td class="l">1.0e-3 mg/L per (mg/h)</td>
+            <td class="l">ROM 미사용 폴백. stageB <b>11케이스 최악값 0.000986</b></td></tr>
+          <tr><td class="l">TURB_BOD_COEF</td><td class="l">0.4 mg/h per NTU</td><td class="l"><span class="red">U1: 근거 문서 없는 임시값</span></td></tr>
+          <tr><td class="l">Q10</td><td class="l">2.0</td><td class="l"><span class="red">U4: 근거 없음</span> (문헌 2~3 중 선택)</td></tr>
+          <tr><td class="l">C*(T)</td><td class="l">Benson–Krause 5항</td><td class="l">구 3차 다항식은 25 ℃에서 −1.06 % 계통편향 → 교체(C6)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <div class="tag" style="color:#9b2c28;background:#fef2f2">논문 대비 상충 5건 — 방향이 <b>전부 false-safe</b></div>
+      <table class="xs">
+        <thead><tr><th class="l">#</th><th class="l">내용</th><th class="l">정량</th></tr></thead>
+        <tbody>
+          <tr><td class="l"><b>B3</b></td><td class="l">앱 정본 K_La <b>3.618 /h가 논문에 0건</b>
+            (폐기된 α<sub>g</sub>=0.257 기반, a=3084)</td>
+            <td class="l">허용부하 169.5 → <b>28.3마리</b><br>2.604 → 20.3 / 2.417 → <b>18.9마리</b><br>
+            <span class="red">19마리 한계에 28마리 "충분" = +50 %</span></td></tr>
+          <tr><td class="l"><b>B2</b></td><td class="l">romShapeValid() = (폭기 == '보통')인데
+            그 '보통'의 정의가 <b>Q_air 2 L/min</b></td>
+            <td class="l">실물 Su≈1.75는 EX2_X 게이트 <b>불합격</b> 조건<br>
+            (IoU 0.597 &lt; 0.80, 정체분율 6.16 → 10.66 % <b>+73 %</b>)<br>
+            <span class="red">게이트 부호가 뒤집혀 있다</span></td></tr>
+          <tr><td class="l"><b>B1</b></td><td class="l">"이류 12.8 s vs 소비 9.5 h → 2,673배 → 완전혼합" 논증</td>
+            <td class="l">t_mix가 철회한 논증 (A11)</td></tr>
+          <tr><td class="l"><b>B4</b></td><td class="l">유효범위 <b>n_obs ≤ 2</b>인데 UI에 게이트 없음</td>
+            <td class="l">학습 0/1/2 = 1/60/254, <b>Tier3 부재</b>.
+            253→315의 62건은 <b>이미 포화된 n=2에 추가</b>(실패한 n≥3은 0건)</td></tr>
+          <tr><td class="l"><b>B5</b></td><td class="l">논문 B층은 <b>확률맵</b> P<sub>hypoxia</sub>(x), 앱은 결정론적 점추정</td>
+            <td class="l">Sc<sub>t</sub> 밴드·κ·프로브 편향 <b>어떤 불확실성도 전파 안 함</b></td></tr>
+        </tbody>
+      </table>
+      <ul class="sm" style="margin-top:10px">
+        <li>부수: <b>κ = 0.928이 엔진에 전혀 적용돼 있지 않다</b> (방향도 false-safe)</li>
+        <li>부수: S1 주석의 "α<sub>g</sub> 0.257 · Su 2.86"은 <b>내부 모순</b>(0.257 → Su 2.52, 2.86은 α<sub>g</sub>=0.29)</li>
+      </ul>
+
+      <div class="card" style="margin-top:14px">
+        <h3>폴백 4종 — 안 되면 꺼지고 계속 돈다</h3>
+        <ul class="sm">
+          <li>① ROM 형상 게이트 실패 → 근사식(히트맵만 비활성)</li>
+          <li>② ROM 미로드 → SPATIAL_DROP_COEF 근사 (순생산이면 여유 안 뺌)</li>
+          <li>③ 수량 ≤ 0 → TANK_VOLUME_L 20.7 L</li>
+          <li>④ 표 보간 범위 밖 → 양 끝값 고정</li>
+          <li>+ do_engine.js 부재 시 옛 선형근사로 <b>앱은 계속 동작</b></li>
+        </ul>
+      </div>
+      <div class="note r">어종별 doCrit는 <b>전 어종 6.0으로 동일</b>(차등값 없음). massG·ocr25는
+        <b>U2/U3: 문헌 추정값 — 출처 [R#] 부여 및 실측 교정 필요</b>.
+        식물은 u_plant 기저 미수령이라 <b>레벨(mean)에만 반영</b>된다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 18 A16 프로브 요구·검증 ===== -->
+<section class="slide">
+  <div class="badge">A16</div>
+  <h1 class="t"><span class="num">A16.</span> 탁도 프로브 — 요구사항 T1~T12 · 검증 V1~V6</h1>
+  <div class="sub">상위 결정: D1 논문·EX2에 탁도 없음(제품 기능 전용) · D2 Φ10 mm 프로브 내장 · D3 출력은 <b>기준선 대비 상대변화</b>(절대 NTU 미주장)</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <table class="xs">
+        <thead><tr><th>#</th><th class="l">요구</th><th class="l">목표값</th><th class="l">확정 설계 / 상태</th></tr></thead>
+        <tbody>
+          <tr><td>T1</td><td class="l">최소 감지 변화</td><td class="l">5 NTU 상당</td><td class="l">SNR 179 — 여유 큼</td></tr>
+          <tr><td>T2</td><td class="l">판정 창</td><td class="l">7 일</td><td class="l">[제안]</td></tr>
+          <tr style="background:#fff7ed"><td><b>T3</b></td><td class="l"><b>드리프트 예산</b></td><td class="l"><b>&lt; 2 NTU / 7일</b></td>
+            <td class="l">최악 1.85 % — <b>여유 0.65 %, 지배 제약</b></td></tr>
+          <tr><td>T4</td><td class="l">동작 온도</td><td class="l">수온 20–30 ℃ (±3)</td><td class="l">실온 아니라 <b>수온</b></td></tr>
+          <tr><td>T5</td><td class="l">단조성</td><td class="l">1–30 NTU 역전 없음</td><td class="l">선형성 불요</td></tr>
+          <tr><td>T6</td><td class="l">반복성</td><td class="l">&lt; 1 NTU (1σ)</td><td class="l">36:1 — 실측 1σ <b>0.043 NTU</b></td></tr>
+          <tr><td>T7</td><td class="l">응답시간</td><td class="l">&lt; 60 s</td><td class="l">10 s</td></tr>
+          <tr style="background:#fef2f2"><td><b>T8</b></td><td class="l">외부광 면역</td><td class="l">조명·햇빛 하 T1 유지</td>
+            <td class="l"><span class="red">V4·V5 미검증</span> ← 구 설계 실패원인</td></tr>
+          <tr><td>T9</td><td class="l">전원</td><td class="l">&lt; 5 mA 평균</td><td class="l">듀티 0.28 %</td></tr>
+          <tr><td>T10</td><td class="l">기구 봉입</td><td class="l">축방향 ≤ 60 mm</td><td class="l">50 + 10 — <b>상한 정확히 사용</b></td></tr>
+          <tr><td>T11</td><td class="l">세척성</td><td class="l">분해 없이 광학창 세척</td><td class="l">생물막이 T3를 직접 파괴</td></tr>
+          <tr><td>T12</td><td class="l">교정</td><td class="l"><b>사용자 교정 절차 없음</b></td><td class="l">설치 후 자동 기준선 학습</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card warn" style="margin-top:14px">
+        <h3 style="color:#9a5b12">T3 드리프트 예산 배분 (L=50 mm, 총 2.5 %)</h3>
+        <ul class="sm">
+          <li>광원 온도드리프트 <b>1.5 %</b> (LED ≈−0.5 %/℃ × ±3 ℃) · 검출기·회로 0.5 % ·
+            생물막 0.3 % · 기계적 정렬 0.2 %</li>
+          <li>감도 ΔI/I₀ ≈ <b>0.25 % per NTU per cm</b> → L=10 mm 0.25 %/NTU(<b>T3 달성 불가</b>) /
+            30 mm 0.75 % / <b>50 mm 1.25 %(현실적)</b></li>
+          <li>T8 귀결: 변조 주파수는 <b>50 Hz·60 Hz 양쪽 모두의 정수배가 아니어야</b> 한다 → f₀ 510 Hz</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="tag">검증 계획 V1~V6 — 합격선</div>
+      <table class="xs">
+        <thead><tr><th>#</th><th class="l">시험</th><th class="l">방법</th><th class="l">합격</th></tr></thead>
+        <tbody>
+          <tr><td>V1</td><td class="l">계단 응답</td><td class="l">5·10·20·30 NTU 단계 투입, 각 10회</td>
+            <td class="l">단계 간 평균차 &gt; <b>3σ</b>, 역전 없음</td></tr>
+          <tr><td>V2</td><td class="l">장기 기준선</td><td class="l">맑은 물 7일 연속 침지</td><td class="l">변동이 5 NTU의 <b>40 % 이내</b></td></tr>
+          <tr><td>V3</td><td class="l">온도 스윕</td><td class="l">20 → 30 ℃</td><td class="l">출력 변화 &lt; <b>2 NTU 상당</b></td></tr>
+          <tr style="background:#fff7ed"><td><b>V4</b></td><td class="l">외부광</td><td class="l">조명·어항등 on/off, 직사광</td>
+            <td class="l">출력 변화 &lt; 1 NTU 상당</td></tr>
+          <tr style="background:#fef2f2"><td><b>V5</b></td><td class="l"><b>미광(차광)</b></td><td class="l">광원 물리적 차단 시 잔류</td>
+            <td class="l"><b>잔류 &lt; 신호의 5 %</b></td></tr>
+          <tr><td>V6</td><td class="l">세척 복원</td><td class="l">오염 유도 → 세척</td><td class="l">초기 기준선 ±2 NTU 이내</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card neg" style="margin-top:16px">
+        <h3 style="color:#9b2c28">V5가 이 프로브의 유일한 남은 관문이다</h3>
+        <ul class="sm">
+          <li><b>구 설계가 통과하지 못한 시험</b> — LED를 물리적으로 뽑아도 출력이 <b>신호의 4배</b>였다</li>
+          <li>현 상태: 공기 중 시험 암 잔류 <b>신호의 28 %</b> (합격선 5 %)</li>
+          <li>주파수 특성이 진짜 신호와 거의 같아(<b>−8 % vs −10 %</b>) <b>광학적 우회</b>로 판정
+            → 하우징으로 잡히는 종류</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>아직 동결하지 않은 3항목</h3>
+        <ul class="sm">
+          <li>R<sub>L</sub> = 15 kΩ ← 확인점 3-a(반복 산포 &lt; 0.1 %), 실패 시 6.8 kΩ</li>
+          <li>f₀ = 510 Hz ← V4 + 스윕 산포 &lt; 3 %</li>
+          <li>적분 10 s ← SNR 부족 시 30 s (T7 한도 60 s)</li>
+        </ul>
+      </div>
+
+      <div class="tag" style="margin-top:14px">거리 실측 (2026-07-27, 공기 중, 5회)</div>
+      <table class="xs">
+        <thead><tr><th>L [mm]</th><th>5</th><th>10</th><th>20</th><th>30</th><th>50</th></tr></thead>
+        <tbody>
+          <tr><td class="l">노드 N [V]</td><td>1.5782</td><td>1.0728</td><td>0.8076</td><td>0.6452</td><td><b>0.3658</b></td></tr>
+          <tr><td class="l">RSD [%]</td><td>0.28</td><td>1.09</td><td>0.74</td><td>0.25</td><td><b>0.23</b></td></tr>
+        </tbody>
+      </table>
+      <div class="note r"><b>문서 불일치 — 감쇠지수.</b> 04_확정사양.md은 L<sup>−0.95</sup>, 미팅 문서는 −0.593으로 적었다.
+        위 5점 log-log LSQ를 직접 계산하면 <b>−0.593</b>이다(−0.95는 이 표로 재현되지 않음).
+        어느 쪽이든 <b>1/L² 가 아니다</b> = 거리와 무관한 미광이 섞여 있다는 뜻이고,
+        V5 하우징 통과 후 재측정하면 50 mm 값은 0.366 V보다 낮아진다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 19 A17 신규성·특허 ===== -->
+<section class="slide">
+  <div class="badge">A17</div>
+  <h1 class="t"><span class="num">A17.</span> 선행연구 지도 · 신규성 판정 · 특허 청구 구조</h1>
+  <div class="sub">결론 한 줄 — <b>"방법은 새롭지 않다. 새로움은 가정 어항 × 사진기반 자동 BC × 소비자 공간 DO 진단의 통합에 있다"</b></div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag">구성요소별 신규성 판정</div>
+      <table class="xs">
+        <thead><tr><th class="l">구성요소</th><th class="l">선행</th><th>신규성</th></tr></thead>
+        <tbody>
+          <tr><td class="l">URANS + DO 스칼라 공간분포 CFD</td><td class="l">① 다수 (원형·팔각 RAS, 양식 연못)</td><td><span class="red">✗</span> 방법 자체는 기존</td></tr>
+          <tr><td class="l">재폭기 시험 → 집약 K_La 캘리브레이션</td><td class="l">② 폭기공학·수처리 <b>표준</b></td><td><span class="red">✗ 거의 없음(교과서)</span></td></tr>
+          <tr><td class="l">가정용 소형 어항 도메인</td><td class="l">특정 연구 없음</td><td>△ 도메인 gap</td></tr>
+          <tr style="background:#ecfdf5"><td class="l"><b>사진→기하→BC 자동설정으로 어항 DO장 추론</b></td>
+            <td class="l">③ 타 도메인 선례(의료영상·실내 열점군), <b>어항 DO엔 없음</b></td><td><b class="bl">○ 적용 신규성(강)</b></td></tr>
+          <tr style="background:#ecfdf5"><td class="l"><b>저가 센서+카메라+물리로 공간 DO 진단(소비자)</b></td>
+            <td class="l">④ 단일점·ML·시간예측 (30분 MAE 0.78)</td><td><b class="bl">○ 시스템/축 신규성(강)</b></td></tr>
+          <tr><td class="l">캘리브 계수의 hold-out 전이</td><td class="l">개념은 기존</td><td>△ 엄밀성 기여(약~중)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card neg" style="margin-top:14px">
+        <h3 style="color:#9b2c28">심사자별 예상 반론과 방어선</h3>
+        <ul class="sm">
+          <li><b>폭기/수처리</b> "CFD K_La 캘리브레이션은 오래된 표준인데?" →
+            기여는 K_La 방법이 아니라 <b>사진기반 자동 BC + 소비자 공간 DO 추론</b>이고 κ는 그 파이프라인의 <b>정직한 검증층</b></li>
+          <li><b>양식 CFD</b> "DO-CFD는 이미 했고 너희는 더 작은 탱크" →
+            레짐(구속·단일 플룸·Pe 공간변동)과 <b>소비자 자동화</b>가 다르다</li>
+          <li><b>IoT/ML</b> "저가 DO 모니터링·예측은 포화" →
+            그들은 <b>단일점 시간예측</b>, 우리는 <b>물리기반 공간장 추론</b> — 축이 다르다</li>
+          <li><b>디지털트윈</b> "사진→CFD 트윈은 의료·건물에 이미 있음" →
+            <b>인용하고 차별화</b>(어항 DO 최초 적용, 저가·소비자 제약)</li>
+        </ul>
+      </div>
+      <div class="note">선행 4군을 Related Work에서 <b>명시 인용</b>하고 "교집합"을 신규성으로 주장하는 편이 심사에서 강하다.
+        모른 척하면 감점.</div>
+    </div>
+
+    <div class="col">
+      <div class="tag">특허 구성요소 C1~C7</div>
+      <table class="xs">
+        <tbody>
+          <tr><td class="l"><b>C1</b></td><td class="l">수질 계측 센서부(수온·탁도) — 계측치가 진단 항목이자 물리모델 입력</td></tr>
+          <tr><td class="l"><b>C2</b></td><td class="l">영상 인식부 — 사진 1장에서 기하·위상 인식</td></tr>
+          <tr><td class="l"><b>C3</b></td><td class="l">경계조건 자동설정부 — 인식 결과를 <b>정규화</b> BC로 사상</td></tr>
+          <tr><td class="l"><b>C4</b></td><td class="l">물리 추론부 — 이송-확산 기반 DO 공간분포</td></tr>
+          <tr><td class="l"><b>C5</b></td><td class="l">어류 건강도 추정부 — 어종·사육조건별 위험 임계</td></tr>
+          <tr><td class="l"><b>C6</b></td><td class="l">융합 판정부 — 3항목 동등 융합 판정·배치 처방</td></tr>
+          <tr><td class="l"><b>C7</b></td><td class="l">캘리브레이션부 — 실험 ground-truth로 저가 관측 보정</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tag" style="margin-top:16px">독립항 3개 — 왜 이렇게 쪼갰나</div>
+      <table class="xs">
+        <thead><tr><th>항</th><th class="l">구성</th><th class="l">명칭</th></tr></thead>
+        <tbody>
+          <tr><td><b>A</b></td><td class="l">C1+C2+C3+C4+C6</td><td class="l">수조 수질 진단 <b>방법</b></td></tr>
+          <tr style="background:#ecfdf5"><td><b>B</b></td><td class="l">C4 + <b>2계층 분할</b><br>
+            <span class="gy">기하→시간평균 유동장 제1계층(오프라인 CFD 학습 대리모델) + 유동장 고정 후 DO 선형 스칼라 제2계층</span></td>
+            <td class="l">수조 수질 진단 장치</td></tr>
+          <tr><td><b>C</b></td><td class="l">C1+C4+C6+C7 — DO 직접 계측 없이 보정계수·잔차를 불확실성으로 전파해
+            <b>확률 형태의 위험맵</b></td><td class="l">수조 수질 진단 장치</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card warn" style="margin-top:14px">
+        <h3 style="color:#9a5b12">선행특허·논문 실사 결과가 청구 구조를 만들었다</h3>
+        <ul class="sm">
+          <li><b>C2</b> — US12099047B2 청구항 원문은 <b>단일 지점값 vs 프리셋 범위 비교 → on/off</b>.
+            우리는 <b>공간장 추론</b></li>
+          <li><b>C3</b> — vision 기반 저산소 예측 논문 리스크 "높음" →
+            <b>C5를 행동인식에서 빅데이터 건강도 추정으로 이미 전환</b></li>
+          <li><b>C4</b> — 팔각 양식수조 DO CFD 논문 때문에 <b>C4 단독 청구는 불가로 판정</b>
+            → 그래서 독립항 B가 "2계층 분할"로 구성됐다</li>
+        </ul>
+      </div>
+
+      <div class="note r"><b>게이트 규칙</b> — "프리프린트든 저널이든 학회든,
+        <b>공개 시점에 출원일이 없으면 C1~C7은 전부 신규성 상실로 소멸한다.</b>"
+        불변 부등식 <b>P &lt; X</b>, 그리고 P &lt; D(8/22 중간발표 = 최초 외부 공개).
+        출원인 김강빈 단독 / 발명자 5인 · 만 19~29세 85 % 감면 시 약 7천 원.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 20 A18 미해결 ===== -->
+<section class="slide">
+  <div class="badge">A18</div>
+  <h1 class="t"><span class="num">A18.</span> 아직 못 한 것 · 문서 간 불일치 (전체)</h1>
+  <div class="sub">이 장을 먼저 꺼내는 것이 유리하다. 목록을 갖고 있다는 것 자체가 관리되고 있다는 증거다</div>
+  <div class="rule"></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="tag" style="color:#9b2c28;background:#fef2f2">미이행 · 미검증</div>
+      <table class="xs">
+        <thead><tr><th class="l">#</th><th class="l">항목</th><th class="l">상태</th></tr></thead>
+        <tbody>
+          <tr><td class="l">1</td><td class="l">Ū로 얼려서 DO를 푸는 것의 직접 검증</td><td class="l">pimpleFoam + scalarTransport 공동풀이 1케이스 필요</td></tr>
+          <tr><td class="l">2</td><td class="l"><b>GCI · 수렴차수 p</b></td><td class="l"><b>산출 불가</b>(비단조) → 3격자 최대편차로 대체</td></tr>
+          <tr><td class="l">3</td><td class="l">정체분율·centroid</td><td class="l"><b>미수렴</b> (19 % · 16 mm)</td></tr>
+          <tr><td class="l">4</td><td class="l">"Su −12 %가 공간구조를 안 바꾼다"</td><td class="l">Re 동일 레짐 외 <b>직접 검증 없음</b>. pos1_su235는 t≈20 s 중단</td></tr>
+          <tr><td class="l">5</td><td class="l">부력측 미보정 (16케이스·EX3 253케이스)</td><td class="l">전달측 a만 사후 교체된 상태</td></tr>
+          <tr><td class="l">6</td><td class="l"><b>κ 값이 두 개</b> (0.952 / 1.063)</td><td class="l">e08 재실행(P0, ~99분) 대기</td></tr>
+          <tr><td class="l">7</td><td class="l">t₉₅ · k<sub>i</sub></td><td class="l"><b>미확정</b> (회수율 148–324 %)</td></tr>
+          <tr><td class="l">8</td><td class="l">재현성 CV_rep</td><td class="l"><b>영구 미측정</b></td></tr>
+          <tr><td class="l">9</td><td class="l">온도보상 검증 · 영점 표류</td><td class="l">닫지 못함</td></tr>
+          <tr><td class="l">10</td><td class="l">Tier3 (n_obs 3~6) 52케이스</td><td class="l"><b>0건</b> — 실패한 영역이 비어 있다</td></tr>
+          <tr><td class="l">11</td><td class="l">VLM 인수시험 2·3회차 · 수초 표본</td><td class="l">1/3 완료 · 수초 <b>0개</b></td></tr>
+          <tr><td class="l">12</td><td class="l">기하인식 문서 02·03§2·04·05</td><td class="l"><b>"---미정" 스텁</b></td></tr>
+          <tr><td class="l">13</td><td class="l">프로브 V4 · V5</td><td class="l">미검증 (암 잔류 28 % vs 합격선 5 %)</td></tr>
+          <tr><td class="l">14</td><td class="l">[R43] 절 번호 특정</td><td class="l">유료 표준이라 미해소</td></tr>
+          <tr><td class="l">15</td><td class="l">경영 — 고객 인터뷰·설문 / TAM·SAM·SOM / 실 BOM 단가</td><td class="l"><b>0명 · 산정 없음 · 기록 없음</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <div class="tag" style="color:#9a5b12;background:#fff7ed">문서 간 수치 불일치 — 발표 전 정리 대상</div>
+      <table class="xs">
+        <thead><tr><th class="l">항목</th><th class="l">A</th><th class="l">B</th><th class="l">판단</th></tr></thead>
+        <tbody>
+          <tr><td class="l">K_La 표기</td><td class="l">2.785 (0-D 해석식)</td><td class="l">2.604 (κ 분모, m21)</td><td class="l">기준 명시 필요</td></tr>
+          <tr><td class="l">z_start 레버</td><td class="l">75.1 / 64.5 / 51.1 / 38.9 %<br><span class="gy">(상수_목록 3-D)</span></td>
+            <td class="l">75.6 / 64.7 / 51.5 / 39.3 %<br><span class="gy">(0-D · 앱 테이블)</span></td>
+            <td class="l"><b>3-D / 0-D 구분 표기</b></td></tr>
+          <tr><td class="l">감쇠지수 (탁도)</td><td class="l">L<sup>−0.95</sup></td><td class="l">−0.593</td>
+            <td class="l"><b>5점 LSQ 재계산 = −0.593</b></td></tr>
+          <tr><td class="l">플룸 Pe</td><td class="l">1995 (03_기계 §9)</td><td class="l">2131 (실험후검토)</td><td class="l">진실원 지정 필요</td></tr>
+          <tr><td class="l">τ<sub>p</sub></td><td class="l">"미측정" (논문 본문)</td><td class="l">41.7 s / τ 19.0 s (참고자료 표)</td><td class="l">본문 갱신</td></tr>
+          <tr><td class="l">위치 CV</td><td class="l">3-D 3점 span 14.5 %(신)/12.6 %(구)</td><td class="l">0-D 16위치 전수 5.1 %</td>
+            <td class="l"><b>섞지 말고 기준 명시</b>. "3-D가 산포를 좁힌다"는 <span class="red">틀림</span></td></tr>
+          <tr><td class="l">ROM 모집단</td><td class="l">지표 문서 253</td><td class="l">배포 rom_model.js 315</td><td class="l">labels.csv는 254행에 멈춤</td></tr>
+          <tr><td class="l">IoU</td><td class="l">0.716 (EX3)</td><td class="l">0.632 (논문)</td><td class="l">미결</td></tr>
+          <tr><td class="l">Prefactor</td><td class="l">0.2178 (coarse 적합)</td><td class="l">W₀ 0.3009 (medium 앵커)</td>
+            <td class="l">지수 0.511은 공용, <b>계수는 격자별</b></td></tr>
+          <tr><td class="l">R_L / SENSE 핀</td><td class="l">15 kΩ / GPIO36</td><td class="l">6.8 kΩ · 151 kΩ / 35</td>
+            <td class="l">15 kΩ은 보유 저항 목록에 없음</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card neg" style="margin-top:14px">
+        <h3 style="color:#9b2c28">발표(8/22) 전에 반드시 끝나야 하는 3건</h3>
+        <ul class="sm">
+          <li><b>① 특허 출원(P)</b> — 목표 8/12, 하드 마감 8/19. 체크리스트 11건 중 완료 1건.
+            <b>§8.4 좌표계 충돌 결정(8/7)</b>이 선행</li>
+          <li><b>② 앱 B3·B2 수정 + 시연 DO 절대값 재계산</b> — 안 하면 시연 숫자가 false-safe +50 %
+            (3.618 → 2.604 교체 시 기본 운전점이 <b>하락</b>하므로 화면 값이 전부 바뀐다)</li>
+          <li><b>③ 프로브 V5 통과</b> — 암 잔류 28 % → 5 %</li>
+          <li>즉시: <b>Gemini API 키 회전</b>(평문 노출 + APK 배포본 존재)</li>
+        </ul>
+      </div>
+      <div class="note">폐기 자료는 삭제하지 않고 <b>_archive/에 원형 보존</b>하고 <b>인용 금지 목록</b>을 함께 적어 둔다
+        (α<sub>g</sub> 0.29·0.257, K_La_CFD 3.799, 구 해석추정 레버표, 구 12점 공간매핑 설계, 인공 국소싱크 설계).</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div id="bar"></div>
+<div id="pg"></div>
+
+<script>
+var slides = document.querySelectorAll('.slide');
+var i = 0;
+function fit(){
+  var s = Math.min(innerWidth/1920, innerHeight/1080);
+  document.getElementById('stage').style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+}
+function render(){
+  slides.forEach(function(el,n){ el.classList.toggle('on', n===i); });
+  document.getElementById('bar').style.width = ((i+1)/slides.length*100) + 'vw';
+  document.getElementById('pg').textContent = (i+1) + ' / ' + slides.length;
+}
+function go(n){ i = Math.max(0, Math.min(slides.length-1, n)); render(); }
+addEventListener('resize', fit);
+addEventListener('keydown', function(e){
+  if (['ArrowRight','ArrowDown',' ','PageDown','Enter'].indexOf(e.key)>-1){ e.preventDefault(); go(i+1); }
+  if (['ArrowLeft','ArrowUp','PageUp','Backspace'].indexOf(e.key)>-1){ e.preventDefault(); go(i-1); }
+  if (e.key==='Home'){ go(0); }
+  if (e.key==='End'){ go(slides.length-1); }
+  // 숫자키 1~9 → A1~A9 (3번째 슬라이드부터)
+  if (e.key>='1' && e.key<='9'){ go(parseInt(e.key)+1); }
+});
+addEventListener('click', function(e){ (e.clientX < innerWidth*0.22) ? go(i-1) : go(i+1); });
+fit(); render();
+</script>
+</body>
+</html>

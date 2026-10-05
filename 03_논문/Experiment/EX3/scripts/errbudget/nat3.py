@@ -1,0 +1,11 @@
+import sys,time,json,os; sys.path.insert(0,'/tmp')
+import numpy as np, scipy.sparse.linalg as spla, sens
+c=sys.argv[1]; log=open('/tmp/nat3.log','a',buffering=1)
+t0=time.time(); A,b,U,Cs,aux=sens.build(f"{sens.RES}/{c}")
+M=spla.spilu(A.tocsc(),drop_tol=1e-3,fill_factor=3); Mop=spla.LinearOperator((sens.N,sens.N),M.solve)
+log.write(f"{c} ilu {time.time()-t0:.1f}\n")
+C,info=sens.solve(A,b,Mop,tol=1e-8)
+m=sens.metrics(C,U,Cs,aux); m.update(case=c,info=int(info),t_s=round(time.time()-t0,1),tol=1e-8)
+np.save(f"/tmp/Cf/{c}.npy",C.astype(np.float32))
+open('/tmp/do_out.jsonl','a').write(json.dumps(m,ensure_ascii=False)+"\n")
+log.write(f"{c} done {m['t_s']}s Cmin {m['C_min']:.6f} gap12 {m['zone_gap12']:.3e} top1 {m['zone_top1']} mb {m['massbal_rel']:.1e}\n")

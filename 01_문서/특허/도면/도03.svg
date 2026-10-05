@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="660" viewBox="0 0 1000 660" font-family="Noto Sans CJK KR, Malgun Gothic, sans-serif">
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker>
+  <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="none" stroke="#000" stroke-width="1.4"/></marker>
+  <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#000" stroke-width="0.7"/></pattern>
+  <pattern id="hatch2" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#000" stroke-width="0.7"/></pattern>
+  <pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#000"/></pattern>
+</defs>
+<rect width="1000" height="660" fill="#fff"/>
+<text x="18" y="30" font-size="17" font-weight="bold">【도 3】</text>
+<rect x="160" y="150" width="560" height="300" fill="none" stroke="#000" stroke-width="1.6"/>
+<line x1="160" y1="150" x2="242" y2="92" stroke="#000" stroke-width="1.6"/>
+<line x1="720" y1="150" x2="802" y2="92" stroke="#000" stroke-width="1.6"/>
+<line x1="720" y1="450" x2="802" y2="392" stroke="#000" stroke-width="1.6"/>
+<line x1="242" y1="92" x2="802" y2="92" stroke="#000" stroke-width="1.6"/>
+<line x1="802" y1="92" x2="802" y2="392" stroke="#000" stroke-width="1.6"/>
+<line x1="720" y1="420" x2="850" y2="476" stroke="#000" stroke-width="0.9"/>
+<circle cx="720" cy="420" r="2" fill="#000"/>
+<text x="856" y="480" font-size="12" text-anchor="start" font-weight="bold">100</text>
+<line x1="160" y1="196" x2="720" y2="196" stroke="#000" stroke-width="1.6"/>
+<line x1="160" y1="196" x2="242" y2="138" stroke="#000" stroke-width="0.9" stroke-dasharray="5 3"/>
+<line x1="720" y1="196" x2="802" y2="138" stroke="#000" stroke-width="0.9" stroke-dasharray="5 3"/>
+<line x1="242" y1="138" x2="802" y2="138" stroke="#000" stroke-width="0.9" stroke-dasharray="5 3"/>
+<line x1="630" y1="196" x2="816" y2="144" stroke="#000" stroke-width="0.9"/>
+<circle cx="630" cy="196" r="2" fill="#000"/>
+<text x="822" y="148" font-size="12" text-anchor="start" font-weight="bold">102</text>
+<line x1="190" y1="450" x2="120" y2="484" stroke="#000" stroke-width="0.9"/>
+<circle cx="190" cy="450" r="2" fill="#000"/>
+<text x="114" y="488" font-size="12" text-anchor="end" font-weight="bold">103</text>
+<rect x="264" y="432" width="32" height="18" fill="none" stroke="#000" stroke-width="1.6"/>
+<line x1="280" y1="441" x2="206" y2="484" stroke="#000" stroke-width="0.9"/>
+<circle cx="280" cy="441" r="2" fill="#000"/>
+<text x="200" y="488" font-size="12" text-anchor="end" font-weight="bold">110</text>
+<rect x="246" y="196" width="68" height="236" fill="none" stroke="#000" stroke-width="1.6" stroke-dasharray="6 4"/>
+<line x1="246" y1="236" x2="172" y2="206" stroke="#000" stroke-width="0.9"/>
+<circle cx="246" cy="236" r="2" fill="#000"/>
+<text x="166" y="210" font-size="12" text-anchor="end" font-weight="bold">111</text>
+<text x="164" y="188" font-size="11" text-anchor="end" font-weight="normal">Ω_air</text>
+<circle cx="266" cy="220" r="4.5" fill="none" stroke="#000" stroke-width="1"/>
+<circle cx="280" cy="252" r="4.5" fill="none" stroke="#000" stroke-width="1"/>
+<circle cx="294" cy="284" r="4.5" fill="none" stroke="#000" stroke-width="1"/>
+<circle cx="266" cy="316" r="4.5" fill="none" stroke="#000" stroke-width="1"/>
+<circle cx="280" cy="348" r="4.5" fill="none" stroke="#000" stroke-width="1"/>
+<circle cx="294" cy="380" r="4.5" fill="none" stroke="#000" stroke-width="1"/>
+<circle cx="266" cy="412" r="4.5" fill="none" stroke="#000" stroke-width="1"/>
+<line x1="266" y1="220" x2="172" y2="250" stroke="#000" stroke-width="0.9"/>
+<circle cx="266" cy="220" r="2" fill="#000"/>
+<text x="166" y="254" font-size="12" text-anchor="end" font-weight="bold">112</text>
+<rect x="322" y="208" width="46" height="92" fill="url(#hatch)" stroke="#000" stroke-width="1.6"/>
+<line x1="368" y1="220" x2="458" y2="184" stroke="#000" stroke-width="0.9"/>
+<circle cx="368" cy="220" r="2" fill="#000"/>
+<text x="464" y="188" font-size="12" text-anchor="start" font-weight="bold">120</text>
+<line x1="368" y1="288" x2="458" y2="324" stroke="#000" stroke-width="0.9"/>
+<circle cx="368" cy="288" r="2" fill="#000"/>
+<text x="464" y="328" font-size="12" text-anchor="start" font-weight="bold">121</text>
+<text x="466" y="342" font-size="11" text-anchor="start" font-weight="normal">Γ_filter</text>
+<path d="M460,450 L490,378 L532,402 L558,450 Z" fill="url(#hatch2)" stroke="#000" stroke-width="1.6"/>
+<line x1="510" y1="394" x2="600" y2="470" stroke="#000" stroke-width="0.9"/>
+<circle cx="510" cy="394" r="2" fill="#000"/>
+<text x="606" y="474" font-size="12" text-anchor="start" font-weight="bold">130</text>
+<path d="M606,450 C596,390 626,380 616,338" fill="none" stroke="#000" stroke-width="1.6"/>
+<path d="M636,450 C630,400 656,386 648,352" fill="none" stroke="#000" stroke-width="1.6"/>
+<line x1="620" y1="354" x2="590" y2="300" stroke="#000" stroke-width="0.9"/>
+<circle cx="620" cy="354" r="2" fill="#000"/>
+<text x="584" y="304" font-size="12" text-anchor="end" font-weight="bold">140</text>
+<ellipse cx="460" cy="240" rx="26" ry="12" fill="none" stroke="#000" stroke-width="1.6"/>
+<path d="M486,240 l18,-11 v22 z" fill="none" stroke="#000" stroke-width="1.6"/>
+<line x1="460" y1="228" x2="490" y2="188" stroke="#000" stroke-width="0.9"/>
+<circle cx="460" cy="228" r="2" fill="#000"/>
+<text x="496" y="192" font-size="12" text-anchor="start" font-weight="bold">150</text>
+<ellipse cx="640" cy="392" rx="64" ry="36" fill="none" stroke="#000" stroke-width="1.6" stroke-dasharray="3 3"/>
+<line x1="640" y1="392" x2="816" y2="354" stroke="#000" stroke-width="0.9"/>
+<circle cx="640" cy="392" r="2" fill="#000"/>
+<text x="822" y="358" font-size="12" text-anchor="start" font-weight="bold">160</text>
+<rect x="562" y="438" width="156" height="12" fill="url(#dots)" stroke="#000" stroke-width="0.9"/>
+<line x1="640" y1="444" x2="816" y2="452" stroke="#000" stroke-width="0.9"/>
+<circle cx="640" cy="444" r="2" fill="#000"/>
+<text x="822" y="456" font-size="12" text-anchor="start" font-weight="bold">170</text>
+<line x1="640" y1="222" x2="816" y2="206" stroke="#000" stroke-width="0.9"/>
+<circle cx="640" cy="222" r="2" fill="#000"/>
+<text x="822" y="210" font-size="12" text-anchor="start" font-weight="bold">101</text>
+<line x1="120" y1="612" x2="216" y2="612" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="222" y="617" font-size="11" text-anchor="start" font-weight="normal">x (길이 L)</text>
+<line x1="120" y1="612" x2="178" y2="570" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="182" y="566" font-size="11" text-anchor="start" font-weight="normal">y (폭 B)</text>
+<line x1="120" y1="612" x2="120" y2="538" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="126" y="532" font-size="11" text-anchor="start" font-weight="normal">z (수심)</text>
+<text x="112" y="618" font-size="11" text-anchor="end" font-weight="normal">O</text>
+<text x="300" y="540" font-size="11" text-anchor="start" font-weight="normal">단일 해석좌표계. 영상 인식부·경계조건 자동설정부·대리모델·센서 배치가 모두 이 좌표계를 공유한다.</text>
+<text x="300" y="562" font-size="11" text-anchor="start" font-weight="normal">영상 인식부의 출력은 각 축을 [0,1]로 정규화한 값으로 주어지며, 별도의 좌표 변환 단계를 두지 않는다.</text>
+<text x="300" y="584" font-size="11" text-anchor="start" font-weight="normal">102 자유수면은 로빈 조건(재폭기·탈기), 103 바닥은 퇴적 플럭스, 121 여과재 표면은 질산화 면소스이다.</text>
+</svg>

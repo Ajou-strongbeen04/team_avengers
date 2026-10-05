@@ -1,0 +1,105 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| 漁벤져스 EX3 A층 · 자동생성 (gen_cases.py) — 수정 금지                       |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object fvOptions; }
+
+airLift
+{
+    type            vectorSemiImplicitSource;
+    selectionMode   cellZone;
+    cellZone        plume;
+    volumeMode      specific;
+    injectionRateSuSp
+    { U ((0 0 2.86) 0); }
+}
+
+plantDrag0
+{
+    type            explicitPorositySource;
+    explicitPorositySourceCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        obs0;
+        type            DarcyForchheimer;
+        d               (0 0 0);
+        f               (15.0 15.0 15.0);
+        coordinateSystem
+        {
+            type        cartesian;
+            origin      (0 0 0);
+            rotation    { type axesRotation; e1 (1 0 0); e2 (0 1 0); }
+        }
+    }
+}
+rockBlock1
+{
+    type            explicitPorositySource;
+    explicitPorositySourceCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        obs1;
+        type            DarcyForchheimer;
+        d               (1000000.0 1000000.0 1000000.0);
+        f               (1000.0 1000.0 1000.0);
+        coordinateSystem
+        {
+            type        cartesian;
+            origin      (0 0 0);
+            rotation    { type axesRotation; e1 (1 0 0); e2 (0 1 0); }
+        }
+    }
+}
+rockBlock2
+{
+    type            explicitPorositySource;
+    explicitPorositySourceCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        obs2;
+        type            DarcyForchheimer;
+        d               (1000000.0 1000000.0 1000000.0);
+        f               (1000.0 1000.0 1000.0);
+        coordinateSystem
+        {
+            type        cartesian;
+            origin      (0 0 0);
+            rotation    { type axesRotation; e1 (1 0 0); e2 (0 1 0); }
+        }
+    }
+}
+plantDrag3
+{
+    type            explicitPorositySource;
+    explicitPorositySourceCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        obs3;
+        type            DarcyForchheimer;
+        d               (0 0 0);
+        f               (2.0 2.0 2.0);
+        coordinateSystem
+        {
+            type        cartesian;
+            origin      (0 0 0);
+            rotation    { type axesRotation; e1 (1 0 0); e2 (0 1 0); }
+        }
+    }
+}
+rockBlock4
+{
+    type            explicitPorositySource;
+    explicitPorositySourceCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        obs4;
+        type            DarcyForchheimer;
+        d               (1000000.0 1000000.0 1000000.0);
+        f               (1000.0 1000.0 1000.0);
+        coordinateSystem
+        {
+            type        cartesian;
+            origin      (0 0 0);
+            rotation    { type axesRotation; e1 (1 0 0); e2 (0 1 0); }
+        }
+    }
+}

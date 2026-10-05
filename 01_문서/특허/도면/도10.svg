@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="620" viewBox="0 0 880 620" font-family="Noto Sans CJK KR, Malgun Gothic, sans-serif">
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker>
+  <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="none" stroke="#000" stroke-width="1.4"/></marker>
+  <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#000" stroke-width="0.7"/></pattern>
+  <pattern id="hatch2" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#000" stroke-width="0.7"/></pattern>
+  <pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#000"/></pattern>
+</defs>
+<rect width="880" height="620" fill="#fff"/>
+<text x="18" y="30" font-size="17" font-weight="bold">【도 10】</text>
+<rect x="250" y="80" width="380" height="46" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="440.0" y="106.8" font-size="11" text-anchor="middle" font-weight="normal">폭기 유량 Q_air 실측, 플룸 단면적 A_p 결정</text>
+<line x1="440" y1="126" x2="440" y2="156" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="250" y="156" width="380" height="46" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="440.0" y="182.8" font-size="11" text-anchor="middle" font-weight="normal">표면 겉보기 기체속도 U_gs = Q_air / A_p</text>
+<line x1="440" y1="202" x2="440" y2="232" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="250" y="232" width="380" height="46" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="440.0" y="258.9" font-size="11" text-anchor="middle" font-weight="normal">α_g 초기값 가정</text>
+<line x1="440" y1="278" x2="440" y2="308" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="250" y="308" width="380" height="56" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="440.0" y="332.9" font-size="11" text-anchor="middle" font-weight="normal">URANS 해석 수행</text>
+<text x="440.0" y="346.9" font-size="11" text-anchor="middle" font-weight="normal">→ 플룸 상승 액상속도 W 획득</text>
+<line x1="440" y1="364" x2="440" y2="394" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="250" y="394" width="380" height="46" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="440.0" y="420.9" font-size="11" text-anchor="middle" font-weight="normal">α_g ← U_gs / (W + U_slip)</text>
+<path d="M440,460 L620,510 L440,560 L260,510 Z" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="440" y="506" font-size="11" text-anchor="middle" font-weight="normal">수렴?</text>
+<text x="440" y="524" font-size="11" text-anchor="middle" font-weight="normal">|Δα_g| &lt; tol</text>
+<line x1="440" y1="440" x2="440" y2="460" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<polyline points="260,510 150,510 150,336 250,336" fill="none" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="60" y="500" font-size="11" text-anchor="start" font-weight="normal">아니오</text>
+<line x1="620" y1="510" x2="700" y2="510" stroke="#000" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="636" y="502" font-size="11" text-anchor="start" font-weight="normal">예</text>
+<rect x="700" y="470" width="160" height="80" rx="3" fill="none" stroke="#000" stroke-width="1.6"/>
+<text x="780.0" y="499.9" font-size="11" text-anchor="middle" font-weight="bold">α_g 확정</text>
+<text x="780.0" y="513.9" font-size="11" text-anchor="middle" font-weight="bold">(부력측 고정)</text>
+<text x="780.0" y="527.9" font-size="11" text-anchor="middle" font-weight="bold">→ 전달측만 캘리브</text>
+<text x="660" y="120" font-size="11" text-anchor="start" font-weight="bold">실시예 수렴값</text>
+<text x="660" y="142" font-size="11" text-anchor="start" font-weight="normal">α_g = 0.1785</text>
+<text x="660" y="162" font-size="11" text-anchor="start" font-weight="normal">Su = 1.751</text>
+<text x="660" y="182" font-size="11" text-anchor="start" font-weight="normal">W = 0.3009 m/s</text>
+<text x="660" y="202" font-size="11" text-anchor="start" font-weight="normal">a = 2142 /m</text>
+<text x="660" y="222" font-size="11" text-anchor="start" font-weight="normal">K_L a = 2.785 /h</text>
+<text x="660" y="258" font-size="11" text-anchor="start" font-weight="normal">멱법칙 W ∝ Su^n,</text>
+<text x="660" y="278" font-size="11" text-anchor="start" font-weight="normal">n = 0.511 (잔차 0.28 %)</text>
+<text x="40" y="596" font-size="11" text-anchor="start" font-weight="normal">α_g 는 부력(운동량)과 계면적(전달)을 동시에 구동한다. 부력측을 고정하지 않으면 캘리브레이션에서 식별이 무너진다.</text>
+</svg>

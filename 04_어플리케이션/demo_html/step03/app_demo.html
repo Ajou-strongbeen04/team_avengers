@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漁벤져스 스마트 어항 앱 데모</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            border: 12px solid #1e293b;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+        .screen { display: none; }
+        .screen.active { display: flex; }
+        /* 탭 콘텐츠는 wrapper 안에서 절대위치로 정확히 채워, 내용이 길어져도
+           하단 탭바를 절대 밀어내거나 가리지 않도록 함 (탭 이동 불가 버그 방지) */
+        .tabview { display: none; position: absolute; inset: 0; }
+        .tabview.active { display: flex; }
+
+        /* 이모지 물고기는 기본적으로 머리가 왼쪽을 향함.
+           오른쪽으로 이동할 때는 좌우반전(scaleX(-1))해서 머리가 진행방향(오른쪽)을 보게 하고,
+           왼쪽으로 이동할 때는 원본 그대로(scaleX(1)) 둬서 머리가 진행방향(왼쪽)을 보게 한다. */
+        @keyframes swim {
+            0%   { transform: translateX(-40px) scaleX(-1); }
+            48%  { transform: translateX(90px) scaleX(-1); }
+            50%  { transform: translateX(90px) scaleX(1); }
+            98%  { transform: translateX(-40px) scaleX(1); }
+            100% { transform: translateX(-40px) scaleX(-1); }
+        }
+        @keyframes bob {
+            0%, 100% { margin-top: 0px; }
+            50% { margin-top: -10px; }
+        }
+        .fish-swimmer {
+            display: inline-block;
+            animation: swim 6s ease-in-out infinite, bob 2s ease-in-out infinite;
+            font-size: 3.5rem;
+            line-height: 1;
+        }
+        .fish-swimmer.small { font-size: 2.2rem; }
+
+        .carousel-fish {
+            font-size: 5rem;
+            transition: transform 0.25s ease;
+        }
+
+        .chat-bubble-user {
+            background: #3b82f6; color: white; align-self: flex-end; border-radius: 14px 14px 2px 14px;
+        }
+        .chat-bubble-ai {
+            background: #e5e7eb; color: #1f2937; align-self: flex-start; border-radius: 14px 14px 14px 2px;
+        }
+
+        .badge-green { background:#dcfce7; color:#15803d; }
+        .badge-yellow { background:#fef9c3; color:#a16207; }
+        .badge-red { background:#fee2e2; color:#b91c1c; }
+
+        @keyframes pulse-ring {
+            0%   { box-shadow: 0 0 0 0 rgba(34,211,238,0.5); }
+            100% { box-shadow: 0 0 0 10px rgba(34,211,238,0); }
+        }
+        .sensor-pulse { animation: pulse-ring 1.6s ease-out infinite; }
+
+    </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+
+    <div class="phone-container flex flex-col">
+
+        <!-- ============ 0. 스플래시 화면 ============ -->
+        <div id="screen-splash" class="screen active flex-col items-center justify-center flex-1 bg-gradient-to-b from-blue-500 to-blue-700 text-white">
+            <div class="fish-swimmer">🐠</div>
+            <p class="mt-6 text-lg font-bold tracking-wide">漁벤져스</p>
+            <p class="text-xs text-blue-100 mt-1">스마트 어항 케어</p>
+        </div>
+
+        <!-- ============ 1. 온보딩: 사진 + 실측 사이즈 + 분석 ============ -->
+        <div id="screen-onboarding" class="screen flex-col flex-1">
+            <div class="bg-blue-600 text-white py-4 px-6 text-center font-bold shadow-md">
+                🐟 어항 최초 설정
+            </div>
+
+            <div class="flex-1 p-6 overflow-y-auto space-y-6">
+
+                <div class="text-center">
+                    <p class="text-sm text-gray-500">어항 실측 사이즈를 입력하고<br>정면 사진을 업로드하면<br>AI가 구조물의 실제 좌표(cm)를 계산합니다.</p>
+                </div>
+
+                <div id="errorBanner" class="hidden bg-red-50 border border-red-300 text-red-700 text-xs rounded-xl p-3 flex items-start justify-between gap-2">
+                    <span id="errorText" class="flex-1"></span>
+                    <button onclick="document.getElementById('errorBanner').classList.add('hidden')" class="font-bold text-red-500 leading-none">✕</button>
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 space-y-3 shadow-sm">
+                    <h3 class="text-sm font-bold text-gray-700">📏 어항 실측 사이즈 (cm)</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="text-xs text-gray-500">가로(너비)</label>
+                            <input type="number" id="tankWidth" min="1" placeholder="예: 60" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm" oninput="checkReady()">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500">세로(높이)</label>
+                            <input type="number" id="tankHeight" min="1" placeholder="예: 36" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm" oninput="checkReady()">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500">깊이</label>
+                            <input type="number" id="tankDepth" min="1" placeholder="예: 30" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm" oninput="checkReady()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-2 border-dashed border-gray-300 rounded-2xl p-4 text-center bg-white hover:border-blue-500 transition cursor-pointer" onclick="document.getElementById('fileInput').click()">
+                    <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="previewImage(event)">
+                    <div id="uploadPlaceholder">
+                        <span class="text-4xl">📸</span>
+                        <p class="text-sm font-semibold text-gray-600 mt-2">어항 사진 선택하기</p>
+                        <p class="text-xs text-gray-400 mt-1">클릭하여 이미지 업로드</p>
+                    </div>
+                    <img id="imagePreview" class="hidden w-full h-40 object-cover rounded-xl" />
+                </div>
+
+                <button id="analyzeBtn" onclick="analyzeAquarium()" class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-blue-600 active:scale-95 transition disabled:bg-gray-300" disabled>
+                    Gemini 3D 좌표 분석 시작
+                </button>
+
+                <div id="loading" class="hidden text-center space-y-2">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
+                    <p class="text-sm text-blue-500 font-semibold">Gemini 2.5 Flash 분석 중...</p>
+                </div>
+
+                <div id="resultArea" class="hidden space-y-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-700 mb-2">📊 추출된 구조물 실제 좌표 (cm)</h3>
+                        <div id="resultCards" class="space-y-2"></div>
+                    </div>
+
+                    <div id="diagramArea" class="space-y-2"></div>
+
+                    <div>
+                        <button onclick="document.getElementById('jsonOutput').classList.toggle('hidden')" class="text-xs text-blue-500 underline">JSON 원본 보기/숨기기</button>
+                        <pre id="jsonOutput" class="hidden bg-gray-900 text-green-400 text-xs p-4 rounded-xl overflow-x-auto max-h-60 font-mono mt-2"></pre>
+                    </div>
+                </div>
+
+                <button id="onboardingNextBtn" onclick="continueFromOnboarding()" class="hidden w-full bg-green-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition">
+                    다음 단계로 → 센서 연동
+                </button>
+                <button onclick="continueFromOnboarding()" class="w-full text-xs text-gray-400 underline pb-2">
+                    (데모) 분석 없이 건너뛰기 →
+                </button>
+            </div>
+        </div>
+
+        <!-- ============ 2. 센서 연동 화면 ============ -->
+        <div id="screen-sensor" class="screen flex-col flex-1 items-center justify-center bg-white">
+            <div id="sensorSpinner" class="text-center space-y-5 px-8">
+                <div class="sensor-pulse inline-block rounded-full">
+                    <svg width="70" height="110" viewBox="0 0 70 110" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="30" y="18" width="10" height="82" rx="4" fill="#94a3b8"/>
+                        <rect x="16" y="0" width="38" height="26" rx="5" fill="#475569"/>
+                        <text x="35" y="11" font-size="6" fill="white" text-anchor="middle" font-weight="bold">AQUA-SENSE</text>
+                        <text x="35" y="19" font-size="5" fill="#cbd5e1" text-anchor="middle">Pro 20mm</text>
+                        <circle cx="35" cy="102" r="4" fill="#38bdf8"/>
+                    </svg>
+                </div>
+
+                <div id="sensorSpin" class="hidden">
+                    <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-blue-500 border-t-transparent"></div>
+                </div>
+
+                <p id="sensorStatusText" class="text-gray-700 font-bold text-lg">센서를 연결해 주세요</p>
+                <p id="sensorHintText" class="text-xs text-gray-400">AQUA-SENSE Pro 의 전원을 켜고 아래 버튼을 누르세요</p>
+
+                <!-- Web Bluetooth 는 반드시 사용자 클릭(user gesture) 안에서만 기기 선택창을 띄울 수 있다.
+                     그래서 화면 진입 시 자동 연결이 아니라 버튼 방식으로 둔다. -->
+                <button id="sensorConnectBtn" onclick="startSensorPairing()"
+                        class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-blue-600 active:scale-95 transition">
+                    🔍 센서 검색 / 연결
+                </button>
+
+                <button onclick="skipSensorPairing()" class="text-xs text-gray-400 underline">
+                    센서 없이 계속하기 (데모 모드) →
+                </button>
+
+                <p id="sensorBackendHint" class="text-[10px] text-gray-300"></p>
+            </div>
+        </div>
+
+        <!-- ============ 3. 물고기 프로필 설정 ============ -->
+        <div id="screen-fish-setup" class="screen flex-col flex-1">
+            <div class="bg-blue-600 text-white py-4 px-6 text-center font-bold shadow-md">
+                🐡 물고기 프로필 설정
+            </div>
+            <div class="flex-1 p-6 overflow-y-auto space-y-6">
+
+                <div class="bg-white rounded-2xl p-4 shadow-sm text-center space-y-3">
+                    <h3 class="text-sm font-bold text-gray-700">우리 집 물고기는?</h3>
+                    <div class="flex items-center justify-center gap-4">
+                        <button onclick="changeSpecies(-1)" class="text-2xl text-gray-400 hover:text-blue-500">◀</button>
+                        <div class="carousel-fish" id="speciesEmoji">🐠</div>
+                        <button onclick="changeSpecies(1)" class="text-2xl text-gray-400 hover:text-blue-500">▶</button>
+                    </div>
+                    <p id="speciesName" class="font-bold text-blue-600"></p>
+                    <p id="speciesDesc" class="text-xs text-gray-400"></p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 space-y-2 shadow-sm">
+                    <label class="text-xs text-gray-500">물고기 이름</label>
+                    <input type="text" id="fishNameInput" placeholder="예: 몽이" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 space-y-3 shadow-sm">
+                    <h3 class="text-sm font-bold text-gray-700">🫧 산소 소비 조건</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-xs text-gray-500">마릿수</label>
+                            <input type="number" id="fishCountInput" min="1" max="200" value="3" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500">폭기(공기) 세기</label>
+                            <select id="aerationInput" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                                <option value="약">약 (~14마리)</option>
+                                <option value="보통" selected>보통 (~28마리)</option>
+                                <option value="강">강 (~56마리)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-xs text-gray-500">수위 (cm)</label>
+                            <input type="number" id="waterDepthInput" min="1" step="0.5" value="21" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500">에어스톤 높이 (cm)</label>
+                            <input type="number" id="zStartInput" min="0" max="19" step="0.5" value="2" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-gray-400 leading-relaxed">수위가 낮거나 에어스톤이 높이 달릴수록 산소전달이 줄어듭니다. 마릿수와 폭기 세기로 산소 수지를 계산하며, CFD 315케이스로 검증한 물리 모델을 씁니다.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 space-y-2 shadow-sm">
+                    <h3 class="text-sm font-bold text-gray-700">🍚 먹이 급여 시간</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-xs text-gray-500">아침</label>
+                            <input type="time" id="feedTime1" value="09:00" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500">저녁</label>
+                            <input type="time" id="feedTime2" value="18:00" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 space-y-3 shadow-sm">
+                    <h3 class="text-sm font-bold text-gray-700">🔔 알림 설정</h3>
+                    <label class="flex items-center justify-between text-sm text-gray-600">
+                        먹이 급여 알림
+                        <input type="checkbox" id="notifyFeed" checked class="w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between text-sm text-gray-600">
+                        위험 상태 알림
+                        <input type="checkbox" id="notifyDanger" checked class="w-4 h-4" onchange="onNotifyDangerChange(this)">
+                    </label>
+                    <button onclick="requestNotifyPermission()" class="w-full text-left pt-1">
+                        <span id="notifyStatus" class="text-[11px] font-semibold text-blue-500">🔔 기기 알림 허용이 필요합니다 — 눌러서 켜기</span>
+                    </button>
+                    <p class="text-[11px] text-gray-400 leading-relaxed">허용하면 앱을 보고 있지 않을 때도 수온·탁도·산소 이상 시 기기 알림이 옵니다.</p>
+                </div>
+
+                <button onclick="finishFishSetup()" class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-blue-600 active:scale-95 transition">
+                    설정 완료 → 시작하기
+                </button>
+            </div>
+        </div>
+
+        <!-- ============ 4. 메인 앱 ============ -->
+        <div id="screen-main" class="screen flex-col flex-1 relative">
+            <div class="bg-blue-600 text-white py-4 px-4 flex items-center shadow-md">
+                <button id="backBtn" onclick="switchTab('home')" class="hidden w-7 text-xl leading-none">←</button>
+                <span class="font-bold flex-1 text-center" id="mainHeader">🏠 홈</span>
+                <button onclick="openMoreMenu()" class="w-7 text-xl leading-none text-right">☰</button>
+            </div>
+
+            <div class="flex-1 min-h-0 relative">
+
+                <!-- 홈 탭 -->
+                <div id="tab-home" class="tabview flex-col overflow-y-auto p-6 space-y-4">
+                    <div class="bg-gradient-to-b from-blue-400 to-blue-600 rounded-2xl h-40 flex items-center justify-center relative overflow-hidden shadow-md">
+                        <div class="fish-swimmer small" id="homeFishEmoji">🐠</div>
+                        <p class="absolute bottom-2 left-3 text-white text-xs font-bold drop-shadow" id="homeFishName">몽이</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white rounded-2xl p-3 shadow-sm text-center">
+                            <p class="text-xs text-gray-400">수온</p>
+                            <p class="text-xl font-bold" id="homeTemp">25.4°C</p>
+                            <p class="text-[11px] font-semibold" id="homeTempStatus">양호</p>
+                        </div>
+                        <div class="bg-white rounded-2xl p-3 shadow-sm text-center">
+                            <p class="text-xs text-gray-400">탁도</p>
+                            <p class="text-xl font-bold" id="homeTurbidity">12 NTU</p>
+                            <p class="text-[11px] font-semibold" id="homeTurbidityStatus">양호</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400">AI 종합 건강상태</p>
+                            <p class="text-xs text-gray-400 mt-1">수온·탁도 기반 용존산소 추정 결과</p>
+                        </div>
+                        <span id="healthBadge" class="badge-green text-sm font-bold px-3 py-1 rounded-full">양호</span>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 shadow-sm space-y-2 cursor-pointer hover:bg-gray-50 transition" onclick="switchTab('alerts')">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-gray-700">🔔 알림</h3>
+                            <span class="text-gray-300 text-lg leading-none">›</span>
+                        </div>
+                        <div id="homeNotifyList" class="space-y-1 text-xs text-gray-500"></div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-50 transition" onclick="switchTab('chat')">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🤖</span>
+                            <div>
+                                <p class="text-sm font-bold text-gray-700">AI 상담</p>
+                                <p class="text-xs text-gray-400">물고기 상태가 궁금하면 물어보세요</p>
+                            </div>
+                        </div>
+                        <span class="text-gray-300 text-lg">›</span>
+                    </div>
+                </div>
+
+                <!-- 센서모니터링 탭 -->
+                <div id="tab-sensor" class="tabview flex-col overflow-y-auto p-6 space-y-4">
+                    <p class="text-sm text-gray-400 text-center">실시간 센서 값 (데모 시뮬레이션)</p>
+
+                    <div class="bg-white rounded-2xl p-5 shadow-sm space-y-5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-base font-bold text-blue-600 tracking-wide">AQUA-SENSE Pro</span>
+                            <span id="sensorMonitorStatus" class="flex items-center gap-1 text-sm text-emerald-600">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>연결됨
+                            </span>
+                        </div>
+
+                        <div id="tempGaugeWrap"></div>
+                        <div id="turbGaugeWrap"></div>
+
+                        <p class="text-[11px] text-gray-400 text-center pt-1 border-t border-gray-100">🟢 양호 · 🟠 주의 (기준값에서 벗어남) · 🔴 위험 (즉시 확인 필요) — 화살표는 기준값(중앙) 대비 현재값 위치</p>
+
+                        <div class="flex justify-around pt-1 text-gray-400 text-sm">
+                            <span>⚙️ 설정</span>
+                            <span>📈 기록</span>
+                        </div>
+                    </div>
+
+                    <!-- ── 용존산소 (do_engine.js rev.C) ── -->
+                    <div class="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-700">🫧 추정 용존산소</span>
+                            <span id="doBadge" class="badge-green text-xs font-bold px-2 py-1 rounded-full">양호</span>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <span id="doValue" class="text-3xl font-bold text-blue-600">-</span>
+                            <span class="text-sm text-gray-400 pb-1">mg/L (평균)</span>
+                        </div>
+                        <div id="doBar" class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="doBarFill" class="h-full bg-emerald-500 transition-all" style="width:0%"></div>
+                        </div>
+                        <div class="space-y-1 text-xs text-gray-500 pt-1 border-t border-gray-100">
+                            <div class="flex justify-between"><span>가장 낮은 지점 (바닥·구석)</span><span id="doWorst" class="font-mono">-</span></div>
+                            <div class="flex justify-between"><span>포화 용존산소 (수온 기준)</span><span id="doSat" class="font-mono">-</span></div>
+                            <div class="flex justify-between"><span>위험 임계 (<span id="doCritSpecies">-</span>)</span><span id="doCrit" class="font-mono">-</span></div>
+                        </div>
+                        <div class="space-y-1 text-xs text-gray-500 pt-1 border-t border-gray-100">
+                            <div class="flex justify-between"><span>물고기 소비량</span><span id="doFish" class="font-mono">-</span></div>
+                            <div class="flex justify-between"><span>유기물 소비량 (탁도 기반)</span><span id="doOrganic" class="font-mono">-</span></div>
+                            <div class="flex justify-between gap-2"><span id="doPlantLabel" class="shrink-0">식물 (광합성/호흡)</span><span id="doPlant" class="font-mono text-right">-</span></div>
+                            <div class="flex justify-between gap-2"><span class="shrink-0">폭기 공급능력 사용률</span><span id="doUsage" class="font-mono text-right">-</span></div>
+                            <!-- 이 행은 값이 길어 좌우 배치로는 라벨 사이에 끼어 들어간다. 아래로 쌓는다 -->
+                            <div class="pt-0.5">
+                                <span>수위 · 수량 · K<sub>L</sub>a</span>
+                                <div id="doDepth" class="font-mono text-[11px] text-gray-400">-</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-1 border-t border-gray-100">
+                            <span class="text-xs text-gray-500">🌗 주/야 (식물 광합성)</span>
+                            <div class="flex gap-1">
+                                <button onclick="setDayNight(true)"  id="btnDay"   class="text-[11px] px-2 py-1 rounded-lg border">☀️ 주간</button>
+                                <button onclick="setDayNight(false)" id="btnNight" class="text-[11px] px-2 py-1 rounded-lg border">🌙 야간</button>
+                                <button onclick="setDayNight(null)"  id="btnAuto"  class="text-[11px] px-2 py-1 rounded-lg border">자동</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── 폭기 용량 진단 (부족/충분 축) ── -->
+                    <div id="aerCard" class="bg-white rounded-2xl p-4 shadow-sm space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-700">💨 폭기 용량 진단</span>
+                            <span id="aerBadge" class="badge-green text-xs font-bold px-2 py-1 rounded-full">충분</span>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <span id="aerMargin" class="text-2xl font-bold text-blue-600">-</span>
+                            <span class="text-xs text-gray-400 pb-1">배 여유</span>
+                        </div>
+                        <div class="space-y-1 text-xs text-gray-500 pt-1 border-t border-gray-100">
+                            <div class="flex justify-between"><span>필요 K<sub>L</sub>a</span><span id="aerReq" class="font-mono">-</span></div>
+                            <div class="flex justify-between"><span>보유 K<sub>L</sub>a</span><span id="aerHave" class="font-mono">-</span></div>
+                            <div class="flex justify-between"><span>수용 가능 부하</span><span id="aerCap" class="font-mono">-</span></div>
+                        </div>
+                        <div id="aerRx" class="hidden pt-2 border-t border-gray-100">
+                            <p class="text-xs font-bold text-red-600 mb-1">권장 조치</p>
+                            <ol id="aerRxList" class="text-[11px] text-gray-600 space-y-1 list-decimal list-inside"></ol>
+                        </div>
+                    </div>
+
+                    <!-- ── A층 ROM 산소 분포 지도 (사진 분석 시에만) ── -->
+                    <div id="romCard" class="hidden bg-white rounded-2xl p-4 shadow-sm space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-700">🗺️ 산소 분포 지도</span>
+                            <span class="text-[10px] text-gray-400">CFD 315케이스 학습 ROM</span>
+                        </div>
+                        <div id="romHeatmap"></div>
+                        <p id="romWorstText" class="text-xs text-gray-500"></p>
+                        <p class="text-[11px] text-gray-400 leading-relaxed">사진에서 인식한 바위·수초 배치를 반영한 예측입니다. 위에서 내려다본 바닥층이며, 진한 곳이 산소가 낮습니다.</p>
+                    </div>
+
+                    <p class="text-xs text-gray-400 text-center leading-relaxed">수온·탁도 센서값과 어종·마릿수로 산소 수지를 계산합니다.<br>CFD 315케이스로 검증한 완전혼합 축약 모델 (DO 기준 오차 0.11 %).</p>
+                </div>
+
+                <!-- AI 상담 탭 -->
+                <div id="tab-chat" class="tabview flex-col">
+                    <div id="chatMessages" class="flex-1 min-h-0 overflow-y-auto p-4 flex flex-col gap-2"></div>
+                    <div class="p-3 border-t border-gray-200 flex gap-2 bg-white shrink-0">
+                        <input id="chatInput" type="text" placeholder="물고기 상태가 궁금하다면 물어보세요"
+                               class="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm"
+                               onkeydown="if(event.key==='Enter') sendChatMessage()">
+                        <button onclick="sendChatMessage()" class="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center shrink-0">➤</button>
+                    </div>
+                </div>
+
+                <!-- 알림 내역 탭 — 더보기 메뉴와 홈 화면 알림 카드에서 진입 -->
+                <div id="tab-alerts" class="tabview flex-col overflow-y-auto p-6 space-y-3">
+                    <p class="text-xs text-gray-400 text-center mb-1">최근 알림 내역</p>
+                    <div id="alertsList" class="space-y-2"></div>
+                </div>
+
+                <!-- 공지사항 -->
+                <div id="tab-notices" class="tabview flex-col overflow-y-auto p-6 space-y-3">
+                    <p class="text-sm text-gray-400 text-center mb-1">공지사항</p>
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <p class="text-sm font-semibold text-gray-700">🎉 漁벤져스 데모 버전을 시작합니다</p>
+                        <p class="text-xs text-gray-400 mt-1">2026.07.30</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <p class="text-sm font-semibold text-gray-700">🤖 AI 상담 기능이 추가되었어요</p>
+                        <p class="text-xs text-gray-400 mt-1">2026.07.30</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <p class="text-sm font-semibold text-gray-700">🌡️ 계기판 형태의 센서 모니터링이 추가되었어요</p>
+                        <p class="text-xs text-gray-400 mt-1">2026.07.30</p>
+                    </div>
+                </div>
+
+                <!-- 정보 -->
+                <div id="tab-info" class="tabview flex-col overflow-y-auto p-6 space-y-4">
+                    <div class="bg-white rounded-2xl p-5 shadow-sm text-center space-y-2">
+                        <p class="text-3xl">🐟</p>
+                        <p class="font-bold text-blue-600 text-lg">漁벤져스</p>
+                        <p class="text-xs text-gray-400">스마트 어항 케어 앱</p>
+                        <p class="text-xs text-gray-400 pt-2 leading-relaxed">수온·탁도를 측정해 용존산소량을 추정하고,<br>AI로 관상어 건강 상태를 실시간으로 알려드려요.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-sm text-sm text-gray-500 space-y-2">
+                        <div class="flex justify-between"><span>버전</span><span class="font-mono text-gray-700">26.1</span></div>
+                        <div class="flex justify-between"><span>연동 센서</span><span class="text-gray-700">AQUA-SENSE Pro</span></div>
+                    </div>
+                </div>
+
+                <!-- 어항 설정 -->
+                <div id="tab-tank-settings" class="tabview flex-col overflow-y-auto p-6 space-y-4">
+                    <p class="text-sm text-gray-400 text-center">어항 정보 관리</p>
+                    <div class="bg-white rounded-2xl p-4 space-y-3 shadow-sm">
+                        <h3 class="text-sm font-bold text-gray-700">📏 어항 실측 사이즈 (cm)</h3>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="text-xs text-gray-500">가로</label>
+                                <input type="number" id="tankWidthSettings" min="1" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-500">세로</label>
+                                <input type="number" id="tankHeightSettings" min="1" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-500">깊이</label>
+                                <input type="number" id="tankDepthSettings" min="1" class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="saveTankSettings()" class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-blue-600 active:scale-95 transition">저장</button>
+                </div>
+
+                <!-- 센서 설정 -->
+                <div id="tab-sensor-settings" class="tabview flex-col overflow-y-auto p-6 space-y-4">
+                    <p class="text-sm text-gray-400 text-center">센서 설정</p>
+                    <div class="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-gray-700">AQUA-SENSE Pro</span>
+                            <span id="sensorSettingsStatus" class="flex items-center gap-1 text-sm text-emerald-600">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>연결됨
+                            </span>
+                        </div>
+                        <button onclick="reconnectSensor()" class="w-full border border-blue-500 text-blue-500 font-semibold py-2 rounded-xl text-sm">🔄 재연동</button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 shadow-sm space-y-2">
+                        <h3 class="text-sm font-bold text-gray-700">💧 탁도 영점 보정</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">프로브를 <b>깨끗한 물</b>에 담근 상태에서 눌러주세요. 지금 측정값이 0 NTU 기준이 됩니다.</p>
+                        <button onclick="calibrateClearWater()" class="w-full border border-emerald-500 text-emerald-600 font-semibold py-2 rounded-xl text-sm">영점 보정 실행</button>
+                        <p id="calibStatus" class="text-xs text-gray-400 text-center"></p>
+                    </div>
+
+                    <p class="text-xs text-gray-400 text-center leading-relaxed">연동이 끊기면 이 화면에서 다시 연결할 수 있어요.</p>
+                </div>
+
+            </div>
+
+            <!-- 더보기 메뉴 -->
+            <div id="moreMenuOverlay" class="hidden absolute inset-0 z-40 bg-black/40" onclick="closeMoreMenu()">
+                <div class="absolute left-0 top-0 h-full w-60 bg-white shadow-xl p-5 flex flex-col" onclick="event.stopPropagation()">
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="font-bold text-blue-600 text-base">漁벤져스</span>
+                        <button onclick="closeMoreMenu()" class="text-gray-400 text-lg leading-none">✕</button>
+                    </div>
+
+                    <div class="space-y-5 flex-1 overflow-y-auto">
+                        <div>
+                            <p class="text-[11px] text-gray-400 font-bold mb-1 px-1">서비스</p>
+                            <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm text-gray-700 flex items-center gap-2" onclick="openMorePage('alerts')">
+                                🔔 알림 내역
+                                <span id="menuAlertBadge" class="hidden ml-auto bg-red-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5"></span>
+                            </button>
+                            <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm text-gray-700 flex items-center gap-2" onclick="openMorePage('notices')">📢 공지사항</button>
+                            <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm text-gray-700 flex items-center gap-2" onclick="openMorePage('info')">ℹ️ 정보</button>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-gray-400 font-bold mb-1 px-1">기본설정</p>
+                            <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm text-gray-700 flex items-center gap-2" onclick="openMorePage('tank')">🐠 어항</button>
+                            <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm text-gray-700 flex items-center gap-2" onclick="openMorePage('fish')">🐡 물고기</button>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-gray-400 font-bold mb-1 px-1">센서</p>
+                            <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm text-gray-700 flex items-center gap-2" onclick="openMorePage('sensor-settings')">⚙️ 센서설정</button>
+                            <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm text-gray-700 flex items-center gap-2" onclick="openMorePage('sensor')">🌡️ 모니터링</button>
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-gray-300 pt-3 border-t border-gray-100">버전 26.1</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── SW팀 물리엔진 ─────────────────────────────────────────────────
+         rom_model.js : CFD 315케이스로 학습한 A층 축소모델 계수 (210 KB)
+         do_engine.js : 용존산소 수지·폭기 진단 (rev.C)
+         rom_model.js 가 없어도 do_engine.js 는 근사식으로 동작한다.
+         반드시 아래 인라인 스크립트보다 먼저 로드해야 한다. -->
+    <script src="rom_model.js"></script>
+    <script src="do_engine.js"></script>
+
+    <script src="config.js"></script>
+    <script>
+        // 올바른 구글 API 키 고정
+        const API_KEY = window.GEMINI_API_KEY || "";
+
+        let base64Image = "";
+
+        // 어항 실측 사이즈 (온보딩에서 입력한 값을 저장해 두고, 이후 "더보기 > 어항" 설정 화면에서 재사용)
+        let tankDims = { width: 60, height: 36, depth: 30 };
+
+        /* ── 물리엔진 입력 ────────────────────────────────────────────────
+         * 산소 수지에 필요한 값들. UI 여러 곳에서 바뀌므로 한 군데 모아 두고
+         * syncEngine() 으로만 엔진에 밀어넣는다. 이렇게 하지 않으면 어항 치수만
+         * 바꿨을 때 엔진이 옛 치수로 계산하는 어긋남이 생긴다. */
+        let fishCount     = 3;        // 마릿수
+        let aerationLevel = '보통';    // 폭기 세기
+        let waterDepthCm  = 21;       // 수위 [cm]
+        let zStartM       = 0.02;     // 에어스톤 높이 [m]
+        let analyzedObjects = null;   // 사진 분석 결과 (ROM 입력). null = 미분석
+        let dayNightOverride = null;  // null = 시각 자동
+
+        function syncEngine() {
+            if (!window.DOEngine) return;
+            DOEngine.configure({
+                tank: tankDims,
+                waterDepthCm: Math.min(waterDepthCm, tankDims.height),
+                zStartM, aerationLevel,
+                objects: analyzedObjects,
+                dayNight: dayNightOverride
+            });
+        }
+
+        function continueFromOnboarding() {
+            const w = parseFloat(document.getElementById('tankWidth').value);
+            const h = parseFloat(document.getElementById('tankHeight').value);
+            const d = parseFloat(document.getElementById('tankDepth').value);
+            if (w > 0) tankDims.width = w;
+            if (h > 0) tankDims.height = h;
+            if (d > 0) tankDims.depth = d;
+            // 수위 기본값은 수조 높이. 사용자가 프로필 화면에서 다시 지정할 수 있다.
+            waterDepthCm = tankDims.height;
+            document.getElementById('waterDepthInput').value = waterDepthCm;
+            syncEngine();
+            goToScreen('screen-sensor');
+        }
+
+        // ===================== 화면 전환 공통 로직 =====================
+        function goToScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+
+            if (id === 'screen-sensor') resetSensorScreen();
+        }
+
+        // 앱 진입 2초 후 스플래시 → 온보딩 자동 전환
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => goToScreen('screen-onboarding'), 2000);
+            renderSpeciesCard();
+        });
+
+        // ===================== 1. 온보딩 (사진 + 실측 + Gemini 분석) =====================
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('errorBanner').classList.remove('hidden');
+        }
+
+        function renderCards(items) {
+            document.getElementById('resultCards').innerHTML = items.map(item => `
+                <div class="bg-white rounded-xl p-3 shadow-sm flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700">${escapeHtml(item.object)}</span>
+                    <span class="text-xs text-gray-500 font-mono">X:${item.coordinates_cm.x} Y:${item.coordinates_cm.y} Z:${item.coordinates_cm.z} cm</span>
+                </div>
+            `).join('');
+        }
+
+        function renderDiagram(points, opts) {
+            const { width = 300, maxH, maxV, keyH, keyV, invertV, labelH, labelV, title } = opts;
+            const height = Math.max(70, Math.min(220, width * (maxV / maxH)));
+            const pad = 22;
+            const plotW = width - pad * 2;
+            const plotH = height - pad * 2;
+
+            const toX = v => pad + (v / maxH) * plotW;
+            const toY = v => invertV
+                ? pad + plotH - (v / maxV) * plotH
+                : pad + (v / maxV) * plotH;
+
+            const dots = points.map(p => {
+                const cx = toX(p.coordinates_cm[keyH]);
+                const cy = toY(p.coordinates_cm[keyV]);
+                // Gemini 응답 문자열이므로 SVG 에 넣기 전에 이스케이프한다
+                const label = escapeHtml(p.object.length > 6 ? p.object.slice(0, 6) + '…' : p.object);
+                return `
+                    <circle cx="${cx}" cy="${cy}" r="5" fill="#3b82f6" stroke="white" stroke-width="1.5">
+                        <title>${escapeHtml(p.object)} (${p.coordinates_cm[keyH]}, ${p.coordinates_cm[keyV]}cm)</title>
+                    </circle>
+                    <text x="${cx}" y="${cy - 8}" font-size="8" text-anchor="middle" fill="#1e3a8a">${label}</text>
+                `;
+            }).join('');
+
+            return `
+                <div class="bg-white rounded-xl p-2 shadow-sm">
+                    <p class="text-xs font-semibold text-gray-600 mb-1">${title}</p>
+                    <svg viewBox="0 0 ${width} ${height}" class="w-full">
+                        <rect x="${pad}" y="${pad}" width="${plotW}" height="${plotH}" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+                        ${dots}
+                        <text x="${pad}" y="${height - 4}" font-size="8" fill="#64748b">${labelH} →</text>
+                        <text x="6" y="${pad + 4}" font-size="8" fill="#64748b" transform="rotate(-90 6 ${pad + 4})">${labelV} →</text>
+                    </svg>
+                </div>
+            `;
+        }
+
+        function checkReady() {
+            const w = parseFloat(document.getElementById('tankWidth').value);
+            const h = parseFloat(document.getElementById('tankHeight').value);
+            const d = parseFloat(document.getElementById('tankDepth').value);
+            const sizeValid = w > 0 && h > 0 && d > 0;
+            document.getElementById('analyzeBtn').disabled = !(base64Image && sizeValid);
+        }
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('imagePreview').classList.remove('hidden');
+                document.getElementById('uploadPlaceholder').classList.add('hidden');
+
+                base64Image = e.target.result.split(',')[1];
+                checkReady();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function analyzeAquarium() {
+            if (!base64Image) return;
+
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loading = document.getElementById('loading');
+            const resultArea = document.getElementById('resultArea');
+            const jsonOutput = document.getElementById('jsonOutput');
+
+            analyzeBtn.disabled = true;
+            loading.querySelector('p').textContent = "Gemini 2.5 Flash 분석 중...";
+            loading.classList.remove('hidden');
+            resultArea.classList.add('hidden');
+            document.getElementById('errorBanner').classList.add('hidden');
+
+            const promptText = `
+You are an expert in 3D spatial analysis for aquariums.
+Analyze the provided front-view photo of an aquarium and identify key structures (e.g., filter, rocks, plants, decorations).
+
+For each identified object report THREE things:
+
+1. "type" — classify into exactly one of: "rock" (solid decor: rocks, stones, driftwood,
+   ornaments), "plant" (aquatic plants, moss), "other" (filter, heater, tubing, gravel bed).
+
+2. "coordinates" — the object CENTER as relative position (X, Y, Z), each 0 to 100:
+   - X-axis (Width): Left edge is 0 -> Right edge is 100.
+   - Y-axis (Height): Top water surface is 0 -> Bottom sand bed is 100.
+   - Z-axis (Depth): Front glass panel is 0 -> Back wall panel is 100.
+
+3. "size" — the object's extent as a percentage of the tank's corresponding dimension:
+   - width  : object width  as % of tank width  (0-100)
+   - height : object height as % of tank height (0-100)
+   - depth  : object depth  as % of tank depth  (0-100)
+
+Output MUST be a strictly formatted JSON array of objects, with no other text, markdown blocks, or explanation.
+Example Output Format:
+[
+  {
+    "object": "filter",
+    "type": "other",
+    "coordinates": {"x": 15, "y": 45, "z": 80},
+    "size": {"width": 8, "height": 30, "depth": 6}
+  }
+]
+`;
+
+            const modelFallbacks = ["gemini-flash-latest"];
+
+            const requestBody = {
+                contents: [{
+                    parts: [
+                        { text: promptText },
+                        {
+                            inlineData: {
+                                mimeType: "image/jpeg",
+                                data: base64Image
+                            }
+                        }
+                    ]
+                }]
+            };
+
+            try {
+                let response, data;
+                const retriesPerModel = 6;
+                const maxQuotaRetries = 1;
+                let quotaRetryCount = 0;
+
+                outer:
+                for (const model of modelFallbacks) {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
+
+                    for (let attempt = 0; attempt < retriesPerModel; attempt++) {
+                        response = await fetch(url, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(requestBody)
+                        });
+                        data = await response.json();
+
+                        if (response.status === 429) {
+                            if (quotaRetryCount >= maxQuotaRetries) break outer;
+                            quotaRetryCount++;
+                            const retryInfo = data?.error?.details?.find(d => d["@type"]?.includes("RetryInfo"));
+                            const suggestedSeconds = retryInfo ? parseFloat(retryInfo.retryDelay) : 30;
+                            const delayMs = Math.ceil(suggestedSeconds * 1000) + 500;
+                            document.querySelector('#loading p').textContent = `분당 요청 한도 초과, ${Math.ceil(delayMs / 1000)}초 대기 중...`;
+                            await new Promise(r => setTimeout(r, delayMs));
+                            continue;
+                        }
+
+                        if (response.status === 503) {
+                            const delayMs = Math.min(1500 * Math.pow(2, attempt), 15000);
+                            document.querySelector('#loading p').textContent = `과부하 감지, 재시도 중... (${attempt + 1}/${retriesPerModel})`;
+                            await new Promise(r => setTimeout(r, delayMs));
+                            continue;
+                        }
+                        break outer;
+                    }
+                }
+
+                if (!response.ok) {
+                    console.error("구글 서버 에러 상세:", data);
+                    showError(`🚨 에러 발생! [코드: ${data.error?.code}] ${data.error?.message}`);
+                    document.getElementById('onboardingNextBtn').classList.remove('hidden');
+                    return;
+                }
+
+                let rawText = data.candidates[0].content.parts[0].text;
+                rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+
+                const relativeCoords = JSON.parse(rawText);
+
+                const tankWidth = parseFloat(document.getElementById('tankWidth').value);
+                const tankHeight = parseFloat(document.getElementById('tankHeight').value);
+                const tankDepth = parseFloat(document.getElementById('tankDepth').value);
+
+                const resultWithActual = relativeCoords.map(item => ({
+                    object: item.object,
+                    type: item.type || (window.DOEngine ? DOEngine.classifyObject(item.object) : 'other'),
+                    coordinates_cm: {
+                        x: Math.round((item.coordinates.x / 100) * tankWidth * 10) / 10,
+                        y: Math.round((item.coordinates.y / 100) * tankHeight * 10) / 10,
+                        z: Math.round((item.coordinates.z / 100) * tankDepth * 10) / 10
+                    },
+                    // 상대 좌표·크기(0~100)는 ROM 입력 격자를 만들 때 그대로 사용한다.
+                    // size 를 못 받으면 ROM 이 장애물을 아예 못 보므로 보수적 기본값을 준다.
+                    rel: {
+                        x: item.coordinates.x, y: item.coordinates.y, z: item.coordinates.z,
+                        w: (item.size && item.size.width)  != null ? item.size.width  : 10,
+                        h: (item.size && item.size.height) != null ? item.size.height : 15,
+                        d: (item.size && item.size.depth)  != null ? item.size.depth  : 10
+                    }
+                }));
+
+                // ROM 예측에 쓰기 위해 분석 결과를 보관하고 엔진에 넘긴다
+                analyzedObjects = resultWithActual;
+                syncEngine();
+
+                renderCards(resultWithActual);
+
+                document.getElementById('diagramArea').innerHTML =
+                    renderDiagram(resultWithActual, {
+                        maxH: tankWidth, maxV: tankDepth,
+                        keyH: 'x', keyV: 'z', invertV: true,
+                        labelH: '가로(cm)', labelV: '깊이(cm)',
+                        title: '📐 위에서 본 배치 (Top View)'
+                    }) +
+                    renderDiagram(resultWithActual, {
+                        maxH: tankWidth, maxV: tankHeight,
+                        keyH: 'x', keyV: 'y', invertV: false,
+                        labelH: '가로(cm)', labelV: '높이(cm, 위=수면)',
+                        title: '📐 옆에서 본 배치 (Side View)'
+                    });
+
+                jsonOutput.textContent = JSON.stringify(resultWithActual, null, 2);
+                resultArea.classList.remove('hidden');
+                document.getElementById('onboardingNextBtn').classList.remove('hidden');
+
+            } catch (error) {
+                console.error("네트워크 에러 상세:", error);
+                showError(`❌ 시스템 오류: ${error.message}`);
+                document.getElementById('onboardingNextBtn').classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        // ===================== 2. 센서 연동 (BLE) =====================
+        /* ESP32(AQUA-SENSE Pro)는 1초마다 하나의 characteristic 으로
+         * "수온,탁도" CSV 문자열을 notify 한다.  예: "25.43,12.1"
+         * (BLE 기본 MTU 23바이트 = 실 payload 20바이트 제한 안에 들어가도록 CSV 사용)
+         *
+         * 아래 값들은 firmware/aqua_sense_esp32/aqua_sense_esp32.ino 와 반드시 일치해야 한다. */
+        const BLE_SERVICE_UUID = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
+        const BLE_DATA_UUID    = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
+        const BLE_CMD_UUID     = 'beb5483e-36e1-4688-b7f5-ea07361b26a9';
+        const BLE_NAME_PREFIX  = 'AQUA-SENSE';
+
+        /* 실행 환경에 따라 3가지 백엔드를 자동 선택한다.
+         *  - 'capacitor' : 안드로이드 APK. @capacitor-community/bluetooth-le 네이티브 플러그인
+         *  - 'web'       : 크롬 데스크톱/안드로이드 크롬. Web Bluetooth API (개발 중 테스트용)
+         *  - 'demo'      : 위 둘 다 없을 때. 기존 랜덤 시뮬레이션 (발표·UI 확인용)
+         * 안드로이드 WebView 는 Web Bluetooth 를 지원하지 않으므로 APK 에서는 반드시 capacitor 경로를 탄다. */
+        let sensorMode      = 'demo';
+        let bleDeviceId     = null;   // capacitor 용
+        let bleDataChar     = null;   // web bluetooth 용
+        let bleWebDevice    = null;
+        let sensorConnected = false;
+
+        function detectSensorBackend() {
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.BluetoothLe) return 'capacitor';
+            if (navigator.bluetooth) return 'web';
+            return 'demo';
+        }
+
+        /* ESP32가 보낸 "25.43,12.1" 을 해석해 화면을 갱신한다.
+         * 탁도가 -1 이면 펌웨어가 아직 캘리브레이션되지 않았다는 뜻이므로 직전 값을 유지한다. */
+        // 펌웨어가 보내는 무효 센티널: 수온 -99(센서 미검출), 탁도 -1(미보정 또는 측정 불가)
+        let tempFault = false;
+        let turbFault = false;
+
+        function handleSensorPacket(text) {
+            const parts = String(text).trim().split(',');
+            const t = parseFloat(parts[0]);
+            const n = parseFloat(parts[1]);
+
+            tempFault = !(Number.isFinite(t) && t > -50 && t < 90);
+            turbFault = !(Number.isFinite(n) && n >= 0);
+
+            if (!tempFault) liveTemp = t;
+            if (!turbFault) liveTurbidity = n;
+            refreshHomeAndSensorViews();
+        }
+
+        // Capacitor 네이티브 계층은 값을 16진 문자열("32 35 2e ...")로 돌려준다 → ASCII 복원
+        function hexToText(hex) {
+            const clean = String(hex || '').replace(/0x/g, '').replace(/[^0-9a-fA-F]/g, '');
+            let out = '';
+            for (let i = 0; i + 1 < clean.length; i += 2) {
+                out += String.fromCharCode(parseInt(clean.substr(i, 2), 16));
+            }
+            return out;
+        }
+
+        function onSensorDisconnected() {
+            sensorConnected = false;
+            noteLinkState(false);
+            refreshConnectionBadges();
+            // 연결이 끊기면 notify 가 멈춰 화면이 마지막 값에서 영구 정지한다.
+            // 값이 얼어붙은 채 "정상"으로 보이는 게 최악이므로 시뮬레이션으로 되돌린다.
+            startDemoSimulation();
+        }
+
+        // 모니터링 탭·센서설정 탭의 연결 상태 표시를 실제 상태와 동기화
+        function refreshConnectionBadges() {
+            // 데모 모드는 '오류'가 아니므로 빨강이 아닌 회색으로 구분해 표시한다
+            const demo  = !sensorConnected && sensorMode === 'demo';
+            const label = sensorConnected ? '연결됨' : (demo ? '데모 모드' : '연결 끊김');
+            const dot   = sensorConnected ? 'bg-emerald-500' : (demo ? 'bg-gray-300' : 'bg-red-400');
+            const txt   = sensorConnected ? 'text-emerald-600' : (demo ? 'text-gray-400' : 'text-red-500');
+            ['sensorSettingsStatus', 'sensorMonitorStatus'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${dot} inline-block"></span>${label}`;
+                el.className = `flex items-center gap-1 text-sm ${txt}`;
+            });
+        }
+
+        function startDemoSimulation() {
+            if (sensorInterval) clearInterval(sensorInterval);
+            sensorInterval = setInterval(() => {
+                liveTemp += (Math.random() - 0.5) * 0.3;
+                liveTurbidity += (Math.random() - 0.5) * 1.5;
+                liveTurbidity = Math.max(0, liveTurbidity);
+                refreshHomeAndSensorViews();
+            }, 4000);
+        }
+
+        // ---- 백엔드별 연결 구현 ----
+        async function connectViaCapacitor() {
+            const Ble = window.Capacitor.Plugins.BluetoothLe;
+            await Ble.initialize();
+            // 재연동을 반복하면 리스너가 계속 쌓여 콜백이 중복 호출된다 → 매번 정리 후 등록
+            if (Ble.removeAllListeners) { try { await Ble.removeAllListeners(); } catch (e) {} }
+
+            // 네이티브 기기 선택 다이얼로그. 서비스 UUID 로 필터링해 우리 센서만 보여준다.
+            const device = await Ble.requestDevice({
+                services: [BLE_SERVICE_UUID],
+                namePrefix: BLE_NAME_PREFIX
+            });
+            bleDeviceId = device.deviceId;
+
+            await Ble.connect({ deviceId: bleDeviceId });
+
+            /* 플러그인은 'notification|기기|서비스|특성' 이벤트 키로 값을 던진다.
+             * ★ UUID 부분만 소문자여야 하고 deviceId 는 원본 그대로여야 한다.
+             *   안드로이드의 deviceId 는 대문자 MAC("AA:BB:...") 이라
+             *   문자열 전체에 toLowerCase() 를 걸면 키가 어긋나 notify 가 영영 안 온다. */
+            const uuidPart = `${BLE_SERVICE_UUID.toLowerCase()}|${BLE_DATA_UUID.toLowerCase()}`;
+            const onNotify = res => handleSensorPacket(hexToText(res && res.value));
+            Ble.addListener(`notification|${bleDeviceId}|${uuidPart}`, onNotify);
+            // 플러그인 버전에 따라 소문자 deviceId 로 발행하는 경우도 있어 양쪽 다 등록 (중복은 무해)
+            if (bleDeviceId !== bleDeviceId.toLowerCase()) {
+                Ble.addListener(`notification|${bleDeviceId.toLowerCase()}|${uuidPart}`, onNotify);
+            }
+            // disconnect 도 같은 이유로 대소문자 양쪽 키를 등록해 둔다
+            Ble.addListener(`disconnected|${bleDeviceId}`, onSensorDisconnected);
+            if (bleDeviceId !== bleDeviceId.toLowerCase()) {
+                Ble.addListener(`disconnected|${bleDeviceId.toLowerCase()}`, onSensorDisconnected);
+            }
+
+            await Ble.startNotifications({
+                deviceId: bleDeviceId,
+                service: BLE_SERVICE_UUID,
+                characteristic: BLE_DATA_UUID
+            });
+        }
+
+        function onWebBleValue(e) {
+            handleSensorPacket(new TextDecoder().decode(e.target.value));
+        }
+
+        async function connectViaWebBluetooth() {
+            bleWebDevice = await navigator.bluetooth.requestDevice({
+                filters: [{ namePrefix: BLE_NAME_PREFIX }],
+                optionalServices: [BLE_SERVICE_UUID]
+            });
+            bleWebDevice.addEventListener('gattserverdisconnected', onSensorDisconnected);
+
+            const server  = await bleWebDevice.gatt.connect();
+            const service = await server.getPrimaryService(BLE_SERVICE_UUID);
+            bleDataChar   = await service.getCharacteristic(BLE_DATA_UUID);
+
+            // 재연동 시 크롬이 같은 characteristic 객체를 돌려주면 핸들러가 누적된다.
+            // named 함수로 등록해야 remove 로 중복을 제거할 수 있다.
+            bleDataChar.removeEventListener('characteristicvaluechanged', onWebBleValue);
+            bleDataChar.addEventListener('characteristicvaluechanged', onWebBleValue);
+            await bleDataChar.startNotifications();
+        }
+
+        /* 실제 하드웨어 연결 진입점.
+         * 실패하면 예외를 그대로 올려서 호출부가 사용자에게 사유를 보여줄 수 있게 한다. */
+        async function connectSensorHardware() {
+            sensorMode = detectSensorBackend();
+            if (sensorMode === 'capacitor')  await connectViaCapacitor();
+            else if (sensorMode === 'web')   await connectViaWebBluetooth();
+            else throw new Error('이 환경에서는 블루투스를 사용할 수 없습니다');
+            // 이전 세션의 오류 플래그가 남아 첫 패킷 도착 전까지 '--' 가 뜨는 것을 막는다
+            tempFault = false;
+            turbFault = false;
+            sensorConnected = true;
+            noteLinkState(true);
+        }
+
+        // 펌웨어에 캘리브레이션 명령 전송 ("CAL_CLEAR" = 지금 상태를 0 NTU 기준으로 저장)
+        async function sendSensorCommand(cmd) {
+            if (!sensorConnected) return;
+            const bytes = new TextEncoder().encode(cmd);
+            if (sensorMode === 'capacitor') {
+                const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(' ');
+                await window.Capacitor.Plugins.BluetoothLe.write({
+                    deviceId: bleDeviceId, service: BLE_SERVICE_UUID,
+                    characteristic: BLE_CMD_UUID, value: hex
+                });
+            } else if (sensorMode === 'web' && bleWebDevice) {
+                const svc = await bleWebDevice.gatt.getPrimaryService(BLE_SERVICE_UUID);
+                const ch  = await svc.getCharacteristic(BLE_CMD_UUID);
+                await ch.writeValue(bytes);
+            }
+        }
+
+        // ---- 센서 연동 화면 ----
+        function setSensorStatus(text, cls, hint) {
+            const s = document.getElementById('sensorStatusText');
+            s.textContent = text;
+            s.className = `font-bold text-lg ${cls}`;
+            if (hint !== undefined) document.getElementById('sensorHintText').textContent = hint;
+        }
+
+        function resetSensorScreen() {
+            sensorMode = detectSensorBackend();
+            document.getElementById('sensorSpin').classList.add('hidden');
+            document.getElementById('sensorConnectBtn').classList.remove('hidden');
+            setSensorStatus('센서를 연결해 주세요', 'text-gray-700',
+                            'AQUA-SENSE Pro 의 전원을 켜고 아래 버튼을 누르세요');
+            document.getElementById('sensorBackendHint').textContent =
+                sensorMode === 'demo' ? '⚠️ 이 환경에서는 블루투스를 쓸 수 없어 데모 모드만 가능합니다'
+                                      : `연결 방식: ${sensorMode === 'capacitor' ? '네이티브 BLE' : 'Web Bluetooth'}`;
+        }
+
+        async function startSensorPairing() {
+            document.getElementById('sensorConnectBtn').classList.add('hidden');
+            document.getElementById('sensorSpin').classList.remove('hidden');
+            setSensorStatus('센서 연동 중...', 'text-blue-500', '기기 목록에서 AQUA-SENSE Pro 를 선택하세요');
+
+            try {
+                await connectSensorHardware();
+                document.getElementById('sensorSpin').classList.add('hidden');
+                setSensorStatus('✅ 센서 연동 완료!', 'text-green-600', '실시간 측정값을 받아오는 중입니다');
+                setTimeout(() => goToScreen('screen-fish-setup'), 900);
+            } catch (err) {
+                // 연결 실패로 앱 전체가 막히면 안 되므로 되돌아가서 재시도/건너뛰기를 고를 수 있게 한다
+                sensorMode = 'demo';   // 실패했으니 실제 동작은 시뮬레이션 = 배지도 '데모 모드'
+                document.getElementById('sensorSpin').classList.add('hidden');
+                document.getElementById('sensorConnectBtn').classList.remove('hidden');
+                setSensorStatus('연결에 실패했어요', 'text-red-500',
+                                (err && err.message) ? err.message : '다시 시도하거나 데모 모드로 진행하세요');
+            }
+        }
+
+        // 센서 없이 진행 — 값은 기존 랜덤 시뮬레이션으로 채운다
+        function skipSensorPairing() {
+            sensorMode = 'demo';
+            sensorConnected = false;
+            goToScreen('screen-fish-setup');
+        }
+
+        // ===================== 3. 물고기 프로필 설정 =====================
+        // tempOptimal = 양호 범위 [min,max], tempCaution = 주의까지 포함하는 넓은 범위 [min,max]
+        // (caution 범위 바깥은 위험으로 판정). 종별 적정 수온은 일반적인 사육 가이드 기준.
+        /* 산소 관련 파라미터 (용존산소 계산용):
+         *   massG  : 성체 평균 체중 [g]
+         *   ocr25  : 25 °C 단위체중 산소소비율 [mg O2/(kg·h)]
+         *   doCrit : 이 값 미만이면 위험으로 판정하는 용존산소 임계 [mg/L]
+         *   ⚠ U2/U3: massG·ocr25 는 문헌 추정값 — 출처 [R#] 부여 및 실측 교정 필요
+         * C_crit 단일 기준 6.0 mg/L (EX1 "> 6 = 안전"). [R29] 밴드 5/3/2 는 참고용 (C7) */
+        const DO_CRIT = window.DOEngine ? DOEngine.DO_CRIT : 6.0;
+        const speciesList = [
+            { emoji: "🐠", name: "베타",     desc: "화려한 지느러미, 단독 사육 선호", tempOptimal: [24, 28], tempCaution: [22, 30], massG: 3,   ocr25: 350, doCrit: DO_CRIT },
+            { emoji: "🐟", name: "금붕어",   desc: "관리가 쉬운 대표 관상어",         tempOptimal: [18, 23], tempCaution: [15, 26], massG: 30,  ocr25: 200, doCrit: DO_CRIT },
+            { emoji: "🐡", name: "디스커스", desc: "원형 몸체, 수질에 예민",           tempOptimal: [28, 30], tempCaution: [26, 32], massG: 100, ocr25: 250, doCrit: DO_CRIT },
+            { emoji: "🎏", name: "코이",     desc: "대형 어항·연못용 비단잉어",       tempOptimal: [15, 24], tempCaution: [10, 28], massG: 500, ocr25: 180, doCrit: DO_CRIT },
+            { emoji: "🐠", name: "구피",     desc: "번식이 쉬운 소형 열대어",         tempOptimal: [24, 27], tempCaution: [20, 30], massG: 1.5, ocr25: 400, doCrit: DO_CRIT },
+            { emoji: "🐟", name: "엔젤피시", desc: "삼각형 몸체의 인기 열대어",       tempOptimal: [24, 28], tempCaution: [22, 30], massG: 40,  ocr25: 250, doCrit: DO_CRIT }
+        ];
+        // 탁도는 종에 관계없이 일반적인 관상어 사육 기준 (NTU)
+        const turbidityOptimal = [0, 10];
+        const turbidityCaution = [0, 25];
+        let speciesIndex = 0;
+        let selectedFish = { ...speciesList[0], fishName: "몽이", feedTimes: ["09:00", "18:00"] };
+
+        function renderSpeciesCard() {
+            const s = speciesList[speciesIndex];
+            document.getElementById('speciesEmoji').textContent = s.emoji;
+            document.getElementById('speciesName').textContent = s.name;
+            document.getElementById('speciesDesc').textContent = s.desc;
+        }
+
+        function changeSpecies(dir) {
+            speciesIndex = (speciesIndex + dir + speciesList.length) % speciesList.length;
+            renderSpeciesCard();
+        }
+
+        function finishFishSetup() {
+            const s = speciesList[speciesIndex];
+            const name = document.getElementById('fishNameInput').value.trim() || "우리 물고기";
+            const feed1 = document.getElementById('feedTime1').value || "09:00";
+            const feed2 = document.getElementById('feedTime2').value || "18:00";
+
+            // ---- 산소 수지 입력 ----
+            const cnt = parseInt(document.getElementById('fishCountInput').value, 10);
+            fishCount = (cnt > 0) ? cnt : 1;
+            aerationLevel = document.getElementById('aerationInput').value || "보통";
+
+            // N2: 수위 (수조 높이를 넘지 않도록 제한)
+            const wd = parseFloat(document.getElementById('waterDepthInput').value);
+            if (wd > 0) waterDepthCm = Math.min(wd, tankDims.height);
+
+            // N3: 에어스톤 높이 (수면 아래여야 하므로 수위 미만으로 제한)
+            const zs = parseFloat(document.getElementById('zStartInput').value);
+            if (zs >= 0) zStartM = Math.min(zs, waterDepthCm - 1) / 100;
+
+            syncEngine();
+
+            selectedFish = {
+                ...s,
+                fishName: name,
+                feedTimes: [feed1, feed2],
+                notifyFeed: document.getElementById('notifyFeed').checked,
+                notifyDanger: document.getElementById('notifyDanger').checked
+            };
+
+            initMainApp();
+            goToScreen('screen-main');
+        }
+
+        // ===================== 4. 메인 앱 =====================
+        let liveTemp = 25.4;
+        let liveTurbidity = 12;
+        let sensorInterval = null;
+        let feedInterval   = null;
+        // 마지막 산소 계산 결과. 알림 문구에 최저값·권장조치를 싣기 위해 보관한다.
+        let latestDo = null;
+
+        /* 용존산소 추정 — do_engine.js (rev.C) 가 담당한다.
+         * 이전의 단순 선형 추정식(9.0 − 0.15ΔT − 0.05·NTU)은 자리표시자였고,
+         * 이제 CFD 315케이스로 검증한 물리 수지로 대체됐다:
+         *   C = C*(T) − R_total /(V·K_La)     (완전혼합 정상상태)
+         *   R_total = 어류 + 유기물(탁도) + 식물(주야)
+         *   K_La    = (플룸·에어스톤높이 + 자유수면) × 수위 × 수온보정
+         * 등급은 평균이 아니라 '최저 지점' 기준이다 — 평균이 안전해도 바닥
+         * 구석이 임계 미만이면 그 물고기는 실제로 위험하다.
+         *
+         * 엔진이 없으면(파일 누락) 앱 전체가 죽지 않도록 옛 근사식으로 되돌린다. */
+        function estimateHealth(temp, turbidity) {
+            if (!window.DOEngine) {
+                const doEstimate = 9.0 - (temp - 25) * 0.15 - turbidity * 0.05;
+                const status = doEstimate > 7 ? { label: "양호", cls: "badge-green" }
+                             : doEstimate > 5 ? { label: "주의", cls: "badge-yellow" }
+                             :                  { label: "위험", cls: "badge-red" };
+                return { doEstimate, status, mean: doEstimate, worst: doEstimate,
+                         engineMissing: true };
+            }
+            return DOEngine.estimate(temp, turbidity, selectedFish, fishCount);
+        }
+
+        // 수온·탁도 모두 "기준값(0 = 가장 좋은 지점)에서 얼마나 떨어져 있는지"를 재는
+        // 동일한 편차(deviation) 게이지로 통일한다.
+        // - 탁도: 0 NTU가 가장 좋은 값이므로 편차 = 측정값 그 자체 (한쪽 방향으로만 나빠짐)
+        // - 수온: 적정범위의 중앙값이 가장 좋은 값이므로 편차 = |측정값 - 중앙값| (양쪽으로 나빠짐)
+        // 두 경우 모두 편차가 0에 가까우면 양호, optimalDev까지는 양호, cautionDev까지는 주의, 그 밖은 경고.
+        function classifyDeviation(deviation, optimalDev, cautionDev) {
+            if (deviation <= optimalDev) return { label: "양호", light: "text-green-600" };
+            if (deviation <= cautionDev) return { label: "주의", light: "text-orange-500" };
+            return { label: "경고", light: "text-red-600" };
+        }
+
+        // ---- 계기판(게이지) SVG 생성 ----
+        // 각도 0=위(12시), 90=오른쪽, -90=왼쪽 기준. 반원(-90~90)에 편차(0~domainMax)를 매핑한다.
+        function polarToCartesian(cx, cy, r, angleDeg) {
+            const rad = (angleDeg - 90) * Math.PI / 180;
+            return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+        }
+        function describeArc(cx, cy, r, startAngle, endAngle) {
+            const p1 = polarToCartesian(cx, cy, r, endAngle);
+            const p2 = polarToCartesian(cx, cy, r, startAngle);
+            const largeArc = (endAngle - startAngle) <= 180 ? 0 : 1;
+            return `M ${p1.x.toFixed(1)} ${p1.y.toFixed(1)} A ${r} ${r} 0 ${largeArc} 0 ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+        }
+        function valueToAngle(value, domainMin, domainMax) {
+            const clamped = Math.max(domainMin, Math.min(domainMax, value));
+            return -90 + ((clamped - domainMin) / (domainMax - domainMin)) * 180;
+        }
+
+        // 수온/탁도 둘 다 이 함수 하나로 그려서 계기판 모양을 완전히 동일하게 맞춘다: 초록(0~optimalDev) → 주황 → 빨강.
+        function buildDeviationGaugeSVG(deviation, optimalDev, cautionDev, domainMax) {
+            const cx = 130, cy = 130, r = 95;
+            const zones = [
+                [0, optimalDev, '#22c55e'],
+                [optimalDev, cautionDev, '#f97316'],
+                [cautionDev, domainMax, '#ef4444']
+            ];
+            const arcs = zones.map(([from, to, color]) => {
+                const a1 = valueToAngle(from, 0, domainMax);
+                const a2 = valueToAngle(to, 0, domainMax);
+                if (a2 - a1 < 0.5) return '';
+                return `<path d="${describeArc(cx, cy, r, a1, a2)}" stroke="${color}" stroke-width="16" fill="none" stroke-linecap="butt"/>`;
+            }).join('');
+
+            const needleAngle = valueToAngle(deviation, 0, domainMax);
+            const tip = polarToCartesian(cx, cy, r - 22, needleAngle);
+            const needle = `<line x1="${cx}" y1="${cy}" x2="${tip.x.toFixed(1)}" y2="${tip.y.toFixed(1)}" stroke="#1e293b" stroke-width="4" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="7" fill="#1e293b"/>`;
+
+            return `<svg viewBox="0 0 260 145" class="w-full max-w-[230px] mx-auto">${arcs}${needle}</svg>`;
+        }
+
+        function renderDeviationGauge(containerId, opts) {
+            const { icon, title, valueStr, center, deviation, optimalDev, cautionDev, margin, unit } = opts;
+            const domainMax = cautionDev + margin;
+            const result = classifyDeviation(deviation, optimalDev, cautionDev);
+            const svg = buildDeviationGaugeSVG(deviation, optimalDev, cautionDev, domainMax);
+            document.getElementById(containerId).innerHTML = `
+                <div>
+                    <div class="flex items-end justify-between mb-1">
+                        <span class="text-sm font-semibold text-gray-600">${icon} ${title}</span>
+                        <span class="text-lg font-bold ${result.light}">${valueStr} <span class="text-xs font-semibold">${result.label}</span></span>
+                    </div>
+                    ${svg}
+                    <div class="flex justify-between text-[11px] text-gray-400 px-2 -mt-3">
+                        <span>기준 ${center}${unit}</span>
+                        <span class="text-green-600 font-semibold">양호 ±${optimalDev}${unit} 이내</span>
+                        <span>±${domainMax}${unit}</span>
+                    </div>
+                </div>`;
+        }
+
+        // 센서 오류 시 계기판 자리에 대신 넣을 안내 블록
+        function gaugeFaultHTML(title, reason) {
+            return `<div>
+                <div class="flex items-end justify-between mb-1">
+                    <span class="text-sm font-semibold text-gray-600">${title}</span>
+                    <span class="text-lg font-bold text-gray-400">-- <span class="text-xs font-semibold">오류</span></span>
+                </div>
+                <div class="bg-gray-50 border border-dashed border-gray-300 rounded-xl py-6 text-center">
+                    <p class="text-2xl">⚠️</p>
+                    <p class="text-xs text-gray-400 mt-1 px-4">${reason}</p>
+                </div>
+            </div>`;
+        }
+
+        function refreshHomeAndSensorViews() {
+            // 수온: 적정범위 중앙값 기준 편차 (양쪽으로 벗어나면 모두 나빠짐)
+            const tempCenter = Math.round((selectedFish.tempOptimal[0] + selectedFish.tempOptimal[1]) / 2 * 10) / 10;
+            const tempOptimalDev = (selectedFish.tempOptimal[1] - selectedFish.tempOptimal[0]) / 2;
+            const tempCautionDev = (selectedFish.tempCaution[1] - selectedFish.tempCaution[0]) / 2;
+            const tempDeviation = Math.abs(liveTemp - tempCenter);
+            const tempResult = classifyDeviation(tempDeviation, tempOptimalDev, tempCautionDev);
+
+            // 탁도: 0 NTU를 기준값으로 한 편차(=측정값 자체, 한쪽으로만 나빠짐)
+            const turbCenter = 0;
+            const turbOptimalDev = turbidityOptimal[1];
+            const turbCautionDev = turbidityCaution[1];
+            const turbDeviation = liveTurbidity;
+            const turbResult = classifyDeviation(turbDeviation, turbOptimalDev, turbCautionDev);
+
+            const homeTemp = document.getElementById('homeTemp');
+            homeTemp.textContent = `${liveTemp.toFixed(1)}°C`;
+            homeTemp.className = `text-xl font-bold ${tempResult.light}`;
+            const homeTempStatus = document.getElementById('homeTempStatus');
+            homeTempStatus.textContent = tempResult.label;
+            homeTempStatus.className = `text-[11px] font-semibold ${tempResult.light}`;
+
+            const homeTurbidity = document.getElementById('homeTurbidity');
+            homeTurbidity.textContent = `${liveTurbidity.toFixed(0)} NTU`;
+            homeTurbidity.className = `text-xl font-bold ${turbResult.light}`;
+            const homeTurbidityStatus = document.getElementById('homeTurbidityStatus');
+            homeTurbidityStatus.textContent = turbResult.label;
+            homeTurbidityStatus.className = `text-[11px] font-semibold ${turbResult.light}`;
+
+            // 수온·탁도 게이지 — 완전히 동일한 모양(편차 기반 초록→주황→빨강)으로 렌더링
+            renderDeviationGauge('tempGaugeWrap', {
+                icon: '🌡️', title: '수온', valueStr: `${liveTemp.toFixed(1)}°C`,
+                center: tempCenter, deviation: tempDeviation, optimalDev: tempOptimalDev, cautionDev: tempCautionDev,
+                margin: 3, unit: '°C'
+            });
+            renderDeviationGauge('turbGaugeWrap', {
+                icon: '💧', title: '탁도', valueStr: `${liveTurbidity.toFixed(0)} NTU`,
+                center: turbCenter, deviation: turbDeviation, optimalDev: turbOptimalDev, cautionDev: turbCautionDev,
+                margin: 10, unit: ' NTU'
+            });
+
+            const r = estimateHealth(liveTemp, liveTurbidity);
+            latestDo = r;
+            const status = r.status;
+            const badge = document.getElementById('healthBadge');
+            badge.textContent = status.label;
+            badge.className = `${status.cls} text-sm font-bold px-3 py-1 rounded-full`;
+
+            renderDoPanels(r);
+
+            /* 센서가 무효값을 보내고 있으면 마지막 정상값을 "정상"인 것처럼 보여주면 안 된다.
+             * 값이 얼어붙은 채 양호로 표시되는 게 가장 위험한 실패 방식이라 명시적으로 덮어쓴다. */
+            if (sensorConnected && tempFault) {
+                homeTemp.textContent = '--';
+                homeTemp.className = 'text-xl font-bold text-gray-400';
+                homeTempStatus.textContent = '센서 오류';
+                homeTempStatus.className = 'text-[11px] font-semibold text-red-500';
+            }
+            if (sensorConnected && turbFault) {
+                homeTurbidity.textContent = '--';
+                homeTurbidity.className = 'text-xl font-bold text-gray-400';
+                homeTurbidityStatus.textContent = '측정 불가';
+                homeTurbidityStatus.className = 'text-[11px] font-semibold text-orange-500';
+            }
+            // 모니터링 탭 계기판도 같이 가려야 한다. 홈은 '--' 인데 게이지 바늘만
+            // 낡은 값에서 '양호' 를 가리키고 있으면 오히려 더 위험한 오해를 만든다.
+            if (sensorConnected && tempFault) {
+                document.getElementById('tempGaugeWrap').innerHTML = gaugeFaultHTML('🌡️ 수온', '센서 응답 없음');
+            }
+            if (sensorConnected && turbFault) {
+                document.getElementById('turbGaugeWrap').innerHTML = gaugeFaultHTML('💧 탁도', '측정 불가 · 영점 보정 또는 차광 확인');
+            }
+            // 종합 배지도 같이 덮지 않으면 홈 카드는 '--' 인데 배지만 '양호' 로 남는다
+            if (sensorConnected && (tempFault || turbFault)) {
+                badge.textContent = '측정 불가';
+                badge.className = 'bg-gray-100 text-gray-500 text-sm font-bold px-3 py-1 rounded-full';
+            }
+
+            /* 값이 갱신될 때마다 상태를 평가해 전이 시점에만 알림을 남긴다.
+             * ★ 게이트를 여기 두는 이유: 물고기 종을 고르기 전에는 적정 수온 기준이 임시값이라
+             * 평가 자체가 무의미하다. pushAlert 단계에서 막으면 '상태는 이미 확정됐는데
+             * 알림만 버려진' 꼴이 되어, 정작 메인에 들어온 뒤로는 전이가 없다고 판단해
+             * 시작부터 위험한 상황을 영영 통보하지 못한다. */
+            if (mainAppStarted) {
+                const faulty = sensorConnected && (tempFault || turbFault);
+                noteFaultState(faulty);
+
+                /* 연결이 끊긴 뒤에는 화면이 시뮬레이션 값으로 돌아간다.
+                 * 그 값으로 "수온이 위험 범위예요" 를 띄우면, 바로 직전에 낸
+                 * "표시된 값은 최신이 아닙니다" 와 정면으로 모순된다.
+                 * 단, 처음부터 센서 없이 쓰는 데모 모드(link === null)는 그대로 평가한다. */
+                const linkDown = (alertState.link === 'down');
+                if (!faulty && !linkDown) {
+                    // 수온·탁도·용존산소 세 지표를 각각 독립적으로 판정한다.
+                    // 산소는 센서로 직접 재는 값이 아니라 두 센서값에서 계산된 값이지만,
+                    // 위험 여부는 산소가 결정하므로 별도 채널로 둔다.
+                    evaluateAlerts(tempResult.label, turbResult.label, doAlertLabel(r));
+                } else {
+                    // 복귀 직후 안정화 카운트가 옛 값으로 남아 즉시 확정되는 걸 막는다
+                    alertPending.temp.n = 0;
+                    alertPending.turb.n = 0;
+                    if (alertPending.do) alertPending.do.n = 0;
+                }
+            }
+        }
+
+        /* ===================== 용존산소 화면 렌더링 =====================
+         * 계산은 do_engine.js 가 하고, 여기서는 그리기만 한다. */
+        function renderDoPanels(r) {
+            if (r.engineMissing) return;   // 엔진 없으면 패널을 건드리지 않는다
+
+            document.getElementById('doValue').textContent = r.mean.toFixed(2);
+            document.getElementById('doWorst').textContent = `${r.worst.toFixed(2)} mg/L`;
+            document.getElementById('doSat').textContent   = `${r.Csat.toFixed(2)} mg/L`;
+            document.getElementById('doCrit').textContent  = `${r.doCrit.toFixed(1)} mg/L`;
+            document.getElementById('doCritSpecies').textContent = selectedFish.name;
+            document.getElementById('doFish').textContent    = `${r.fishMgH.toFixed(1)} mg/h (${fishCount}마리)`;
+            document.getElementById('doOrganic').textContent = `${r.organicMgH.toFixed(1)} mg/h`;
+
+            // N1: 식물 항 (주간 = 순생산이므로 음수로 표기)
+            const plantEl = document.getElementById('doPlant');
+            document.getElementById('doPlantLabel').textContent =
+                r.daytime ? '☀️ 식물 광합성 (순생산)' : '🌙 식물 호흡 (소비)';
+            if (r.biomassG > 0) {
+                plantEl.textContent = `${r.plantMgH >= 0 ? '+' : ''}${r.plantMgH.toFixed(1)} mg/h (${r.biomassG.toFixed(1)} g)`;
+                plantEl.className = `font-mono text-right ${r.plantMgH < 0 ? 'text-emerald-600' : 'text-orange-500'}`;
+            } else {
+                plantEl.textContent = '수초 없음';
+                plantEl.className = 'font-mono text-right text-gray-400';
+            }
+            document.getElementById('doUsage').textContent =
+                `${(r.usage * 100).toFixed(0)}% (능력 ${r.capacity.toFixed(0)} mg/h)`;
+            document.getElementById('doDepth').textContent =
+                `${r.waterDepthCm.toFixed(0)}cm · ${r.volumeL.toFixed(1)}L · 스톤 ${(r.zStartM * 100).toFixed(0)}cm(${(r.zLever * 100).toFixed(0)}%) · Kₗa ${r.kla.toFixed(2)}/h`;
+
+            const doBadge = document.getElementById('doBadge');
+            doBadge.textContent = r.anoxic ? '무산소' : r.status.label;
+            doBadge.className = `${r.status.cls} text-xs font-bold px-2 py-1 rounded-full`;
+
+            // 포화값 대비 비율로 막대 표시, 색은 위험도에 맞춘다
+            const fill = document.getElementById('doBarFill');
+            fill.style.width = `${Math.min(100, 100 * r.mean / r.Csat).toFixed(0)}%`;
+            fill.className = 'h-full transition-all ' +
+                (r.status.cls === 'badge-green' ? 'bg-emerald-500'
+                 : r.status.cls === 'badge-yellow' ? 'bg-orange-400' : 'bg-red-500');
+
+            // ---- 폭기 용량 진단 ----
+            if (r.diag) {
+                const d = r.diag;
+                const ab = document.getElementById('aerBadge');
+                ab.textContent = d.sufficient ? '충분' : '부족';
+                ab.className = `${d.sufficient ? 'badge-green' : 'badge-red'} text-xs font-bold px-2 py-1 rounded-full`;
+                const mg = document.getElementById('aerMargin');
+                mg.textContent = isFinite(d.margin) ? d.margin.toFixed(2) : '—';
+                mg.className = `text-2xl font-bold ${d.sufficient ? 'text-blue-600' : 'text-red-600'}`;
+                document.getElementById('aerReq').textContent  = `${d.req.toFixed(3)} /h`;
+                document.getElementById('aerHave').textContent = `${r.kla.toFixed(3)} /h`;
+                document.getElementById('aerCap').textContent  =
+                    `${d.capacityMgH.toFixed(0)} mg/h (현재 ${Math.max(0, r.demand).toFixed(0)})`;
+
+                const rx = document.getElementById('aerRx');
+                if (r.prescriptions && r.prescriptions.length) {
+                    rx.classList.remove('hidden');
+                    document.getElementById('aerRxList').innerHTML =
+                        r.prescriptions.map(t => `<li>${escapeHtml(t)}</li>`).join('');
+                } else {
+                    rx.classList.add('hidden');
+                }
+            }
+
+            renderRomHeatmap(r);
+        }
+
+        // 주/야 수동 전환 (데모용). null = 시각 기준 자동
+        function setDayNight(v) {
+            dayNightOverride = v;
+            syncEngine();
+            ['btnDay', 'btnNight', 'btnAuto'].forEach(id => {
+                const b = document.getElementById(id);
+                if (b) b.className = 'text-[11px] px-2 py-1 rounded-lg border';
+            });
+            const active = v === true ? 'btnDay' : v === false ? 'btnNight' : 'btnAuto';
+            const el = document.getElementById(active);
+            if (el) el.className = 'text-[11px] px-2 py-1 rounded-lg border border-blue-500 bg-blue-50 text-blue-600 font-semibold';
+            refreshHomeAndSensorViews();
+        }
+
+        // ROM 예측 분포를 바닥층 히트맵으로 그린다 (위에서 내려다본 평면)
+        function renderRomHeatmap(r) {
+            const card = document.getElementById('romCard');
+            if (!card) return;
+            if (!r.rom && !r.romGated) { card.classList.add('hidden'); return; }
+            card.classList.remove('hidden');
+
+            // S1: 기준 운전점이 아니면 형상 미검증 — 지도를 그리지 않고 사유를 밝힌다
+            if (r.romGated || !r.rom) {
+                document.getElementById('romHeatmap').innerHTML =
+                    `<div class="bg-amber-50 border border-amber-300 rounded-xl p-3 text-[11px] text-amber-800 leading-relaxed">
+                        ⚠ 폭기 '${escapeHtml(aerationLevel)}'는 ROM 학습 기준 운전점('${DOEngine.ROM_REF_LEVEL}', Q<sub>air</sub> 2 L/min)과 달라
+                        공간 <b>형상이 검증되지 않았습니다</b>. 평균값만 사용합니다.<br>
+                        <span class="text-amber-600">근거: Su 2.86→1.684 조건에서 정규화마스크 IoU 0.597 (기준 0.80 미달)</span>
+                     </div>`;
+                document.getElementById('romWorstText').innerHTML =
+                    `평균 <b>${r.mean.toFixed(2)} mg/L</b> · 최저 지점 위치는 이 운전점에서 미검증`;
+                return;
+            }
+
+            const g = r.rom.grid, f = r.rom.field;
+            const kBottom = 0;                       // 바닥층 (산소가 가장 낮은 층)
+            const cells = [];
+            let lo = Infinity, hi = -Infinity;
+            for (let j = 0; j < g.ny; j++) for (let i = 0; i < g.nx; i++) {
+                const v = f[(kBottom * g.ny + j) * g.nx + i];
+                cells.push({ i, j, v });
+                if (v < lo) lo = v;
+                if (v > hi) hi = v;
+            }
+            const span = Math.max(hi - lo, 1e-9);
+            const T = ROM_MODEL.tank;
+            const W = 300, H = W * (T.ly / T.lx);
+            const cw = W / g.nx, chh = H / g.ny;
+
+            // 낮을수록 진한 빨강, 높을수록 옅은 파랑
+            const color = v => {
+                const t = (v - lo) / span;           // 0=최저 1=최고
+                const rr = Math.round(220 - 60 * t), gg = Math.round(60 + 140 * t), bb = Math.round(50 + 190 * t);
+                return `rgb(${rr},${gg},${bb})`;
+            };
+            const rects = cells.map(c =>
+                `<rect x="${(c.i * cw).toFixed(1)}" y="${(c.j * chh).toFixed(1)}" width="${cw.toFixed(1)}" height="${chh.toFixed(1)}" fill="${color(c.v)}"><title>${c.v.toFixed(3)} mg/L</title></rect>`
+            ).join('');
+
+            // 폭기 위치와 최저 지점 표시
+            const px = ROM_MODEL.plume.x / T.lx * W, py = ROM_MODEL.plume.y / T.ly * H;
+            const wx = r.rom.worstPos.x / 100 / T.lx * W, wy = r.rom.worstPos.y / 100 / T.ly * H;
+
+            document.getElementById('romHeatmap').innerHTML = `
+                <svg viewBox="0 0 ${W} ${H + 16}" class="w-full">
+                    ${rects}
+                    <rect x="0" y="0" width="${W}" height="${H}" fill="none" stroke="#94a3b8" stroke-width="1"/>
+                    <text x="${px}" y="${py + 4}" font-size="13" text-anchor="middle" fill="#1e3a8a">★</text>
+                    <circle cx="${wx}" cy="${wy}" r="5" fill="none" stroke="#7f1d1d" stroke-width="2"/>
+                    <text x="2" y="${H + 12}" font-size="8" fill="#64748b">★ 폭기 · ○ 최저 지점 · 가로 = 어항 길이</text>
+                </svg>`;
+
+            const p = r.rom.worstPos;
+            document.getElementById('romWorstText').innerHTML =
+                `최저 지점 <b>${r.worst.toFixed(2)} mg/L</b> — 왼쪽에서 ${p.x.toFixed(0)}cm, 앞유리에서 ${p.y.toFixed(0)}cm, 바닥에서 ${p.z.toFixed(0)}cm 지점` +
+                `<br><span class="text-gray-400">평균 대비 ${r.spatialDrop.toFixed(3)} mg/L 낮음 · 예측 방식: ${r.source}</span>`;
+        }
+
+        function initMainApp() {
+            mainAppStarted = true;
+            document.getElementById('homeFishEmoji').textContent = selectedFish.emoji;
+            document.getElementById('homeFishName').textContent = selectedFish.fishName;
+
+            renderHomeNotify();
+            renderAlerts();
+            refreshHomeAndSensorViews();
+
+            // 급여 시간은 1분마다 대조한다 (센서 갱신 주기와 무관하게 돌아야 함)
+            if (feedInterval) clearInterval(feedInterval);
+            feedInterval = setInterval(checkFeedTime, 60000);
+            checkFeedTime();
+
+            // 실제 센서가 붙어 있으면 값은 BLE notify(handleSensorPacket)가 갱신한다.
+            // 센서가 없을 때만 기존 랜덤 시뮬레이션을 돌려 화면이 비어 보이지 않게 한다.
+            if (sensorInterval) clearInterval(sensorInterval);
+            if (!sensorConnected) startDemoSimulation();
+            refreshConnectionBadges();
+
+            switchTab('home');
+
+            // 채팅창 초기화. 화면만 비우고 chatHistory 를 남기면 API 에는 이전 대화가
+            // 계속 실려 나가서, 사용자가 보는 것과 모델이 보는 맥락이 어긋난다.
+            chatHistory = [];
+            document.getElementById('chatMessages').innerHTML = "";
+            appendChatBubble('ai', `안녕하세요! ${selectedFish.fishName}(${selectedFish.name})의 건강 상태나 어항 환경에 대해 무엇이든 물어보세요 🐟`);
+        }
+
+        /* ===================== 알림 엔진 =====================
+         * 센서값이 바뀔 때마다 상태를 평가해 '상태가 전이될 때만' 알림을 남긴다.
+         * 매 갱신마다 쌓으면 4초에 하나씩 같은 알림이 수백 개 쌓여 쓸모없어진다. */
+        let alertLog   = [];      // { at: Date, level, text }
+        let unreadCount = 0;
+        let currentTab  = 'home';
+        let mainAppStarted = false;   // 물고기 프로필 설정을 마치고 메인에 진입했는가
+        // 카테고리별 마지막 '확정' 상태. 이 값과 달라질 때만 기록한다.
+        const alertState = { temp: null, turb: null, do: null, link: null, fault: null, fed: null };
+
+        /* 경계값 근처에서 값이 진동하면 "올라갔어요 / 내려갔어요" 가 몇 초 간격으로
+         * 번갈아 쌓여 알림 목록이 못 쓰게 된다. 두 겹으로 막는다.
+         *  1) 같은 상태가 연속 N회 관측돼야 '확정' 으로 인정 (일시적 튐 무시)
+         *  2) 같은 항목은 최소 간격 이내에 다시 알리지 않음 (느린 진동 대비) */
+        const ALERT_STABLE_COUNT = 3;
+        const ALERT_MIN_GAP_MS   = 60000;
+        const alertPending = { temp: { label: null, n: 0 }, turb: { label: null, n: 0 },
+                               do: { label: null, n: 0 }, fault: { label: null, n: 0 } };
+        const alertLastAt  = { temp: 0, turb: 0, do: 0, fault: 0 };
+
+        // 물고기 이름은 사용자 입력이라 그대로 innerHTML 에 넣으면 스크립트가 실행될 수 있다
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => (
+                { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+            ));
+        }
+
+        const ALERT_STYLE = {
+            danger: { dot: 'bg-red-500',     text: 'text-red-600' },
+            warn:   { dot: 'bg-orange-400',  text: 'text-orange-500' },
+            info:   { dot: 'bg-blue-400',    text: 'text-gray-600' },
+            good:   { dot: 'bg-emerald-500', text: 'text-gray-600' }
+        };
+
+        /* ===================== 기기(백그라운드) 알림 =====================
+         * 앱 화면을 보고 있지 않을 때도 위험을 알려야 한다. 경로를 두 개 둔다.
+         *   1) Capacitor LocalNotifications — 안드로이드 APK 에서 쓰는 정식 경로.
+         *      @capacitor/local-notifications 가 설치돼 있을 때만 잡힌다.
+         *      설치:  npm i @capacitor/local-notifications && npm run sync
+         *      (미설치여도 앱은 정상 동작한다 — 그래서 하드 의존으로 두지 않았다)
+         *   2) Web Notification API — 브라우저에서 열었을 때의 폴백.
+         * 둘 다 없으면 앱 안의 알림 목록에만 남는다. */
+        let notifyPermission = 'default';
+
+        function localNotifPlugin() {
+            const P = window.Capacitor && window.Capacitor.Plugins;
+            return (P && P.LocalNotifications) ? P.LocalNotifications : null;
+        }
+
+        async function requestNotifyPermission() {
+            const el = document.getElementById('notifyStatus');
+            const show = (txt, cls) => { if (el) { el.textContent = txt; el.className = `text-[11px] font-semibold ${cls}`; } };
+            try {
+                const LN = localNotifPlugin();
+                if (LN) {
+                    const res = await LN.requestPermissions();
+                    notifyPermission = (res && res.display === 'granted') ? 'granted' : 'denied';
+                } else if (typeof Notification !== 'undefined') {
+                    notifyPermission = await Notification.requestPermission();
+                } else {
+                    notifyPermission = 'unsupported';
+                }
+            } catch (err) {
+                notifyPermission = 'denied';
+            }
+            if (notifyPermission === 'granted')          show('✅ 기기 알림이 켜졌습니다', 'text-emerald-600');
+            else if (notifyPermission === 'unsupported') show('이 환경은 기기 알림을 지원하지 않습니다 (앱 내 알림만 기록)', 'text-gray-400');
+            else                                        show('⚠️ 기기 알림이 차단됐습니다 — 앱 내 알림만 기록됩니다', 'text-orange-500');
+            return notifyPermission === 'granted';
+        }
+
+        // 위험 알림 체크박스를 켜면 곧바로 권한을 요청한다
+        function onNotifyDangerChange(el) {
+            if (selectedFish) selectedFish.notifyDanger = el.checked;
+            if (el.checked) requestNotifyPermission();
+        }
+
+        let notifSeq = 1;
+        function notifyOS(title, body) {
+            if (notifyPermission !== 'granted') return;
+            const LN = localNotifPlugin();
+            try {
+                if (LN) {
+                    LN.schedule({ notifications: [{ id: notifSeq++, title, body }] });
+                } else if (typeof Notification !== 'undefined') {
+                    new Notification(title, { body, tag: 'aquasense' });
+                }
+            } catch (err) {
+                console.warn('기기 알림 실패:', err);
+            }
+        }
+
+        function pushAlert(level, text) {
+            /* text 는 이미 HTML 조각이다 — 호출부에서 사용자 입력을 escapeHtml 로 처리한 뒤
+             * 넘긴다는 규약. 여기서 다시 이스케이프하면 이중 처리가 되므로 하지 않는다.
+             * (센서 판정 알림의 게이트는 refreshHomeAndSensorViews 쪽에 있다) */
+            alertLog.unshift({ at: new Date(), level, text });
+
+            /* 기기 알림은 위험·주의만 보낸다. '정상으로 돌아왔어요' 까지 OS 알림으로
+             * 띄우면 잠결에 울려 사용자가 알림을 아예 꺼버린다.
+             * OS 알림은 평문만 받으므로 HTML 태그를 걷어낸다. */
+            if (level === 'danger' || level === 'warn') {
+                const plain = text.replace(/<[^>]*>/g, '')
+                                  .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+                                  .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+                                  .replace(/&amp;/g, '&');
+                notifyOS(level === 'danger' ? '🚨 어항 위험 알림' : '⚠️ 어항 주의 알림', plain);
+            }
+            if (alertLog.length > 50) alertLog.pop();   // 메모리 무한 증가 방지
+            // 알림 탭을 보고 있는 중이라면 이미 읽은 것이므로 미읽음으로 세지 않는다
+            if (currentTab !== 'alerts') unreadCount++;
+            renderAlerts();
+            renderHomeNotify();
+        }
+
+        // '방금 / 12분 전 / 어제 21:10' 식으로 사람이 읽기 쉬운 시각 표기
+        function formatAlertTime(d) {
+            const diffMin = Math.floor((Date.now() - d.getTime()) / 60000);
+            if (diffMin < 1)  return '방금';
+            if (diffMin < 60) return `${diffMin}분 전`;
+            const hhmm = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+            const today = new Date();
+            if (d.toDateString() === today.toDateString()) return hhmm;
+            const diffDay = Math.floor((today - new Date(d.toDateString())) / 86400000);
+            return diffDay === 1 ? `어제 ${hhmm}` : `${diffDay}일 전`;
+        }
+
+        function renderAlerts() {
+            const list = document.getElementById('alertsList');
+            if (!list) return;
+
+            if (alertLog.length === 0) {
+                list.innerHTML = `<p class="text-xs text-gray-400 text-center py-10">아직 알림이 없어요.<br>수온·탁도에 이상이 생기면 여기에 기록됩니다.</p>`;
+                return;
+            }
+            list.innerHTML = alertLog.map(a => {
+                const s = ALERT_STYLE[a.level] || ALERT_STYLE.info;
+                return `<div class="bg-white rounded-xl p-3 shadow-sm flex justify-between items-start gap-2">
+                    <span class="w-2 h-2 rounded-full ${s.dot} shrink-0 mt-1.5"></span>
+                    <span class="text-sm ${s.text} flex-1">${a.text}</span>
+                    <span class="text-[10px] text-gray-400 whitespace-nowrap">${formatAlertTime(a.at)}</span>
+                </div>`;
+            }).join('');
+        }
+
+        // 홈 카드에는 급여 예정 시간 + 최근 알림 2건만 요약해 보여준다
+        function renderHomeNotify() {
+            const el = document.getElementById('homeNotifyList');
+            if (!el) return;
+            const feeds = selectedFish.feedTimes
+                .map(t => `<div class="flex justify-between"><span>🍚 밥 줄 시간</span><span class="font-mono">[${t}]</span></div>`)
+                .join('');
+            const recent = alertLog.slice(0, 2)
+                .map(a => `<div class="flex justify-between gap-2"><span class="truncate">${a.text}</span><span class="whitespace-nowrap text-gray-400">${formatAlertTime(a.at)}</span></div>`)
+                .join('');
+            el.innerHTML = feeds + recent;
+
+            const badge = document.getElementById('menuAlertBadge');
+            if (badge) {
+                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                badge.classList.toggle('hidden', unreadCount === 0);
+            }
+        }
+
+        /* 현재 센서값을 평가해 상태 전이 시점에만 알림을 남긴다.
+         * refreshHomeAndSensorViews() 끝에서 호출된다. */
+        /* 상태 전이를 확정하고, 알릴 만한 전이면 announce 를 호출한다.
+         * 반환값 없음. 위의 안정화·최소간격 규칙을 여기서 한 번에 적용한다. */
+        function commitTransition(cat, label, announce, normalLabel) {
+            const p = alertPending[cat] || (alertPending[cat] = { label: null, n: 0 });
+            if (!(cat in alertLastAt)) alertLastAt[cat] = 0;
+
+            if (p.label !== label) { p.label = label; p.n = 1; } else { p.n++; }
+            if (p.n < ALERT_STABLE_COUNT) return;        // 아직 일시적인 튐일 수 있음
+            if (alertState[cat] === label) return;       // 이미 그 상태
+
+            const first  = (alertState[cat] === null);
+            const normal = normalLabel || '양호';
+
+            /* ★ 최소 간격에 걸리면 '상태를 확정하지 않고' 그냥 돌아간다.
+             * 여기서 alertState 를 먼저 갱신해 버리면, 억제된 전이는 다음 관측에서
+             * "이미 그 상태" 로 걸러져 영영 다시 알릴 기회가 없어진다.
+             * 예: 주의 알림 10초 뒤 경고로 악화 → 억제 → 위험을 끝까지 통보 못 함. */
+            if (!first && Date.now() - alertLastAt[cat] < ALERT_MIN_GAP_MS) return;
+
+            alertState[cat] = label;
+
+            // 앱을 켰을 때부터 정상이면 굳이 알리지 않는다. 다만 처음부터 이상하면 알려야 한다.
+            if (first && label === normal) return;
+
+            alertLastAt[cat] = Date.now();
+            announce(label);
+        }
+
+        /* 용존산소를 수온·탁도와 같은 3단 라벨로 환산한다.
+         * 기준은 '최저 지점'과 어종별 임계 C_crit 이다. 평균이 임계를 넘어도
+         * 바닥 구석이 임계 미만이면 그 물고기는 실제로 숨이 차므로 최저값으로 본다. */
+        function doAlertLabel(r) {
+            if (!r || r.engineMissing || !isFinite(r.worst)) return null;
+            const crit = r.doCrit;
+            if (r.worst >= crit + 1.5) return '양호';
+            if (r.worst >= crit)       return '주의';
+            return '경고';
+        }
+
+        function evaluateAlerts(tempLabel, turbLabel, doLabel) {
+            if (selectedFish.notifyDanger === false) return;
+
+            commitTransition('temp', tempLabel, label => {
+                if (label === '경고')      pushAlert('danger', `수온이 위험 범위예요 (${liveTemp.toFixed(1)}°C). ${escapeHtml(selectedFish.name)} 적정 수온은 ${selectedFish.tempOptimal[0]}~${selectedFish.tempOptimal[1]}°C 입니다.`);
+                else if (label === '주의') pushAlert('warn',   `수온이 적정 범위를 벗어났어요 (${liveTemp.toFixed(1)}°C).`);
+                else                       pushAlert('good',   `수온이 정상으로 돌아왔어요 (${liveTemp.toFixed(1)}°C) 👍`);
+            });
+
+            commitTransition('turb', turbLabel, label => {
+                if (label === '경고')      pushAlert('danger', `탁도가 크게 높아졌어요 (${liveTurbidity.toFixed(0)} NTU). 여과기와 환수 상태를 확인해주세요.`);
+                else if (label === '주의') pushAlert('warn',   `탁도가 올라가고 있어요 (${liveTurbidity.toFixed(0)} NTU).`);
+                else                       pushAlert('good',   `물이 다시 맑아졌어요 (${liveTurbidity.toFixed(0)} NTU) 👍`);
+            });
+
+            /* 용존산소 — 수온·탁도가 각각 정상 범위여도 둘이 겹치거나 사육부하가 크면
+             * 산소만 먼저 무너질 수 있다. 그래서 독립 채널로 판정한다. */
+            if (doLabel) {
+                const lastDo = latestDo;
+                commitTransition('do', doLabel, label => {
+                    const w = lastDo ? lastDo.worst.toFixed(2) : '-';
+                    const crit = lastDo ? lastDo.doCrit.toFixed(1) : '6.0';
+                    if (label === '경고') {
+                        const rx = (lastDo && lastDo.prescriptions && lastDo.prescriptions.length)
+                            ? ` 권장: ${escapeHtml(lastDo.prescriptions[0])}` : ' 폭기와 사육밀도를 확인해주세요.';
+                        pushAlert('danger', `용존산소가 위험 수준이에요 (최저 ${w} mg/L, 임계 ${crit}).${rx}`);
+                    } else if (label === '주의') {
+                        pushAlert('warn', `용존산소 여유가 줄었어요 (최저 ${w} mg/L, 임계 ${crit}).`);
+                    } else {
+                        pushAlert('good', `용존산소가 안전 범위로 돌아왔어요 (최저 ${w} mg/L) 👍`);
+                    }
+                });
+            }
+        }
+
+        // 센서 자체가 무효값을 보내는 상태도 하나의 전이로 기록한다.
+        // 이걸 안 남기면 '값이 왜 멈췄는지' 가 로그에 아무 흔적도 없이 지나간다.
+        function noteFaultState(faulty) {
+            /* 연결이 끊긴 상태는 noteLinkState 가 담당한다. 여기서까지 판정하면
+             * "연결이 끊어졌어요" 바로 뒤에 "측정이 정상으로 돌아왔어요" 가 붙는 모순이 생긴다.
+             * (끊기면 시뮬레이션 값으로 바뀌어 fault 가 해제된 것처럼 보이기 때문) */
+            if (!sensorConnected) {
+                alertState.fault = null;
+                alertPending.fault.label = null;
+                alertPending.fault.n = 0;
+                return;
+            }
+            // 상태 리셋은 항상 하고, 알림 발생만 설정을 따른다 (순서를 바꾸면 설정을
+            // 껐다 켜는 사이에 낡은 상태가 남아 엉뚱한 '정상 복귀' 알림이 뜬다)
+            if (selectedFish.notifyDanger === false) return;
+            // 접촉 불량 등으로 유효/무효를 오갈 때 알림이 쏟아지지 않도록 동일한 안정화 규칙을 태운다
+            commitTransition('fault', faulty ? 'fault' : 'ok', label => {
+                if (label === 'fault') pushAlert('danger', '센서가 유효한 값을 보내지 못하고 있어요. 프로브 상태와 영점 보정을 확인해주세요.');
+                else                   pushAlert('good',   '센서 측정이 정상으로 돌아왔어요.');
+            }, 'ok');
+        }
+
+        // 센서 연결 상태 변화도 알림으로 남긴다 (값이 멈춘 걸 모르고 지나가는 게 가장 위험하다)
+        function noteLinkState(connected) {
+            const s = connected ? 'up' : 'down';
+            if (alertState.link === s) return;
+            // 상태 추적은 항상 하되(다른 로직이 참조함), 알림 발생만 설정을 따른다
+            if (alertState.link !== null && selectedFish.notifyDanger !== false) {
+                if (connected) pushAlert('good',   '센서와 다시 연결됐어요.');
+                else           pushAlert('danger', '센서 연결이 끊어졌어요. 표시된 값은 최신이 아닙니다.');
+            }
+            alertState.link = s;
+        }
+
+        // 급여 시간 알림 — 1분마다 현재 시각과 대조한다
+        function checkFeedTime() {
+            if (selectedFish.notifyFeed === false) return;
+            const now = new Date();
+            const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            // 날짜를 키에 포함해야 다음 날 같은 시각에 다시 울린다.
+            // 시각 문자열만 쓰면 아침·저녁을 같은 시각으로 설정했을 때 영영 다시 안 뜬다.
+            const key = `${now.toDateString()} ${hhmm}`;
+            if (selectedFish.feedTimes.includes(hhmm) && alertState.fed !== key) {
+                alertState.fed = key;
+                pushAlert('info', `${escapeHtml(selectedFish.fishName)} 밥 줄 시간이에요 🍚`);
+            }
+        }
+
+        const tabTitles = {
+            home: "🏠 홈",
+            sensor: "🌡️ 모니터링",
+            chat: "🤖 AI 상담",
+            alerts: "🔔 알림 내역",
+            notices: "📢 공지사항",
+            info: "ℹ️ 정보",
+            'tank-settings': "🐠 어항 설정",
+            'sensor-settings': "⚙️ 센서 설정"
+        };
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tabview').forEach(v => v.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            currentTab = tabName;
+
+            document.getElementById('mainHeader').textContent = tabTitles[tabName];
+            document.getElementById('backBtn').classList.toggle('hidden', tabName === 'home');
+
+            // 알림 탭을 열었으면 읽음 처리하고 시각 표기('3분 전')를 최신화한다
+            if (tabName === 'alerts') {
+                unreadCount = 0;
+                renderAlerts();
+                renderHomeNotify();
+            }
+        }
+
+        // ===================== 더보기 메뉴 =====================
+        function openMoreMenu() {
+            document.getElementById('moreMenuOverlay').classList.remove('hidden');
+        }
+        function closeMoreMenu() {
+            document.getElementById('moreMenuOverlay').classList.add('hidden');
+        }
+        function openMorePage(page) {
+            closeMoreMenu();
+            // 탭이 아니라 별도 화면으로 나가므로 '알림 탭을 보는 중' 상태를 해제해야 한다
+            if (page === 'fish') { currentTab = null; goToScreen('screen-fish-setup'); return; }
+            if (page === 'tank') {
+                document.getElementById('tankWidthSettings').value = tankDims.width;
+                document.getElementById('tankHeightSettings').value = tankDims.height;
+                document.getElementById('tankDepthSettings').value = tankDims.depth;
+                switchTab('tank-settings');
+                return;
+            }
+            switchTab(page); // notices, info, sensor-settings, sensor(모니터링)
+        }
+        function saveTankSettings() {
+            const w = parseFloat(document.getElementById('tankWidthSettings').value);
+            const h = parseFloat(document.getElementById('tankHeightSettings').value);
+            const d = parseFloat(document.getElementById('tankDepthSettings').value);
+            if (w > 0) tankDims.width = w;
+            if (h > 0) tankDims.height = h;
+            if (d > 0) tankDims.depth = d;
+            // 치수가 바뀌면 수량·수위 상한이 함께 바뀐다. 엔진에 반영하지 않으면
+            // 산소 수지가 옛 치수로 계산돼 화면과 어긋난다.
+            waterDepthCm = Math.min(waterDepthCm, tankDims.height);
+            syncEngine();
+            refreshHomeAndSensorViews();
+            switchTab('home');
+        }
+        async function reconnectSensor() {
+            const status = document.getElementById('sensorSettingsStatus');
+            status.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-gray-300 inline-block animate-pulse"></span>재연동 중...`;
+            status.className = "flex items-center gap-1 text-sm text-gray-400";
+            try {
+                await connectSensorHardware();
+                if (sensorInterval) clearInterval(sensorInterval);   // 시뮬레이션 중지
+                refreshConnectionBadges();
+            } catch (err) {
+                refreshConnectionBadges();
+                status.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"></span>실패`;
+                status.className = "flex items-center gap-1 text-sm text-red-500";
+            }
+        }
+
+        // 프로브를 깨끗한 물에 담근 상태에서 눌러 0 NTU 기준을 잡는다.
+        // 광학 프로브는 유리 오염·LED 열화로 기준이 서서히 변하므로 주기적 재보정이 필요하다.
+        async function calibrateClearWater() {
+            const el = document.getElementById('calibStatus');
+            if (!sensorConnected) { el.textContent = '먼저 센서를 연결해 주세요'; return; }
+            try {
+                await sendSensorCommand('CAL_CLEAR');
+                el.textContent = '✅ 현재 상태를 0 NTU 기준으로 저장했습니다';
+            } catch (err) {
+                el.textContent = '전송 실패: ' + (err && err.message);
+            }
+        }
+
+        // ===================== AI 상담 (Gemini 텍스트 채팅) =====================
+        let chatHistory = []; // {role:'user'|'model', parts:[{text}]}
+
+        function appendChatBubble(role, text) {
+            const wrap = document.createElement('div');
+            wrap.className = `max-w-[80%] px-3 py-2 text-sm ${role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`;
+            wrap.textContent = text;
+            document.getElementById('chatMessages').appendChild(wrap);
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+
+        function buildSystemPrompt() {
+            const r = latestDo || estimateHealth(liveTemp, liveTurbidity);
+            // 산소는 이제 CFD 검증 물리모델의 산출값이므로 상담에서도 숫자를 밝힌다.
+            // (자리표시자 추정식이던 시절에는 숨기는 것이 맞았다)
+            const oxy = r.engineMissing ? '' : `
+- 추정 용존산소: 평균 ${r.mean.toFixed(2)} mg/L, 가장 낮은 지점 ${r.worst.toFixed(2)} mg/L (위험 임계 ${r.doCrit.toFixed(1)})
+- 폭기 용량: ${r.diag ? (r.diag.sufficient ? `충분 (여유 ${isFinite(r.diag.margin) ? r.diag.margin.toFixed(2) : '∞'}배)` : '부족') : '판정 불가'}
+- 산소 소비: 물고기 ${r.fishMgH.toFixed(1)} + 유기물 ${r.organicMgH.toFixed(1)} mg/h${r.biomassG > 0 ? `, 식물 ${r.plantMgH.toFixed(1)} mg/h(${r.daytime ? '주간 광합성' : '야간 호흡'})` : ''}`;
+            return `당신은 "漁벤져스" 스마트 어항 앱의 AI 상담사입니다.
+사용자의 관상어 상태에 대해 친절하고 간결하게 한국어로 답변하세요 (3~4문장 이내).
+현재 등록된 물고기 정보:
+- 이름: ${selectedFish.fishName}
+- 종류: ${selectedFish.name} (${fishCount}마리)
+- 현재 수온: ${liveTemp.toFixed(1)}°C
+- 현재 탁도: ${liveTurbidity.toFixed(0)} NTU
+- AI 종합 건강상태 판정: ${r.status.label}${oxy}
+용존산소는 수조 CFD 해석으로 검증한 물리모델의 계산값입니다. 필요하면 숫자를 인용해도 되지만,
+측정값이 아니라 수온·탁도·사육조건에서 계산한 추정값이라는 점을 밝혀 주세요.`;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendChatBubble('user', text);
+            chatHistory.push({ role: 'user', parts: [{ text }] });
+            input.value = "";
+
+            const thinkingId = 'thinking-' + Date.now();
+            const thinkingEl = document.createElement('div');
+            thinkingEl.id = thinkingId;
+            thinkingEl.className = 'max-w-[80%] px-3 py-2 text-sm chat-bubble-ai text-gray-400';
+            thinkingEl.textContent = '생각 중...';
+            document.getElementById('chatMessages').appendChild(thinkingEl);
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}`;
+                const requestBody = {
+                    systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
+                    contents: chatHistory
+                };
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestBody)
+                });
+                const data = await response.json();
+
+                document.getElementById(thinkingId)?.remove();
+
+                if (!response.ok) {
+                    appendChatBubble('ai', `⚠️ 에러: ${data.error?.message || '응답을 받지 못했어요.'}`);
+                    return;
+                }
+
+                const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "죄송해요, 답변을 생성하지 못했어요.";
+                chatHistory.push({ role: 'model', parts: [{ text: replyText }] });
+                appendChatBubble('ai', replyText);
+
+            } catch (error) {
+                document.getElementById(thinkingId)?.remove();
+                appendChatBubble('ai', `❌ 네트워크 오류: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>

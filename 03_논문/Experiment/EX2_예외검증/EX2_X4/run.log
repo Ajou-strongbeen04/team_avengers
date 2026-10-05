@@ -1,0 +1,230 @@
+########## stage1 · Z군 시드런 (Su=1.773) ##########
+
+===== z05   Su=1.773  z_start=0.05 m   07-30 00:21 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z05
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z05
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z05
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z05 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z05
+ExecutionTime = 1877.085 s  ClockTime = 1877 s
+
+===== z08   Su=1.773  z_start=0.08 m   07-30 00:53 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z08
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z08
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z08
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z08 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z08
+ExecutionTime = 1631.942 s  ClockTime = 1632 s
+
+===== z11   Su=1.773  z_start=0.11 m   07-30 01:20 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11
+ExecutionTime = 1480.79 s  ClockTime = 1480 s
+
+########## z_start 별 고정점 산출 ##########
+============================================================================================
+ z_start 별 alpha_g 자기일관 고정점    U_gs = 0.0637 m/s (z_start 무관)    n = 0.511
+============================================================================================
+
+case     z0[m]  H_p[m]     W 시드      α_g     Su 고정점     W 예측   a[1/m]    Su 변화
+------------------------------------------------------------------------------
+z02      0.020    0.19   0.2930   0.1813     1.7781   0.2934     2175     0.3 %
+z05      0.050    0.16   0.3023   0.1779     1.7457   0.3000     2135    -1.5 %
+z08      0.080    0.13   0.2857   0.1840     1.8047   0.2883     2208     1.8 %
+z11      0.110    0.10   0.2601   0.1943     1.9057   0.2699     2331     7.5 %
+
+  → fp_result.csv 기록 (4 수준)
+     다음: python3 gen_cases.py --stage 2   (Z군 fvOptions 갱신)
+           bash run.sh stage2
+
+  [주의] Su 이동이 3 % 를 넘는 수준: z11 → stage2 재실행 필수
+
+########## stage2 · Z군 자기일관 재실행 ##########
+  z05: Su 1.773 → 1.746  (-1.5 %, 3 % 이내) → 재실행 불필요
+  z08: Su 1.773 → 1.805  (+1.8 %, 3 % 이내) → 재실행 불필요
+  z11: Su 1.773 → 1.906  (+7.5 %) → fvOptions 갱신, 재실행 필요
+
+stage2 재실행 대상: z11  (stage2_todo.txt 기록)
+
+===== z11   Su=1.906  z_start=0.11 m   07-30 01:45 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z11
+ExecutionTime = 1452.856 s  ClockTime = 1453 s
+
+============================================================================================
+ z_start 별 alpha_g 자기일관 고정점    U_gs = 0.0637 m/s (z_start 무관)    n = 0.511
+============================================================================================
+
+case     z0[m]    H_p    Su 입력     W 실측    α_g 입력     α_g 되먹임       잔차  판정
+--------------------------------------------------------------------------
+z02      0.020   0.19    1.773   0.2930    0.1807      0.1815     0.4 %  OK
+z05      0.050   0.16    1.773   0.3023    0.1807      0.1768    -2.2 %  OK
+z08      0.080   0.13    1.773   0.2857    0.1807      0.1854     2.6 %  OK
+z11      0.110   0.10    1.906   0.2696    0.1943      0.1945     0.1 %  OK
+
+  → 전 수준 자기일관  (허용 ±3 %)
+
+########## 집계 (0-D 레버 표) ##########
+
+========================================================================================================
+ z_start 레버 — EX2 hold-out 축   (T = 25 °C, d = 0.21 m 고정, V 고정)
+========================================================================================================
+
+case    z0[m]   H_p   V[L]       셀수      Su     α_g  a[1/m]       W     Qp  K_La[1/h]    τ[분]   90%[분]    플룸%   CFD비     해석
+---------------------------------------------------------------------------------------------------------------------------
+z02      0.02  0.19   20.7  114,996   1.773  0.1815    2178  0.2930   6.16      2.928    20.5       47     85   100 %   100 %
+z05      0.05  0.16   20.7  114,996   1.773  0.1768    2121  0.3023   6.40      2.497    24.0       55     82    85 %    68 %
+z08      0.08  0.13   20.7  114,996   1.773  0.1854    2224  0.2857   6.15      2.212    27.1       62     80    76 %    44 %
+z11      0.11  0.10   20.7  114,996   1.906  0.1945    2333  0.2696   5.93      1.896    31.7       73     77    65 %    29 %
+
+--------------------------------------------------------------------------------------------------------
+  [판정 1] 단조 감소인가 : 예
+           z_start 가 올라갈수록 H_p 가 짧아져 K_La 가 줄어야 한다.
+           수위 축(EX_exception3 §5.1)은 여기서 부호가 뒤집혀 탈락했다.
+
+  [판정 2] 레버 크기      : 100 → 65 %   (실험 반복 재현성 CV 5–10 % 대비)
+           레버가 재현성에 묻히면 hold-out 잔차가 전이성의 증거가 못 된다
+           (위치 축 ±9 % 가 그 이유로 탈락했다).
+
+  [판정 3] 해석추정 대비   : 최대편차 35 %p
+           편차가 크면 실험계획서_v2.md §7.2 표를 **CFD 값으로 교체**하고,
+           런당 로깅 시간(90 % 도달)도 위 표의 CFD 값으로 다시 잡는다.
+
+  → results_zstart.csv 기록 (4 행)
+     다음: python3 run_reaer.py --group z   (3-D K_La 확정)
+
+  다음 (3-D):  python run_reaer.py --group m    # kappa 분모, 최우선
+               python run_reaer.py --group z
+
+완료 2026년 07월 30일 목 오전  2:10:03. 결과를 README.md §4 표에 기입하십시오.
+########## stage1 · Z군 시드런 (신규 수준만, Su=1.773) ##########
+----- z05 : 결과 있음 → 스킵(재개) -----
+----- z08 : 결과 있음 → 스킵(재개) -----
+----- z11 : 결과 있음 → 스킵(재개) -----
+
+===== z14   Su=1.773  z_start=0.14 m   07-30 02:26 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14
+ExecutionTime = 1156.094 s  ClockTime = 1156 s
+
+===== z17   Su=1.773  z_start=0.17 m   07-30 02:45 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17
+ExecutionTime = 895.786 s  ClockTime = 896 s
+
+########## z_start 별 고정점 산출 ##########
+============================================================================================
+ z_start 별 alpha_g 자기일관 고정점    U_gs = 0.0637 m/s (z_start 무관)    n = 0.511
+============================================================================================
+
+case     z0[m]  H_p[m]     W 시드      α_g     Su 고정점     W 예측   a[1/m]    Su 변화
+------------------------------------------------------------------------------
+z02      0.020    0.19   0.2930   0.1813     1.7781   0.2934     2175     0.3 %
+z05      0.050    0.16   0.3023   0.1779     1.7457   0.3000     2135    -1.5 %
+z08      0.080    0.13   0.2857   0.1840     1.8047   0.2883     2208     1.8 %
+z11      0.110    0.10   0.2696   0.1903     1.8667   0.2768     2283    -2.1 %
+z14      0.140    0.07   0.2212   0.2132     2.0919   0.2407     2559    18.0 %
+z17      0.170    0.04   0.1756   0.2430     2.3835   0.2042     2916    34.4 %
+
+  → fp_result.csv 기록 (6 수준)
+     다음: python3 gen_cases.py --stage 2   (Z군 fvOptions 갱신)
+           bash run.sh stage2
+
+  [주의] Su 이동이 3 % 를 넘는 수준: z11, z14, z17 → stage2 재실행 필수
+
+########## stage2 · Z군 자기일관 재실행 ##########
+  z05: Su 1.773 → 1.746  (-1.5 %, 3 % 이내) → 재실행 불필요
+  z08: Su 1.773 → 1.805  (+1.8 %, 3 % 이내) → 재실행 불필요
+  z11: Su 1.906 → 1.867  (-2.1 %, 3 % 이내) → 재실행 불필요
+  z14: Su 1.773 → 2.092  (+18.0 %) → fvOptions 갱신, 재실행 필요
+  z17: Su 1.773 → 2.384  (+34.4 %) → fvOptions 갱신, 재실행 필요
+
+stage2 재실행 대상: z14 z17  (stage2_todo.txt 기록)
+
+===== z14   Su=2.092  z_start=0.14 m   07-30 03:00 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z14
+ExecutionTime = 1260.335 s  ClockTime = 1261 s
+
+===== z17   Su=2.384  z_start=0.17 m   07-30 03:22 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/EX_exception4/z17
+ExecutionTime = 1009.816 s  ClockTime = 1009 s
+
+============================================================================================
+ z_start 별 alpha_g 자기일관 고정점    U_gs = 0.0637 m/s (z_start 무관)    n = 0.511
+============================================================================================
+
+case     z0[m]    H_p    Su 입력     W 실측    α_g 입력     α_g 되먹임       잔차  판정
+--------------------------------------------------------------------------
+z02      0.020   0.19    1.773   0.2930    0.1807      0.1815     0.4 %  OK
+z05      0.050   0.16    1.773   0.3023    0.1807      0.1768    -2.2 %  OK
+z08      0.080   0.13    1.773   0.2857    0.1807      0.1854     2.6 %  OK
+z11      0.110   0.10    1.906   0.2696    0.1943      0.1945     0.1 %  OK
+z14      0.140   0.07    2.092   0.2404    0.2133      0.2135     0.1 %  OK
+z17      0.170   0.04    2.384   0.2036    0.2430      0.2436     0.2 %  OK
+
+  → 전 수준 자기일관  (허용 ±3 %)
+
+########## 집계 (0-D 레버 표) ##########
+
+========================================================================================================
+ z_start 레버 — EX2 hold-out 축   (T = 25 °C, d = 0.21 m 고정, V 고정)
+========================================================================================================
+
+case    z0[m]   H_p   V[L]       셀수      Su     α_g  a[1/m]       W     Qp  K_La[1/h]    τ[분]   90%[분]    플룸%   CFD비     예측     해석
+----------------------------------------------------------------------------------------------------------------------------------
+z02      0.02  0.19   20.7  114,996   1.773  0.1815    2178  0.2930   6.16      2.928    20.5       47     85   100 %   100 %   100 %
+z05      0.05  0.16   20.7  114,996   1.773  0.1768    2121  0.3023   6.40      2.497    24.0       55     82    85 %    85 %    68 %
+z08      0.08  0.13   20.7  114,996   1.773  0.1854    2224  0.2857   6.15      2.212    27.1       62     80    76 %    74 %    44 %
+z11      0.11  0.10   20.7  114,996   1.906  0.1945    2333  0.2696   5.93      1.896    31.7       73     77    65 %    63 %    29 %
+z14      0.14  0.07   20.7  114,996   2.092  0.2135    2562  0.2404   5.00      1.507    39.8       92     71    51 %    50 %    17 %
+z17      0.17  0.04   20.7  114,996   2.384  0.2436    2923  0.2036   4.35      1.151    52.1      120     61    39 %    36 %     8 %
+
+--------------------------------------------------------------------------------------------------------
+  [판정 1] 단조 감소인가 : 예
+           z_start 가 올라갈수록 H_p 가 짧아져 K_La 가 줄어야 한다.
+           수위 축(EX_exception3 §5.1)은 여기서 부호가 뒤집혀 탈락했다.
+
+  [판정 2] 레버 크기      : 100 → 39 %   (실험 반복 재현성 CV 5–10 % 대비)
+           레버가 재현성에 묻히면 hold-out 잔차가 전이성의 증거가 못 된다
+           (위치 축 ±9 % 가 그 이유로 탈락했다).
+
+  [판정 3] 해석추정 대비   : 최대편차 35 %p
+           선형모델 대비   : 최대편차 3 %p   (모델 유효)
+           편차가 크면 실험계획서_v2.md §7.2 표를 **CFD 값으로 교체**하고,
+           런당 로깅 시간(90 % 도달)도 위 표의 CFD 값으로 다시 잡는다.
+
+  → results_zstart.csv 기록 (6 행)
+     다음: python3 run_reaer.py --group z   (3-D K_La 확정)
+
+  다음 (3-D):  python run_reaer.py --group m    # kappa 분모, 최우선
+               python run_reaer.py --group z
+
+완료 2026년 07월 30일 목 오전  3:39:17. 결과를 README.md §4 표에 기입하십시오.

@@ -1,0 +1,6 @@
+file,run,z_start,probe,role
+run_S1.csv,S1,0.02,jangchuk,train
+run_S2.csv,S2,0.02,danchuk,position
+run_S3.csv,S3,0.02,choewon,position
+run_S4.csv,S4,0.08,jangchuk,train
+run_S5.csv,S5,0.17,jangchuk,holdout

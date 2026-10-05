@@ -1,0 +1,15 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| 漁벤져스 EX3 A층 파일럿 · 자동생성 (generate_cases.py) — 수정 금지          |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object fvOptions; }
+
+airLift
+{
+    type            vectorSemiImplicitSource;
+    selectionMode   cellZone;
+    cellZone        plume;
+    volumeMode      specific;
+    injectionRateSuSp
+    { U ((0 0 2.86) 0); }
+}
+

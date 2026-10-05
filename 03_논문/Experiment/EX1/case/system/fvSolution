@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX1 · 정상상태(simpleFoam) 선형솔버·완화                                     |
+|  폐쇄수조(출입구 없음) → pRefCell 로 압력기준 고정                           |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object fvSolution; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    p
+    {
+        solver          GAMG;
+        smoother        GaussSeidel;
+        tolerance       1e-7;
+        relTol          0.01;
+    }
+
+    "(U|k|omega)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-8;
+        relTol          0.1;
+    }
+
+    C
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-9;
+        relTol          0.1;
+    }
+}
+
+SIMPLE
+{
+    nNonOrthogonalCorrectors    1;
+    consistent                  no;
+    pRefCell                    0;
+    pRefValue                   0;
+
+    residualControl
+    {
+        p       1e-4;
+        U       1e-4;
+        "(k|omega)" 1e-4;
+        C       1e-5;
+    }
+}
+
+relaxationFactors
+{
+    fields
+    {
+        p       0.3;
+    }
+    equations
+    {
+        U           0.7;
+        "(k|omega)" 0.7;
+        C           0.7;
+    }
+}
+
+// ************************************************************************* //

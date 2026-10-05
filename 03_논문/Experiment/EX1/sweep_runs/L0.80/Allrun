@@ -1,0 +1,19 @@
+#!/bin/sh
+cd "${0%/*}" || exit 1
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+
+restore0Dir                       # 0.orig -> 0
+runApplication blockMesh
+runApplication topoSet            # 플룸 셀존 생성
+runApplication $(getApplication)  # pimpleFoam (+ scalarTransport + fieldAverage)
+
+# 후처리: 최종 시각 DO 공간 변동계수(CV) 산출 (python 없으면 건너뜀, 실행 자체는 성공)
+latest=$(foamListTimes -latestTime 2>/dev/null | tail -1)
+echo "latest time = $latest"
+PY=$(command -v python || command -v python3 || command -v py)
+if [ -n "$PY" ] && [ -n "$latest" ]; then
+    "$PY" postProcess/computeCV.py "$latest" | tee log.computeCV
+else
+    echo "python 미검출 or 결과 없음 → CV 후처리 건너뜀 (수동: python postProcess/computeCV.py <time>)" | tee log.computeCV
+fi
+#------------------------------------------------------------------------------

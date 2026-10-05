@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漁벤져스 — 우리 프로젝트 쉽게 이해하기</title>
+<style>
+  :root{
+    --ink:#1b2a33; --sub:#5a6b74; --line:#dfe6ea;
+    --sea:#0e7c86; --sea2:#0b5d64; --wash:#eef6f7; --warn:#c0562b; --good:#2f8f5b;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-snap-type:y mandatory;}
+  body{margin:0; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    color:var(--ink); line-height:1.7; background:#f6f8f9;}
+  section{min-height:100vh; scroll-snap-align:start; display:flex; flex-direction:column;
+    justify-content:center; padding:6vh 8vw; border-bottom:1px solid var(--line); background:#fff;}
+  section:nth-child(even){background:var(--wash);}
+  .num{font-size:.85rem; color:var(--sea); letter-spacing:.1em; font-weight:700; margin-bottom:.6rem;}
+  h1{font-size:2.6rem; line-height:1.25; margin:.2rem 0 1rem;}
+  h2{font-size:2rem; line-height:1.3; margin:.2rem 0 1.2rem;}
+  h3{font-size:1.15rem; color:var(--sea2); margin:1.4rem 0 .4rem;}
+  p,li{font-size:1.12rem;}
+  .lead{font-size:1.3rem; color:var(--sub);}
+  .big{font-size:1.5rem; font-weight:700; color:var(--sea2);}
+  ul{padding-left:1.2rem;} li{margin:.5rem 0;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:1.1rem 1.3rem; margin:.6rem 0;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:1rem;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;}
+  .tag{display:inline-block; background:var(--sea); color:#fff; padding:.15rem .7rem; border-radius:999px; font-size:.9rem; font-weight:700;}
+  .quote{border-left:5px solid var(--sea); padding:.6rem 1.2rem; background:var(--wash); font-size:1.25rem; font-weight:600;}
+  .flow{display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; font-weight:700; color:var(--sea2);}
+  .flow .box{background:#fff; border:2px solid var(--sea); border-radius:10px; padding:.6rem 1rem;}
+  .flow .arw{color:var(--sea); font-size:1.4rem;}
+  .warn{color:var(--warn); font-weight:700;} .good{color:var(--good); font-weight:700;}
+  .eq{font-size:1.5rem; text-align:center; background:var(--sea2); color:#fff; border-radius:12px; padding:1rem; letter-spacing:.02em;}
+  .small{font-size:.98rem; color:var(--sub);}
+  table{border-collapse:collapse; width:100%; margin:.6rem 0; font-size:1rem;}
+  th,td{border:1px solid var(--line); padding:.55rem .7rem; text-align:left;}
+  th{background:var(--sea); color:#fff;}
+  .hint{position:fixed; bottom:14px; right:18px; font-size:.8rem; color:var(--sub);
+    background:#fff; border:1px solid var(--line); border-radius:999px; padding:.3rem .8rem;}
+  b.k{color:var(--sea2);}
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section>
+  <div class="num">漁벤져스 · 팀 브리핑</div>
+  <h1>우리가 만드는 것,<br>물리 하나도 몰라도 이해하기</h1>
+  <p class="lead">"자동으로 키워주는 기계"가 아니라,<br><b class="k">물고기가 위험할 때만 알려주는 5만원짜리 건강지킴이.</b></p>
+  <p class="small">기계공학 안 하셔도 됩니다. 이 자료는 우리가 왜·무엇을·어떻게 하는지를 비유로 풀어 설명합니다.</p>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="num">01 · 문제</div>
+  <h2>초보 어항에서 물고기는 생각보다 잘 죽는다</h2>
+  <p>그리고 죽는 이유는 대부분 <b class="k">눈에 안 보이는 "물속 산소 부족"</b>으로 모입니다.</p>
+  <div class="grid">
+    <div class="card"><h3>왜 죽나</h3>
+      <ul>
+        <li>여과 박테리아가 자리잡기 전 입수 → 암모니아 급등(몰살)</li>
+        <li>과밀·과급여·수온상승 → 산소 부족(질식)</li>
+        <li>폭염에 수온 30℃ 넘으면: 물고기는 산소를 더 쓰는데 물은 산소를 덜 머금음</li>
+      </ul>
+    </div>
+    <div class="card"><h3>핵심 포인트</h3>
+      <p>물이 <b>맑아 보여도</b> 산소는 부족할 수 있습니다.<br>
+      사용자는 <span class="warn">죽고 나서야</span> 원인을 압니다.<br>
+      → "문제가 없는 것"이 아니라 "안 보이는 것".</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="num">02 · 핵심 통찰</div>
+  <h2>물속 산소는 어디나 똑같지 않다 — "dead spot"</h2>
+  <p class="lead">방 안 공기는 대충 균일하지만, 어항 물속 산소는 <b class="k">장소마다 다릅니다.</b></p>
+  <div class="card">
+    <h3>쉬운 비유</h3>
+    <p>선풍기 하나 켠 방을 떠올려 보세요. 선풍기 앞은 시원하지만 <b>가구 뒤 구석</b>은 바람이 안 닿아 답답하죠.
+    어항도 똑같습니다. 기포기·필터 물살이 <b>닿지 않는 구석</b>(장식물 뒤, 바위 밑, 바닥 모서리)에는
+    물이 고이고 <span class="warn">산소가 텅 빈 웅덩이(dead spot)</span>가 생깁니다.</p>
+  </div>
+  <p><b>그래서:</b> 산소 센서를 <b>딱 한 군데</b> 담가 재면, 그 한 점은 괜찮아도 구석은 위험할 수 있습니다.
+  <span class="warn">한 점 측정으로는 수조 전체를 대표 못 합니다.</span></p>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="num">03 · 기회</div>
+  <h2>바로 그 "빈칸"이 우리의 무기</h2>
+  <div class="grid">
+    <div class="card"><h3>시장은 이미 붐빈다</h3>
+      <p>스마트 어항 IoT는 레드오션. Seneye·Neptune 등 수두룩.<br>
+      국내 관상어 시장 약 <b>5,000억 원</b>, 세계 스마트어항 <b>13.5억 달러('24)</b>.</p>
+    </div>
+    <div class="card"><h3>그런데 아무도 안 한 것</h3>
+      <p>기존 제품은 산소를 <b>한 점의 값·추정</b>으로만 보여줍니다.<br>
+      <b class="k">"산소가 어디에, 왜 부족한지(공간 지도)"</b>를 다루는 제품은 <span class="good">사실상 없음.</span></p>
+    </div>
+  </div>
+  <p class="big">우리 승부처 = 산소의 "지도"를 그려주는 것.</p>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="num">04 · 제품 컨셉</div>
+  <h2>자율주행이 아니라 "계기판 경고등"</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>안 하는 것 ✕</h3>
+      <p>밥 주기·청소 자동화 (반려의 재미는 사용자 몫)</p>
+    </div>
+    <div class="card">
+      <h3>하는 것 ○</h3>
+      <p>딱 판정만: <span class="good">안전</span> / <span class="warn">위험</span> / 건강<br>
+      "이 구석 산소 위험 → 기포기 위치 옮기세요" 같은 처방</p>
+    </div>
+  </div>
+  <div class="quote">가격 목표 약 5만원. 최악의 실패는 "죽어가는데 안전이라 뜨는 것" → 신뢰도 최우선.</div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="num">05 · 핵심 난제와 아이디어</div>
+  <h2>왜 어렵나: 진짜 산소 센서는 너무 비싸다</h2>
+  <p>DO(용존산소) 센서는 개당 수만~수십만 원. <b>5만원 제품에 넣을 수 없습니다.</b></p>
+  <div class="card">
+    <p class="big">그래서 우리의 핵심 아이디어:</p>
+    <p>비싼 산소 센서로 <b>직접 재는</b> 대신,<br>
+    <b class="k">싼 정보들(수온·탁도 + 카메라 + 사진)로 산소를 "추정"</b>한다.</p>
+    <p class="small">※ '싸다'는 건 성능이 나쁘다는 뜻이 아니라, DO 센서만 비싸서 대체한다는 뜻입니다.</p>
+  </div>
+  <p>이 <b>추정 엔진</b>이 곧 우리의 해자(남이 못 베끼는 강점)입니다. "비싼 센서를 못 쓰는 제약"이 오히려 무기가 됩니다.</p>
+</section>
+
+<!-- 7 -->
+<section>
+  <div class="num">06 · 물리 엔진, 겁먹지 말자</div>
+  <h2>산소를 예측하는 방법 = "통장 잔고" 계산</h2>
+  <p>물속 산소의 양은 결국 <b>들어오는 돈 − 나가는 돈</b>과 같은 "수지 계산"입니다.</p>
+  <div class="grid">
+    <div class="card"><h3>산소가 들어옴 (입금)</h3>
+      <ul><li>기포기 → 공기방울에서 산소 녹아듦</li><li>수면에서 공기와 교환</li></ul>
+    </div>
+    <div class="card"><h3>산소가 빠짐 (출금)</h3>
+      <ul><li>물고기 숨쉬기</li><li>바닥·여과재 박테리아가 소모</li></ul>
+    </div>
+  </div>
+  <p>여기에 <b>물살이 산소를 실어 나르고(이송)</b>, <b>진한 곳→옅은 곳으로 번지는(확산)</b> 효과가 더해집니다.
+  이 셋(<b class="k">나름 + 번짐 + 입출금</b>)을 한 줄로 쓴 게 아래 식입니다.</p>
+</section>
+
+<!-- 8 -->
+<section>
+  <div class="num">07 · 방정식 해석</div>
+  <h2>이 식, 사실 단어 4개짜리 문장입니다</h2>
+  <div class="eq">∂C/∂t &nbsp;+&nbsp; ∇·(U C) &nbsp;=&nbsp; ∇·(D∇C) &nbsp;+&nbsp; ΣS</div>
+  <table>
+    <tr><th>기호</th><th>읽는 법 (쉬운 말)</th></tr>
+    <tr><td>C</td><td>어느 지점의 <b>산소 농도</b></td></tr>
+    <tr><td>∂C/∂t</td><td>시간이 지나며 산소가 <b>변하는 양</b> (가만히 두면 0)</td></tr>
+    <tr><td>∇·(U C)</td><td><b>물살이 산소를 실어 나름</b> (이송)</td></tr>
+    <tr><td>∇·(D∇C)</td><td>진한 데서 옅은 데로 <b>저절로 번짐</b> (확산)</td></tr>
+    <tr><td>ΣS</td><td>산소의 <b>입금·출금 합계</b> (기포·물고기·박테리아)</td></tr>
+  </table>
+  <p class="small">해석: "한 지점 산소의 변화 = 실려온 것 + 번져온 것 + 만들어지고 소모된 것." 끝. 어렵지 않죠.</p>
+</section>
+
+<!-- 9 -->
+<section>
+  <div class="num">08 · 신뢰성</div>
+  <h2>이 식은 우리가 지어낸 게 아니다</h2>
+  <p class="lead">전부 <b class="k">수십~백 년간 검증된 고전 공식들의 조립</b>입니다. 항마다 교과서 출처가 있습니다.</p>
+  <table>
+    <tr><th>우리 식의 부분</th><th>원조 (검증된 고전)</th></tr>
+    <tr><td>산소 수지 계산</td><td>Streeter–Phelps (1925, 하천 산소모델)</td></tr>
+    <tr><td>수면 산소 교환</td><td>Lewis–Whitman 2막 이론 (1924)</td></tr>
+    <tr><td>수온별 포화 산소량</td><td>Benson–Krause (수질 표준)</td></tr>
+    <tr><td>기포가 만드는 난류</td><td>Sato–Sekoguchi (1975)</td></tr>
+  </table>
+  <p><b>왜 좋은가:</b> 심사위원이 "물리가 믿을 만하냐"고 물으면 <span class="good">"전부 검증된 표준입니다"</span>라고 답할 수 있습니다.
+  가장 비슷한 최신 선례로 <b>양식수조 산소분포 CFD 논문(2024)</b>도 있습니다.</p>
+</section>
+
+<!-- 10 -->
+<section>
+  <div class="num">09 · 그럼 새로운 건?</div>
+  <h2>새로움은 "식"이 아니라 "쓰는 방법"에 있다</h2>
+  <div class="grid3">
+    <div class="card"><span class="tag">1</span><h3>새 무대</h3>
+      <p>큰 바다 양식장·하천이 아니라 <b>가정용 어항의 산소 지도</b>. 소비자 제품엔 없던 것.</p></div>
+    <div class="card"><span class="tag">2</span><h3>사진 → 자동 세팅</h3>
+      <p>사용자가 어항을 <b>사진 찍으면 Gemini가 형상·기포기 위치·배치를 읽어</b> 계산 조건을 자동 설정.</p></div>
+    <div class="card"><span class="tag">3</span><h3>싸게 추정</h3>
+      <p>비싼 산소 센서 없이 <b>수온·카메라로 산소를 역추정.</b></p></div>
+  </div>
+  <div class="quote">한 줄 포지셔닝: "단일 센서가 못 보는 산소 구배를, 사진 한 장과 물리로 예측해 배치를 처방하는 반려어 코치."</div>
+</section>
+
+<!-- 11 -->
+<section>
+  <div class="num">10 · 작전</div>
+  <h2>2단계 전략: 정답지 만들기 → 싸게 재현하기</h2>
+  <div class="grid">
+    <div class="card"><h3>1단계 · 실험 (정답지 확보)</h3>
+      <p>실험실에서 <b>비싼 정밀 산소 센서를 여러 곳(8~9점)</b>에 꽂아 진짜 산소 지도를 재고,
+      같은 자리에 싼 센서도 같이 붙여 <b>"싼값 ↔ 진짜값" 짝 데이터</b>를 모읍니다. CFD(컴퓨터 시뮬레이션)로도 지도를 만듭니다.</p>
+    </div>
+    <div class="card"><h3>2단계 · 제품 (싸게 재현)</h3>
+      <p>1단계에서 배운 관계를 이용해, <b>이제 싼 센서·카메라·사진만으로</b> 진짜 지도를 되살립니다.
+      정밀 장비는 오직 <b>정답 맞추기용</b>, 제품엔 안 들어갑니다.</p>
+    </div>
+  </div>
+  <p><b>보너스:</b> 우리가 어항을 직접 소유·측정하니 <span class="good">모델이 맞는지 틀리는지 실제로 검증(반증) 가능</span>합니다. 이게 이 주제의 큰 장점입니다.</p>
+</section>
+
+<!-- 12 -->
+<section>
+  <div class="num">11 · 전체 그림</div>
+  <h2>제품이 실제로 도는 방식</h2>
+  <div class="flow">
+    <div class="box">수온·탁도 센서</div><span class="arw">→</span>
+    <div class="box">카메라(물고기 행동·배치)</div><span class="arw">→</span>
+    <div class="box">사진 → Gemini 조건설정</div>
+  </div>
+  <div class="flow" style="margin-top:1rem;">
+    <span class="arw">⇩ 합쳐서</span>
+    <div class="box" style="border-color:var(--sea2);">물리 기반 산소 지도 추정</div>
+    <span class="arw">→</span>
+    <div class="box" style="border-color:var(--good); color:var(--good);">위험 / 안전 / 건강 판정</div>
+  </div>
+  <div class="grid" style="margin-top:1.2rem;">
+    <div class="card"><h3>가장 강한 단서 2개</h3>
+      <p><b>수온</b>: 물이 머금을 수 있는 산소량을 물리적으로 결정.<br>
+      <b>카메라</b>: 물고기가 수면에서 뻐끔대면(gasping) = 산소부족 실시간 신호.</p></div>
+    <div class="card"><h3>보조 단서</h3>
+      <p>탁도·pH·TDS = 오염·질소 상태의 힌트. (직접 산소는 아니고 참고용)</p></div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section>
+  <div class="num">12 · 정직하게 알아둘 한계</div>
+  <h2>미리 알고 가면 방어된다</h2>
+  <ul>
+    <li><b>적용 범위는 좁게 선언하자.</b> "모든 어항"이 아니라 <b>담수·수초 없는 어항, 좁은 수온대</b>. 사진은 <b>모양·위치</b>는 읽어도 눈에 안 보이는 값(박테리아 양 등)은 못 읽습니다.</li>
+    <li><b>"싼 단서가 산소를 정말 알려주나?"</b>는 <b>가정이 아니라 1단계에서 증명할 숙제.</b></li>
+    <li>정답지 산소도 <b>여러 점(8~9곳)</b>을 재야 "지도"를 검증할 수 있습니다. 한 점으론 부족.</li>
+  </ul>
+  <p class="small">→ 이 한계들을 발표에서 먼저 말하면, 오히려 "이미 설계에 반영됨"으로 점수를 받습니다.</p>
+</section>
+
+<!-- 14 -->
+<section>
+  <div class="num">13 · 마무리 · 다음 할 일</div>
+  <h2>한 문장으로 기억할 것</h2>
+  <div class="quote">"물속 산소는 장소마다 다르다(dead spot). 우리는 비싼 센서 없이, 사진과 검증된 물리로 그 산소 지도를 그려 위험을 미리 알려준다."</div>
+  <div class="grid" style="margin-top:1rem;">
+    <div class="card"><h3>SW 팀</h3><p>사진→배치 인식(Gemini), 센서·카메라 데이터 융합, 판정 앱</p></div>
+    <div class="card"><h3>기계 팀</h3><p>어항·기포기 세팅, 다점 산소 측정 + CFD로 정답지 확보</p></div>
+  </div>
+  <p class="small">상세 근거: 같은 폴더의 06(지배방정식) · 07(방법론) 문서 참고. 질문 환영합니다.</p>
+</section>
+
+<div class="hint">↓ 스크롤 또는 ↑↓ 방향키로 넘기기</div>
+<script>
+  // 최소한의 키보드 넘김만 (과한 JS 지양)
+  const secs=[...document.querySelectorAll('section')]; let i=0;
+  addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='PageDown'){i=Math.min(i+1,secs.length-1);secs[i].scrollIntoView();e.preventDefault();}
+    if(e.key==='ArrowUp'||e.key==='PageUp'){i=Math.max(i-1,0);secs[i].scrollIntoView();e.preventDefault();}
+  });
+</script>
+</body>
+</html>

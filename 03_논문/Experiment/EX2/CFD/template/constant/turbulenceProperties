@@ -1,0 +1,16 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| EX1 · 난류 SST k-omega (Automatic Wall Treatment)                            |
+\*---------------------------------------------------------------------------*/
+FoamFile { version 2.0; format ascii; class dictionary; object turbulenceProperties; }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+simulationType  RAS;
+
+RAS
+{
+    RASModel        kOmegaSST;   // 벽함수(omega/nutU)가 y+ 무관하게 블렌딩 = AWT
+    turbulence      on;
+    printCoeffs     on;
+}
+
+// ************************************************************************* //

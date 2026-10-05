@@ -1,0 +1,80 @@
+########## C 군 stage1 시드런 ##########
+
+===== c02blk   Su=1.773
+0  z_start=0.02 m   08-02 03:18 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk
+ExecutionTime = 18047.253 s  ClockTime = 18048 s
+
+########## 고정점 산출 ##########
+[미완] 아직 결과가 없는 케이스:
+    mz08: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\mz08: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    mz17: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\mz17: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    b01: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\b01: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    b03: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\b03: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    b04: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\b04: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    b06: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\b06: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    p13z02: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\p13z02: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    p13z08: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\p13z08: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    p13z17: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\p13z17: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+
+============================================================================================
+ z_start 별 alpha_g 자기일관 고정점    U_gs = 0.0637 m/s (z_start 무관)    n = 0.511
+============================================================================================
+
+case     z0[m]  H_p[m]     W 시드      α_g     Su 고정점     W 예측   a[1/m]    Su 변화
+------------------------------------------------------------------------------
+m21      0.020    0.19   0.3009   0.1785     1.7507   0.2989     2142    -1.3 %
+z02      0.020    0.19   0.2930   0.1813     1.7781   0.2934     2175     0.3 %
+c02blk   0.020    0.19   0.1765   0.2422     2.3763   0.2050     2907    34.0 %
+
+  → fp_result.csv 기록 (3 수준)
+     다음: python3 gen_cases.py --stage 2   (Z군 fvOptions 갱신)
+           bash run.sh stage2
+
+  [주의] Su 이동이 3 % 를 넘는 수준: c02blk → stage2 재실행 필수
+
+########## stage2 자기일관 재실행 ##########
+  c02blk: Su 1.773 → 2.376  (+34.0 %) → fvOptions 갱신, 재실행 필요
+
+stage2 재실행 대상: c02blk
+
+===== c02blk   Su=2.376  z_start=0.02 m   08-02 08:19 =====
+Restore 0/ from 0.orig/
+Running blockMesh on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk
+Running topoSet on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk
+Running decomposePar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk
+Running pimpleFoam (8 processes) on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk 
+Running reconstructPar on /c/Users/김강빈/OneDrive/문서/ajou university/2026/2학기/AI-Integrated-Capston-Design/Claude/03_논문/Experiment/_exceptions/EX_exception5/c02blk
+ExecutionTime = 2203.985 s  ClockTime = 2204 s
+
+[미완] 아직 결과가 없는 케이스:
+    mz08: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\mz08: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    mz17: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\mz17: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    b01: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\b01: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    b03: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\b03: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    b04: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\b04: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    b06: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\b06: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    p13z02: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\p13z02: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    p13z08: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\p13z08: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+    p13z17: C:\Users\김강빈\OneDrive\문서\ajou university\2026\2학기\AI-Integrated-Capston-Design\Claude\03_논문\Experiment\_exceptions\EX_exception5\p13z17: 시간디렉터리 없음 (아직 안 돌았거나 reconstructPar 미실행)
+
+============================================================================================
+ z_start 별 alpha_g 자기일관 고정점    U_gs = 0.0637 m/s (z_start 무관)    n = 0.511
+============================================================================================
+
+case     z0[m]    H_p    Su 입력     W 실측    α_g 입력     α_g 되먹임       잔차  판정
+--------------------------------------------------------------------------
+m21      0.020   0.19    1.773   0.3009    0.1807      0.1775    -1.8 %  OK
+z02      0.020   0.19    1.773   0.2930    0.1807      0.1815     0.4 %  OK
+c02blk   0.020   0.19    2.376   0.3445    0.2422      0.1583   -34.7 %  NG 재반복
+
+  → 1개 수준 미수렴  (허용 ±3 %)
+
+완료 2026년 08월  2일 일 오전  8:56:24.
+  다음 (3-D · kappa 의 분모):  python run_reaer.py --group C
+  결과를 README.md §4 표에 기입하십시오.
